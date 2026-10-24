@@ -3,309 +3,231 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Guilherme Rigonato Portfolio</title>
+<title>Guilherme Rigonato</title>
 
-<meta name="description" content="Senior BI Engineer in Lisbon. Power BI, Qlik Sense and SQL, with seven years as a commercial director.">
+<meta name="description" content="Guilherme Rigonato, BI engineer in Lisbon: Power BI, Qlik Sense and SQL. Projects with code, and experience.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Mono:wght@400&display=swap">
 <style>
-/* Layout: a BI spec sheet. One reading column; the 30-second strip and the project hub come first, career after. Case studies live on their own pages. */
+/* Layout: one left-aligned reading column, like a well-set CV. Rules separate entries; no cards, no badges. */
 :root {
-  --paper: #f5f6f4;
-  --sheet: #ffffff;
-  --ink: #16202a;
-  --muted: #5a6670;
-  --rule: #d6dbd9;
-  --signal: #b45309;
-  --signal-soft: #fbefe0;
-  --road: #2b3a46;
-  --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
-  --body: "Source Serif 4", Georgia, "Times New Roman", serif;
-  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --bg: #f7f8f9;
+  --ink: #1b2430;
+  --muted: #5d6876;
+  --rule: #dce0e5;
+  --accent: #1f5a85;
+  --panel: #ffffff;
+  --serif: "IBM Plex Serif", Georgia, "Times New Roman", serif;
+  --sans: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: #12181d; --sheet: #182128; --ink: #e6eaec; --muted: #9aa7b0;
-    --rule: #2c3943; --signal: #f0a04b; --signal-soft: #2d2216; --road: #c9d3da;
-    color-scheme: dark;
-  }
+  :root:not([data-theme="light"]) { --bg: #121519; --ink: #e3e7eb; --muted: #97a2ad; --rule: #2a3038; --accent: #86b6da; --panel: #181c21; color-scheme: dark; }
 }
-:root[data-theme="dark"] {
-  --paper: #12181d; --sheet: #182128; --ink: #e6eaec; --muted: #9aa7b0;
-  --rule: #2c3943; --signal: #f0a04b; --signal-soft: #2d2216; --road: #c9d3da;
-  color-scheme: dark;
-}
-body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 1.0625rem; line-height: 1.6; }
-.wrap {
-  max-width: 60rem; margin: 0 auto; padding-block: 3rem 4rem;
+:root[data-theme="dark"] { --bg: #121519; --ink: #e3e7eb; --muted: #97a2ad; --rule: #2a3038; --accent: #86b6da; --panel: #181c21; color-scheme: dark; }
+
+body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 1rem; line-height: 1.6; }
+.page {
+  max-width: 46rem; margin: 0 auto; padding-block: 3.5rem 4rem;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
-  display: grid; gap: 3.5rem;
+  display: grid; gap: 3rem;
 }
-h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.1; }
-h1 { font-size: clamp(2.4rem, 7vw, 4.2rem); font-weight: 800; font-stretch: 112%; letter-spacing: -0.01em; }
-h2 { font-size: clamp(1.5rem, 3.6vw, 2rem); font-weight: 700; font-stretch: 105%; }
-h3 { font-size: 1.15rem; font-weight: 700; }
-p { margin: 0; max-width: 65ch; }
-.label { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-a { color: var(--signal); text-underline-offset: 3px; }
-a:focus-visible, button:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(2rem, 5vw, 2.6rem); line-height: 1.15; }
+h2 { font-family: var(--serif); font-weight: 500; font-size: 1.35rem; line-height: 1.3; }
+h3 { font-size: 1.05rem; font-weight: 600; line-height: 1.4; }
+p, ul, ol { margin: 0; }
+a { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+.muted { color: var(--muted); }
+.small { font-size: 0.9rem; }
 
-.hero { display: grid; gap: 1.25rem; }
-.hero .role { font-family: var(--display); font-size: 1.25rem; font-weight: 600; color: var(--road); }
-.hero .role span { color: var(--muted); font-weight: 400; }
-.hero .thesis { font-size: 1.3rem; line-height: 1.5; }
-.hero .thesis strong { color: var(--signal); font-weight: 600; }
-.meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; font-family: var(--mono); font-size: 0.85rem; color: var(--muted); }
-.meta .ok { color: var(--ink); }
+header { display: grid; gap: 0.9rem; }
+.role { font-size: 1.1rem; font-weight: 500; }
+.intro { max-width: 62ch; }
+.facts { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; color: var(--muted); font-size: 0.92rem; }
+.links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; font-size: 0.95rem; }
 
-.spec { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); }
-.spec div { padding: 0.9rem 1rem 0.9rem 0; display: grid; gap: 0.2rem; min-width: 0; }
-.spec b { font-family: var(--display); font-size: 1.6rem; font-weight: 700; font-stretch: 90%; font-variant-numeric: tabular-nums; }
+section { display: grid; gap: 1.25rem; }
+.list { display: grid; border-top: 1px solid var(--rule); }
+.entry { display: grid; gap: 0.5rem; padding-block: 1.25rem; border-bottom: 1px solid var(--rule); }
+.entry > * { min-width: 0; }
+.entry .top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.75rem; }
+.status { font-size: 0.85rem; color: var(--muted); }
+.entry ul { padding-left: 1.1rem; display: grid; gap: 0.15rem; }
+.entry li { font-variant-numeric: tabular-nums; }
+.stack { font-size: 0.88rem; color: var(--muted); }
 
-section { display: grid; gap: 1.5rem; }
-.head { display: grid; gap: 0.5rem; padding-top: 1rem; border-top: 1px solid var(--rule); }
-.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1.5rem 2.5rem; }
-.two > * { min-width: 0; display: grid; gap: 0.5rem; align-content: start; }
+.job { display: grid; grid-template-columns: 7.5rem 1fr; gap: 0.25rem 1.5rem; padding-block: 1rem; border-bottom: 1px solid var(--rule); }
+.job > * { min-width: 0; }
+.job .when { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 0.92rem; padding-top: 0.05rem; }
+.job div { display: grid; gap: 0.2rem; }
+@media (max-width: 560px) { .job { grid-template-columns: 1fr; } }
 
-/* Work index */
-.work { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1rem; }
-.card { background: var(--sheet); border: 1px solid var(--rule); border-radius: 4px; padding: 1.25rem; display: grid; gap: 0.75rem; align-content: start; min-width: 0; }
-.card .q { font-style: italic; color: var(--road); }
-.card ul { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.25rem; }
-.card .go { font-family: var(--mono); font-size: 0.85rem; font-weight: 600; text-decoration: none; justify-self: start; }
-.card .go:hover { text-decoration: underline; }
-.go-row { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; }
-.status { display: inline-block; margin-right: 0.5rem; padding: 0.05rem 0.4rem; border-radius: 3px; border: 1px solid var(--rule); color: var(--muted); letter-spacing: 0.04em; }
-.status.live { border-color: var(--signal); background: var(--signal-soft); color: var(--ink); }
+.skills { display: grid; gap: 0.4rem; }
+.skills p { display: grid; grid-template-columns: 7.5rem 1fr; gap: 1.5rem; }
+.skills p > * { min-width: 0; }
+@media (max-width: 560px) { .skills p { grid-template-columns: 1fr; gap: 0; } }
 
-.chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-.chips span { font-family: var(--mono); font-size: 0.8rem; padding: 0.15rem 0.5rem; border: 1px solid var(--rule); border-radius: 3px; background: var(--sheet); }
-.chips span.main { border-color: var(--signal); background: var(--signal-soft); }
+footer { display: grid; gap: 0.75rem; padding-top: 1.25rem; border-top: 1px solid var(--ink); }
+.contact { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; align-items: baseline; }
+.email { font-family: var(--mono); font-size: 0.92rem; user-select: all; overflow-wrap: anywhere; }
+button.copy { font: inherit; font-size: 0.85rem; color: var(--accent); background: none; border: 1px solid var(--rule); border-radius: 3px; padding: 0.1rem 0.5rem; cursor: pointer; margin-left: 0.5rem; }
+button.copy:hover { border-color: var(--accent); }
 
-.diagram { background: var(--sheet); border: 1px solid var(--rule); border-radius: 4px; overflow-x: auto; padding: 1rem; margin: 0; }
-.diagram svg { display: block; min-width: 760px; width: 100%; height: auto; }
-.diagram .box { fill: var(--paper); stroke: var(--rule); }
-.diagram .box-hl { fill: var(--signal-soft); stroke: var(--signal); }
-.diagram .t { fill: var(--ink); font-family: var(--display); font-size: 14px; font-weight: 700; }
-.diagram .s { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
-.diagram .arrow { stroke: var(--road); stroke-width: 1.5; fill: none; }
-.diagram .head-a { fill: var(--road); }
-
-.rows { display: grid; border-top: 1px solid var(--rule); }
-.row { display: grid; grid-template-columns: 13rem 1fr; gap: 0.5rem 1.5rem; padding: 1rem 0; border-bottom: 1px solid var(--rule); }
-.row > * { min-width: 0; }
-.row h3 { font-size: 1rem; }
-.row .tools { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); }
-.row > div { display: grid; gap: 0.35rem; }
-@media (max-width: 640px) { .row { grid-template-columns: 1fr; } }
-
-.versions { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; }
-.ver { background: var(--sheet); border: 1px solid var(--rule); border-radius: 4px; padding: 1.1rem; display: grid; gap: 0.5rem; align-content: start; }
-.ver .v { font-family: var(--mono); font-size: 0.8rem; font-weight: 600; color: var(--signal); }
-.ver.now { border-color: var(--signal); }
-
-.stack { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1.25rem 2rem; }
-.stack div { display: grid; gap: 0.35rem; min-width: 0; }
-
-.exp { display: grid; border-top: 1px solid var(--rule); }
-.job { display: grid; grid-template-columns: 9rem 1fr; gap: 0.25rem 1.5rem; padding: 1rem 0; border-bottom: 1px solid var(--rule); }
-.job .when { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); padding-top: 0.2rem; font-variant-numeric: tabular-nums; }
-.job > div { min-width: 0; display: grid; gap: 0.3rem; }
-@media (max-width: 640px) { .job { grid-template-columns: 1fr; } }
-
-.contact { display: flex; flex-wrap: wrap; gap: 1rem 2.5rem; align-items: center; padding-top: 1.25rem; border-top: 2px solid var(--ink); }
-.contact .item { display: grid; gap: 0.2rem; min-width: 0; }
-.contact .val { font-family: var(--mono); font-size: 0.95rem; user-select: all; overflow-wrap: anywhere; }
-button.copy { font-family: var(--mono); font-size: 0.75rem; background: none; border: 1px solid var(--rule); color: var(--ink); border-radius: 3px; padding: 0.2rem 0.5rem; cursor: pointer; justify-self: start; }
-button.copy:hover { border-color: var(--signal); }
-.note { font-size: 0.85rem; color: var(--muted); }
+/* Case-study page */
+.steps { padding-left: 1.25rem; display: grid; gap: 1rem; }
+.steps li::marker { color: var(--muted); }
+.figure { margin: 0; background: var(--panel); border: 1px solid var(--rule); padding: 1rem; overflow-x: auto; }
+.figure svg { display: block; min-width: 680px; width: 100%; height: auto; }
+.figure .box { fill: var(--bg); stroke: var(--rule); }
+.figure .box-hl { fill: var(--bg); stroke: var(--accent); stroke-width: 1.5; }
+.figure .t { fill: var(--ink); font-family: var(--sans); font-size: 14px; font-weight: 600; }
+.figure .s { fill: var(--muted); font-family: var(--sans); font-size: 11.5px; }
+.figure .arrow { stroke: var(--muted); stroke-width: 1.25; fill: none; }
+.figure .head-a { fill: var(--muted); }
+pre { margin: 0; background: var(--panel); border: 1px solid var(--rule); padding: 1rem; overflow-x: auto; font-family: var(--mono); font-size: 0.85rem; line-height: 1.7; }
+code { font-family: var(--mono); font-size: 0.88em; }
+.kv { display: grid; grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); gap: 1rem 1.5rem; border-block: 1px solid var(--rule); padding-block: 1rem; }
+.kv div { display: grid; gap: 0.1rem; min-width: 0; }
+.kv b { font-family: var(--serif); font-weight: 500; font-size: 1.35rem; font-variant-numeric: tabular-nums; }
+.kv span { font-size: 0.88rem; color: var(--muted); }
 </style>
 
-<main class="wrap">
+<main class="page">
 
-  <header class="hero">
-    <span class="label">Portfolio · Business Intelligence · Lisbon</span>
+  <header>
     <h1>Guilherme Rigonato</h1>
-    <div class="role">Senior BI Engineer <span>· Power BI · Qlik Sense · SQL</span></div>
-    <p class="thesis">Ten years building BI in <strong>Qlik Sense</strong> and <strong>Power BI</strong>, seven of them leading sales at a distributor that ran on those reports every day. I build the data model, the SQL and the dashboard myself, and I start from the decision the report has to support.</p>
-    <div class="meta">
-      <span class="ok">Based in Lisbon from Dec 2026</span>
-      <span class="ok">D7 residence visa · no sponsorship needed</span>
-      <span>Available full-time</span>
-      <span>English C1 · Portuguese native</span>
-    </div>
+    <p class="role">BI Engineer · Power BI, Qlik Sense, SQL</p>
+    <p class="intro">Ten years building BI in Qlik Sense and Power BI. Seven of them were in sales leadership at a veterinary distributor, where I used the reports I built to run sales, pricing and cash. I work across the stack: source data, SQL, the data model and the dashboard.</p>
+    <p class="facts"><span>Lisbon from December 2026</span><span>No visa sponsorship required</span><span>Full-time</span><span>English and Portuguese</span></p>
   </header>
 
-  <div class="spec" aria-label="Career at a glance">
-    <div><span class="label">Years in BI</span><b>10</b></div>
-    <div><span class="label">Qlik apps run in production</span><b>7</b></div>
-    <div><span class="label">Stores in a replenishment app</span><b>17</b></div>
-    <div><span class="label">Listings modelled in SQL</span><b>~250,000</b></div>
-  </div>
-
-  <section aria-labelledby="work">
-    <div class="head">
-      <span class="label">Selected work</span>
-      <h2 id="work">Projects you can open</h2>
-      <p>Each project starts from a business question. Live projects link to their code, data model and tests.</p>
-    </div>
-    <div class="work">
-      <article class="card">
-        <span class="label"><span class="status live">Live</span> Dashboard · retail · real data</span>
-        <h3>Where is a 10-store retailer losing sales?</h3>
-        <p class="q">Five years of Walmart M5 sales, modelled in SQL and checked against the winning M5 forecast.</p>
+  <section aria-labelledby="projects">
+    <h2 id="projects">Projects</h2>
+    <div class="list">
+      <article class="entry">
+        <div class="top"><h3>Where a 10-store retailer loses sales</h3></div>
+        <p>Five years of daily Walmart sales from the public M5 data set, modelled in dbt and DuckDB, with the winning M5 forecast checked against actual sales.</p>
         <ul>
-          <li>47.7M rows in a star schema built with dbt and tested</li>
-          <li>Forecast error 5% per store-day, 75% per item-day</li>
-          <li>About $0.79M a year lost to suspected stock-outs</li>
+          <li>47.7 million rows in a tested star schema: 13 models, 17 data tests</li>
+          <li>Forecast error of 5% per store and day, 75% per item and day</li>
+          <li>Suspected stock-outs cost about $0.79M a year, 80% of it in Foods</li>
         </ul>
-        <div class="chips"><span class="main">SQL</span><span class="main">dbt</span><span class="main">Power BI</span><span>DuckDB</span><span>DAX</span></div>
-        <div class="go-row">
-          <a class="go" href="/5-retail-bi/">Open the dashboard ↗</a>
-          <a class="go" href="https://github.com/Alpralex/5-retail-bi/tree/main/powerbi" target="_blank" rel="noopener">Power BI model</a>
-          <a class="go" href="https://github.com/Alpralex/5-retail-bi" target="_blank" rel="noopener">Code</a>
-        </div>
+        <p class="stack">SQL, dbt, DuckDB, Power BI, DAX</p>
+        <p class="links"><a href="/5-retail-bi/">Dashboard</a><a href="https://github.com/Alpralex/5-retail-bi/tree/main/powerbi" target="_blank" rel="noopener">Power BI model</a><a href="https://github.com/Alpralex/5-retail-bi" target="_blank" rel="noopener">Code</a></p>
       </article>
-      <article class="card">
-        <span class="label"><span class="status live">Live</span> Case study · end to end</span>
-        <h3>InfoCars: pricing intelligence for used cars</h3>
-        <p class="q">What should this car sell for, and is my stock priced out of line?</p>
+      <article class="entry">
+        <div class="top"><h3>InfoCars: used-car pricing for dealers</h3></div>
+        <p>A product I built and sold at Informar Dados. Car ads are collected every day, matched to a catalogue of models and turned into market prices for a dealer.</p>
         <ul>
-          <li>~250,000 listings collected and modelled in PostgreSQL</li>
-          <li>5,114 model spellings cleaned into 641 real models</li>
-          <li>Sold to a car dealer: about €300 saved per negotiation</li>
+          <li>About 250,000 listings modelled in PostgreSQL</li>
+          <li>5,114 model spellings reduced to 641 real models</li>
+          <li>About €300 saved per negotiation at the dealer</li>
         </ul>
-        <div class="chips"><span class="main">SQL</span><span class="main">Power BI</span><span>Python</span><span>Claude API</span></div>
-        <div class="go-row">
-          <a class="go" href="/infocars/">Read the case study →</a>
-          <a class="go" href="https://github.com/Alpralex/infocars-pricing-showcase" target="_blank" rel="noopener">Code</a>
-        </div>
+        <p class="stack">SQL, PostgreSQL, Python, Power BI, Claude API</p>
+        <p class="links"><a href="/infocars/">Case study</a><a href="https://github.com/Alpralex/infocars-pricing-showcase" target="_blank" rel="noopener">Code</a></p>
       </article>
-      <article class="card">
-        <span class="label"><span class="status soon">November 2026</span> Qlik app · distribution</span>
-        <h3>Why is one region falling while the rest grow?</h3>
-        <p class="q">A sales-director app for an animal-health distributor in Portugal, on documented synthetic data.</p>
+      <article class="entry">
+        <div class="top"><h3>Fact-checking Portugal's 2027 budget debate</h3><span class="status">Preview</span></div>
+        <p>Claims made in Parliament, checked against Eurostat, INE, Banco de Portugal and the Public Finance Council. The page is in Portuguese.</p>
         <ul>
-          <li>Coverage, rep visits, discounting and receivables in one model</li>
-          <li>Set analysis over a single fact table for sales, visits and invoices</li>
-          <li>The kind of app I relied on for seven years in sales leadership</li>
+          <li>Forecasts compared with the range of five independent institutions</li>
+          <li>The same rules for every party, checked by the build</li>
+          <li>Full check of the 27–28 October debate published by 31 October</li>
         </ul>
-        <div class="chips"><span class="main">Qlik Sense</span><span class="main">Set analysis</span><span>Python</span><span>Power BI</span></div>
+        <p class="stack">Python, public APIs, HTML and JavaScript</p>
+        <p class="links"><a href="/oe2027-fact-check/">Preview</a><a href="https://github.com/Alpralex/oe2027-fact-check" target="_blank" rel="noopener">Code</a></p>
       </article>
-      <article class="card">
-        <span class="label"><span class="status live">Preview</span> Data product · public data</span>
-        <h3>Fact-checking a budget debate in 72 hours</h3>
-        <p class="q">Do the claims made in Parliament on Portugal's 2027 State Budget hold up against official data?</p>
-        <p class="note">Pre-debate claims are up now; the full check of the 27–28 Oct debate follows by 31 Oct.</p>
+      <article class="entry">
+        <div class="top"><h3>Sales director app for a distributor</h3><span class="status">In progress, November 2026</span></div>
+        <p>A Qlik Sense app for an animal-health distributor in Portugal, built on synthetic data whose generator and rules are public.</p>
         <ul>
-          <li>Every claim traced to Eurostat, INE, Banco de Portugal or the CFP</li>
-          <li>Forecast verdicts computed against independent institutions</li>
-          <li>Same rules for every party, checked by code</li>
+          <li>Revenue, customer coverage, rep visits, discounts and receivables in one model</li>
+          <li>One fact table for sales, visits and invoices, with set analysis for year to date and aging</li>
         </ul>
-        <div class="chips"><span class="main">Data modelling</span><span>Python</span><span>HTML/JS</span><span>Public APIs</span></div>
-        <div class="go-row">
-          <a class="go" href="/oe2027-fact-check/">Open the preview ↗</a>
-          <a class="go" href="https://github.com/Alpralex/oe2027-fact-check" target="_blank" rel="noopener">Code</a>
-        </div>
+        <p class="stack">Qlik Sense, set analysis, Python</p>
+        <p class="links"><a href="https://github.com/Alpralex/commercial-analytics" target="_blank" rel="noopener">Code</a></p>
       </article>
-      <article class="card">
-        <span class="label"><span class="status soon">In progress</span> Dashboard · public data</span>
-        <h3>Is housing in Portugal falling out of reach?</h3>
-        <p class="q">House prices, rents and incomes in Portugal against six EU neighbours, from Eurostat.</p>
+      <article class="entry">
+        <div class="top"><h3>Housing affordability in Portugal</h3></div>
+        <p>House prices and incomes in Portugal and six EU countries, from Eurostat, in the same dbt and DuckDB pipeline as the retail project.</p>
         <ul>
-          <li>Real house prices and the price-to-income index</li>
-          <li>Share of households overburdened by housing costs</li>
-          <li>Same dbt and DuckDB pipeline as the retail project</li>
+          <li>From 2015 to 2024, house prices rose 124% and median income 65%</li>
+          <li>Price-to-income index of 136 (2015 = 100), against 106 for the EU</li>
         </ul>
-        <div class="chips"><span class="main">SQL</span><span class="main">dbt</span><span>DuckDB</span><span>Eurostat API</span></div>
+        <p class="stack">SQL, dbt, DuckDB, Eurostat API</p>
+        <p class="links"><a href="/pt-housing-analytics/">Dashboard</a></p>
       </article>
     </div>
   </section>
 
-  <section aria-labelledby="qlik">
-    <div class="head">
-      <span class="label">Hands-on BI</span>
-      <h2 id="qlik">Apps I built and ran in production</h2>
-      <p>These ran on company data, so they are described here instead of linked.</p>
-    </div>
-    <div class="rows">
-      <div class="row">
+  <section aria-labelledby="prod">
+    <h2 id="prod">Work on company data</h2>
+    <p class="muted">These ran in production on private data, so they are described rather than linked.</p>
+    <div class="list">
+      <article class="entry">
         <h3>Inventory quality for a home-goods retailer</h3>
-        <div>
-          <p>Purchasing, replenishment of 17 stores and shelf availability in one Qlik app, with forecast accuracy tracked by Bias and MAPE so buyers could see where the forecast was drifting.</p>
-          <span class="tools">Qlik Sense · SQL · Rover, 2023–2024</span>
-        </div>
-      </div>
-      <div class="row">
+        <p>Purchasing, replenishment of 17 stores and shelf availability in one Qlik app. Forecast accuracy was tracked with bias and MAPE so buyers could see where the forecast drifted.</p>
+        <p class="stack">Qlik Sense, SQL · Rover, 2023–2024</p>
+      </article>
+      <article class="entry">
         <h3>Seven core apps for a veterinary distributor</h3>
-        <div>
-          <p>Sales, four business-segment apps, a daily cash-flow projection and sales-rep visit tracking, all on Oracle, used by the company's 10 managers. I later rebuilt them in Power BI to compare, and kept Qlik for performance and Oracle connectivity.</p>
-          <span class="tools">Qlik Sense · Power BI · Oracle SQL · Central Veterinária, 2015–2023</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section aria-labelledby="why">
-    <div class="head">
-      <span class="label">What I bring to a BI team</span>
-      <h2 id="why">I build the report and I know what it is for</h2>
-    </div>
-    <div class="two">
-      <div><h3>Hands-on across the stack</h3><p>Source systems, SQL, the data model, the dashboard and, when it helps, an AI layer on top. I can join a team at any point and understand what happens upstream and downstream.</p></div>
-      <div><h3>Seven years on the business side</h3><p>As commercial manager and then commercial director of a veterinary distributor, I used these reports to run sales, pricing and cash, and hit the commercial targets in each of my four years as director. I design KPIs that answer the question a director is asking.</p></div>
-    </div>
-  </section>
-
-  <section aria-labelledby="stack">
-    <div class="head"><span class="label">Toolkit</span><h2 id="stack">Stack</h2></div>
-    <div class="stack">
-      <div><span class="label">BI</span><div class="chips"><span class="main">Qlik Sense</span><span class="main">Power BI</span><span>DAX</span><span>Power Query</span><span>Data modelling</span><span>Bias &amp; MAPE</span></div></div>
-      <div><span class="label">Data</span><div class="chips"><span class="main">SQL</span><span>PostgreSQL</span><span>Oracle</span><span>Python</span><span>ETL/ELT</span><span>Web scraping</span></div></div>
-      <div><span class="label">AI</span><div class="chips"><span>Anthropic API</span><span>Tool use</span><span>Text-to-SQL</span><span>Model evaluation</span></div></div>
+        <p>Sales, four business-segment apps, a daily cash-flow projection and sales-rep visit tracking, on Oracle, used by the company's 10 managers. I later rebuilt them in Power BI to compare, and kept Qlik for its performance on Oracle.</p>
+        <p class="stack">Qlik Sense, Power BI, Oracle SQL · Central Veterinária, 2015–2023</p>
+      </article>
     </div>
   </section>
 
   <section aria-labelledby="exp">
-    <div class="head"><span class="label">Career</span><h2 id="exp">Experience</h2></div>
-    <div class="exp">
-      <div class="job"><span class="when">2024 – now</span><div><h3>Co-founder &amp; Data Engineer · Informar Dados</h3><p>Data and analytics consultancy. Built InfoCars end to end and co-developed a management software product for coffee-sector small businesses.</p></div></div>
-      <div class="job"><span class="when">2023 – 2024</span><div><h3>Data Engineer · Rover (IT consultancy)</h3><p>Qlik inventory-quality app for a major home-goods retailer: purchasing, replenishment of 17 stores and shelf availability, with forecast accuracy tracked by Bias and MAPE.</p></div></div>
-      <div class="job"><span class="when">2019 – 2023</span><div><h3>Commercial Director · Central Veterinária</h3><p>Led the commercial area and hit the commercial targets in all four years. Kept developing the 7 core Qlik apps on Oracle, used by the company's 10 managers.</p></div></div>
-      <div class="job"><span class="when">2016 – 2019</span><div><h3>Commercial Manager, pet segment · Central Veterinária</h3><p>Ran the pet segment with a team of 10: demand generation through visits to veterinarians, sales in clinic shops, purchasing, pricing and customer coverage analysis.</p></div></div>
-      <div class="job"><span class="when">2015 – 2016</span><div><h3>BI Analyst · Central Veterinária</h3><p>Data models and Qlik dashboards for the commercial team. Promoted to commercial manager.</p></div></div>
-      <div class="job"><span class="when">Education</span><div><h3>BSc Business Administration · UFU</h3><p>Postgraduate in Enterprise Data Science &amp; Analytics at NOVA IMS, Lisbon, from Feb 2027 (evening classes).</p></div></div>
+    <h2 id="exp">Experience</h2>
+    <div class="list">
+      <div class="job"><span class="when">2024 – now</span><div><h3>Co-founder and Data Engineer · Informar Dados</h3><p>Data and analytics consultancy. Built InfoCars end to end.</p></div></div>
+      <div class="job"><span class="when">2023 – 2024</span><div><h3>Data Engineer · Rover</h3><p>IT and analytics consultancy. Built the Qlik inventory-quality app for a home-goods retailer.</p></div></div>
+      <div class="job"><span class="when">2019 – 2023</span><div><h3>Commercial Director · Central Veterinária</h3><p>Led the commercial area and hit the commercial targets in all four years. Kept developing the company's seven Qlik apps.</p></div></div>
+      <div class="job"><span class="when">2016 – 2019</span><div><h3>Commercial Manager, pet segment · Central Veterinária</h3><p>Ran the pet segment with a team of 10: visits to veterinarians, sales in clinic shops, purchasing, pricing and customer coverage.</p></div></div>
+      <div class="job"><span class="when">2015 – 2016</span><div><h3>BI Analyst · Central Veterinária</h3><p>Data models and Qlik dashboards for the commercial team.</p></div></div>
+      <div class="job"><span class="when">Education</span><div><h3>BSc Business Administration · UFU</h3><p>Postgraduate in Enterprise Data Science and Analytics at NOVA IMS, Lisbon, from February 2027, evening classes.</p></div></div>
     </div>
   </section>
 
-  <footer class="contact" aria-label="Contact">
-    <div class="item">
-      <span class="label">Email</span>
-      <span class="val" id="email">rigonato.guilherme@gmail.com</span>
-      <button class="copy" id="copy-email" type="button">Copy email</button>
+  <section aria-labelledby="skills">
+    <h2 id="skills">Skills</h2>
+    <div class="skills">
+      <p><span class="muted">BI</span><span>Qlik Sense, Power BI, DAX, Power Query, set analysis, data modelling</span></p>
+      <p><span class="muted">Data</span><span>SQL, PostgreSQL, Oracle, dbt, DuckDB, Python</span></p>
+      <p><span class="muted">AI</span><span>Claude API, tool use, text-to-SQL</span></p>
     </div>
-    <div class="item">
-      <span class="label">LinkedIn</span>
-      <a class="val" href="https://www.linkedin.com/in/guilherme-rigonato-b41463116" target="_blank" rel="noopener">linkedin.com/in/guilherme-rigonato-b41463116</a>
-    </div>
-    <p class="note">Euro figures converted from Brazilian reais at about 6.5 BRL per euro.</p>
-  </footer>
+  </section>
 
+  <footer>
+    <div class="contact">
+      <p><span class="email" id="email">rigonato.guilherme@gmail.com</span><button class="copy" id="copy-email" type="button">Copy</button></p>
+      <a href="https://www.linkedin.com/in/guilherme-rigonato-b41463116" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/Alpralex" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <p class="muted small">Euro figures converted from Brazilian reais at about 6.5 BRL per euro.</p>
+  </footer>
 </main>
 
 <script>
-document.getElementById('copy-email').addEventListener('click', function () {
-  var btn = this, text = document.getElementById('email').textContent;
-  var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy email'; }, 1600); };
-  var fallback = function () {
-    var r = document.createRange(); r.selectNodeContents(document.getElementById('email'));
-    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
-    btn.textContent = 'Selected, press Ctrl/⌘+C';
-  };
-  try { navigator.clipboard.writeText(text).then(done, fallback); } catch (e) { fallback(); }
-});
+(function () {
+  var btn = document.getElementById('copy-email');
+  if (!btn) return;
+  btn.addEventListener('click', function () {
+    var el = document.getElementById('email'), text = el.textContent;
+    var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1600); };
+    var fallback = function () {
+      var r = document.createRange(); r.selectNodeContents(el);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent = 'Selected';
+    };
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch (e) { fallback(); }
+  });
+})();
 </script>
 
 </html>
