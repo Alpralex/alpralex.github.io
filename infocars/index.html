@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>InfoCars Case Study</title>
+
+<meta name="description" content="InfoCars case study by Guilherme Rigonato: a used-car pricing product built end to end, from scraping to SQL model, dashboards and an AI assistant.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a BI spec sheet. One reading column; the 30-second strip and the work index come first, the case study and career after. */
+:root {
+  --paper: #f5f6f4;
+  --sheet: #ffffff;
+  --ink: #16202a;
+  --muted: #5a6670;
+  --rule: #d6dbd9;
+  --signal: #b45309;
+  --signal-soft: #fbefe0;
+  --road: #2b3a46;
+  --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #12181d; --sheet: #182128; --ink: #e6eaec; --muted: #9aa7b0;
+    --rule: #2c3943; --signal: #f0a04b; --signal-soft: #2d2216; --road: #c9d3da;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #12181d; --sheet: #182128; --ink: #e6eaec; --muted: #9aa7b0;
+  --rule: #2c3943; --signal: #f0a04b; --signal-soft: #2d2216; --road: #c9d3da;
+  color-scheme: dark;
+}
+body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 1.0625rem; line-height: 1.6; }
+.wrap {
+  max-width: 60rem; margin: 0 auto; padding-block: 3rem 4rem;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 3.5rem;
+}
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.1; }
+h1 { font-size: clamp(2.4rem, 7vw, 4.2rem); font-weight: 800; font-stretch: 112%; letter-spacing: -0.01em; }
+h2 { font-size: clamp(1.5rem, 3.6vw, 2rem); font-weight: 700; font-stretch: 105%; }
+h3 { font-size: 1.15rem; font-weight: 700; }
+p { margin: 0; max-width: 65ch; }
+.label { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+a { color: var(--signal); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+
+.hero { display: grid; gap: 1.25rem; }
+.hero .role { font-family: var(--display); font-size: 1.25rem; font-weight: 600; color: var(--road); }
+.hero .role span { color: var(--muted); font-weight: 400; }
+.hero .thesis { font-size: 1.3rem; line-height: 1.5; }
+.hero .thesis strong { color: var(--signal); font-weight: 600; }
+.meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; font-family: var(--mono); font-size: 0.85rem; color: var(--muted); }
+.meta .ok { color: var(--ink); }
+
+.spec { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); }
+.spec div { padding: 0.9rem 1rem 0.9rem 0; display: grid; gap: 0.2rem; min-width: 0; }
+.spec b { font-family: var(--display); font-size: 1.6rem; font-weight: 700; font-stretch: 90%; font-variant-numeric: tabular-nums; }
+
+section { display: grid; gap: 1.5rem; }
+.head { display: grid; gap: 0.5rem; padding-top: 1rem; border-top: 1px solid var(--rule); }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1.5rem 2.5rem; }
+.two > * { min-width: 0; display: grid; gap: 0.5rem; align-content: start; }
+
+/* Work index */
+.work { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1rem; }
+.card { background: var(--sheet); border: 1px solid var(--rule); border-radius: 4px; padding: 1.25rem; display: grid; gap: 0.75rem; align-content: start; min-width: 0; }
+.card .q { font-style: italic; color: var(--road); }
+.card ul { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.25rem; }
+.card .go { font-family: var(--mono); font-size: 0.85rem; font-weight: 600; text-decoration: none; justify-self: start; }
+.card .go:hover { text-decoration: underline; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.chips span { font-family: var(--mono); font-size: 0.8rem; padding: 0.15rem 0.5rem; border: 1px solid var(--rule); border-radius: 3px; background: var(--sheet); }
+.chips span.main { border-color: var(--signal); background: var(--signal-soft); }
+
+.diagram { background: var(--sheet); border: 1px solid var(--rule); border-radius: 4px; overflow-x: auto; padding: 1rem; margin: 0; }
+.diagram svg { display: block; min-width: 760px; width: 100%; height: auto; }
+.diagram .box { fill: var(--paper); stroke: var(--rule); }
+.diagram .box-hl { fill: var(--signal-soft); stroke: var(--signal); }
+.diagram .t { fill: var(--ink); font-family: var(--display); font-size: 14px; font-weight: 700; }
+.diagram .s { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+.diagram .arrow { stroke: var(--road); stroke-width: 1.5; fill: none; }
+.diagram .head-a { fill: var(--road); }
+
+.rows { display: grid; border-top: 1px solid var(--rule); }
+.row { display: grid; grid-template-columns: 13rem 1fr; gap: 0.5rem 1.5rem; padding: 1rem 0; border-bottom: 1px solid var(--rule); }
+.row > * { min-width: 0; }
+.row h3 { font-size: 1rem; }
+.row .tools { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); }
+.row > div { display: grid; gap: 0.35rem; }
+@media (max-width: 640px) { .row { grid-template-columns: 1fr; } }
+
+.versions { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; }
+.ver { background: var(--sheet); border: 1px solid var(--rule); border-radius: 4px; padding: 1.1rem; display: grid; gap: 0.5rem; align-content: start; }
+.ver .v { font-family: var(--mono); font-size: 0.8rem; font-weight: 600; color: var(--signal); }
+.ver.now { border-color: var(--signal); }
+
+.stack { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1.25rem 2rem; }
+.stack div { display: grid; gap: 0.35rem; min-width: 0; }
+
+.exp { display: grid; border-top: 1px solid var(--rule); }
+.job { display: grid; grid-template-columns: 9rem 1fr; gap: 0.25rem 1.5rem; padding: 1rem 0; border-bottom: 1px solid var(--rule); }
+.job .when { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); padding-top: 0.2rem; font-variant-numeric: tabular-nums; }
+.job > div { min-width: 0; display: grid; gap: 0.3rem; }
+@media (max-width: 640px) { .job { grid-template-columns: 1fr; } }
+
+.contact { display: flex; flex-wrap: wrap; gap: 1rem 2.5rem; align-items: center; padding-top: 1.25rem; border-top: 2px solid var(--ink); }
+.contact .item { display: grid; gap: 0.2rem; min-width: 0; }
+.contact .val { font-family: var(--mono); font-size: 0.95rem; user-select: all; overflow-wrap: anywhere; }
+button.copy { font-family: var(--mono); font-size: 0.75rem; background: none; border: 1px solid var(--rule); color: var(--ink); border-radius: 3px; padding: 0.2rem 0.5rem; cursor: pointer; justify-self: start; }
+button.copy:hover { border-color: var(--signal); }
+.note { font-size: 0.85rem; color: var(--muted); }
+
+.back { font-family: var(--mono); font-size: 0.85rem; font-weight: 600; text-decoration: none; }
+.back:hover { text-decoration: underline; }
+.links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; font-family: var(--mono); font-size: 0.9rem; font-weight: 600; }
+.links a { text-decoration: none; }
+.links a:hover { text-decoration: underline; }
+pre.cmd { background: var(--sheet); border: 1px solid var(--rule); border-radius: 4px; padding: 1rem; margin: 0; overflow-x: auto; font-family: var(--mono); font-size: 0.85rem; line-height: 1.6; }
+code { font-family: var(--mono); font-size: 0.9em; }
+</style>
+
+<main class="wrap">
+
+  <a class="back" href="/">← All projects</a>
+
+  <header class="hero">
+    <span class="label">Case study · end to end · 2025</span>
+    <h1>InfoCars</h1>
+    <div class="role">Pricing intelligence for used-car dealers <span>· SQL · Python · Power BI · Claude API</span></div>
+    <p class="thesis">What should this car sell for, and is my stock priced out of line? I built a product that answers both from <strong>about 250,000 car ads</strong>, and sold it to a car dealer in Brazil.</p>
+    <div class="links">
+      <a href="https://github.com/Alpralex/infocars-pricing-showcase" target="_blank" rel="noopener">Code on GitHub ↗</a>
+      <a href="#run">Run the demo ↓</a>
+    </div>
+  </header>
+
+  <div class="spec" aria-label="Results in production">
+    <div><span class="label">Listings in the database</span><b>~250,000</b></div>
+    <div><span class="label">Model spellings cleaned</span><b>5,114 → 641</b></div>
+    <div><span class="label">Saved per negotiation</span><b>~€300</b></div>
+    <div><span class="label">Time in stock</span><b>1–3 months</b></div>
+  </div>
+
+  <section aria-labelledby="what">
+    <div class="head">
+      <span class="label">Overview</span>
+      <h2 id="what">The problem and what I built</h2>
+    </div>
+    <div class="two">
+      <div>
+        <span class="label">The problem</span>
+        <p>Dealers price used cars by gut feel and by browsing a few listing sites. The data exists, but it is scattered across portals, duplicated, and written inconsistently. The same car can appear as "Onix 1.0 LT", "ONIX LT 1.0 FLEX" or with a typo in the version.</p>
+      </div>
+      <div>
+        <span class="label">What I built</span>
+        <p>An end-to-end pipeline that collects listings every day, normalises them into one clean model of make, model, version and year, and serves the result through dashboards and an AI assistant. I designed and built it, from scraping to the product a customer sees, and it was sold to a Brazilian car dealer.</p>
+      </div>
+    </div>
+
+    <figure class="diagram" aria-label="InfoCars data pipeline">
+      <svg viewBox="0 0 900 190" role="img" aria-labelledby="pipe-title">
+        <title id="pipe-title">Listing portals feed a scraping layer, then raw storage in PostgreSQL, then normalisation and modelling, then dashboards and the AI assistant.</title>
+        <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="head-a" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+        <rect class="box" x="10" y="55" width="140" height="80" rx="4"/>
+        <text class="t" x="80" y="88" text-anchor="middle">Listing portals</text>
+        <text class="s" x="80" y="108" text-anchor="middle">public car ads</text>
+        <rect class="box" x="190" y="55" width="140" height="80" rx="4"/>
+        <text class="t" x="260" y="88" text-anchor="middle">Collection</text>
+        <text class="s" x="260" y="108" text-anchor="middle">Python · Bright Data</text>
+        <rect class="box" x="370" y="55" width="140" height="80" rx="4"/>
+        <text class="t" x="440" y="88" text-anchor="middle">Raw layer</text>
+        <text class="s" x="440" y="108" text-anchor="middle">PostgreSQL</text>
+        <rect class="box-hl" x="550" y="55" width="140" height="80" rx="4"/>
+        <text class="t" x="620" y="88" text-anchor="middle">Normalised model</text>
+        <text class="s" x="620" y="108" text-anchor="middle">catalogue match</text>
+        <rect class="box" x="740" y="10" width="150" height="70" rx="4"/>
+        <text class="t" x="815" y="40" text-anchor="middle">Dashboards</text>
+        <text class="s" x="815" y="60" text-anchor="middle">Power BI</text>
+        <rect class="box" x="740" y="110" width="150" height="70" rx="4"/>
+        <text class="t" x="815" y="140" text-anchor="middle">AI assistant</text>
+        <text class="s" x="815" y="160" text-anchor="middle">Claude API · tools</text>
+        <path class="arrow" d="M150,95 L186,95" marker-end="url(#ah)"/>
+        <path class="arrow" d="M330,95 L366,95" marker-end="url(#ah)"/>
+        <path class="arrow" d="M510,95 L546,95" marker-end="url(#ah)"/>
+        <path class="arrow" d="M690,85 C715,85 715,45 736,45" marker-end="url(#ah)"/>
+        <path class="arrow" d="M690,105 C715,105 715,145 736,145" marker-end="url(#ah)"/>
+      </svg>
+    </figure>
+  </section>
+
+  <section aria-labelledby="how">
+    <div class="head">
+      <span class="label">How it works</span>
+      <h2 id="how">Four steps from a messy ad to a price</h2>
+    </div>
+    <div class="rows">
+      <div class="row"><h3>1 · Match each ad to a catalogue</h3><p>Sellers write the same car in many ways: "Onix 1.0 LT", "GM ONIX LT 22/23", "onix lt flex". The matcher cleans the text, matches aliases on whole words so "LT" never matches "LTZ", reads the model year from "22/23", and falls back to fuzzy matching for typos such as "Corola". In production this cut 5,114 model spellings to 641 real models and corrected 26,071 ads.</p></div>
+      <div class="row"><h3>2 · Drop bad prices</h3><p>Ads go out when the price is missing, out of range, or far from comparable cars. The most common error is a price typed without its last digit, which still looks like a plausible car price, so a fixed range does not catch it and a comparison with similar cars does.</p></div>
+      <div class="row"><h3>3 · Build market statistics</h3><p>For each version, year and state: median asking price, 25th and 75th percentiles, and median days on the site. An ad that disappears is treated as sold on its last day online. In production these were materialised views in PostgreSQL.</p></div>
+      <div class="row"><h3>4 · Answer the dealer</h3><p>Dashboards show what similar cars sell for, where a car sits against the market and which stock is priced out of line. The assistant answers the same questions in plain language.</p></div>
+      <div class="row"><h3>Result</h3><p>Comparing the dealer's own figures before and after adoption, the saving was about R$2,000 (roughly €300) per vehicle negotiation, and time in stock came down to one to three months.</p></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="ai">
+    <div class="head">
+      <span class="label">AI layer</span>
+      <h2 id="ai">Three designs for the pricing assistant</h2>
+      <p>The final model was chosen by running the same test questions against each design.</p>
+    </div>
+    <div class="versions">
+      <div class="ver"><span class="v">v1</span><h3>Function calling</h3><p>OpenAI and Grok models call predefined functions to fetch data. A test suite compares the models' answers on the same questions.</p></div>
+      <div class="ver"><span class="v">v2</span><h3>SQL agent</h3><p>The model writes SQL against the modelled tables, reading only from an approved list of tables.</p></div>
+      <div class="ver now"><span class="v">v3 · final</span><h3>Claude tool use</h3><p>Anthropic Claude API with tool use. Prompt caching on the system prompt and tool definitions keeps cost and latency down.</p></div>
+    </div>
+    <div class="rows">
+      <div class="row"><h3>Tools</h3><p>Three tools: <code>market_price</code>, <code>price_position</code> and a guarded <code>run_sql</code>. The system prompt and tool definitions are cached, because they are identical on every call.</p></div>
+      <div class="row"><h3>Guardrails</h3><p>SQL written by the model is checked before it runs: one SELECT only, approved tables only, no comments, and a row limit added. In production it also ran under a read-only database role.</p></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="run">
+    <div class="head">
+      <span class="label">Try it</span>
+      <h2 id="run">Run the demo in a minute</h2>
+      <p>The repository is a rebuilt sample written for this portfolio. It shows how the main parts worked on 1,200 synthetic listings, and does not contain the production code, real listings or the scraper. The demo uses SQLite, so it runs without a database server; the PostgreSQL schema, market views, quality checks and read-only role are in <code>sql/postgres/</code>.</p>
+    </div>
+    <pre class="cmd">git clone https://github.com/Alpralex/infocars-pricing-showcase
+cd infocars-pricing-showcase
+pip install -r requirements.txt
+python scripts/demo.py     # quality report, market price, price position
+pytest                     # 33 tests</pre>
+    <div class="links"><a href="https://github.com/Alpralex/infocars-pricing-showcase" target="_blank" rel="noopener">Open the repository ↗</a><a href="/">See the other projects →</a></div>
+  </section>
+
+  <footer class="contact" aria-label="Contact">
+    <div class="item">
+      <span class="label">Email</span>
+      <span class="val" id="email">rigonato.guilherme@gmail.com</span>
+      <button class="copy" id="copy-email" type="button">Copy email</button>
+    </div>
+    <div class="item">
+      <span class="label">LinkedIn</span>
+      <a class="val" href="https://www.linkedin.com/in/guilherme-rigonato-b41463116" target="_blank" rel="noopener">linkedin.com/in/guilherme-rigonato-b41463116</a>
+    </div>
+    <p class="note">Euro figures converted from Brazilian reais at about 6.5 BRL per euro.</p>
+  </footer>
+
+</main>
+
+<script>
+document.getElementById('copy-email').addEventListener('click', function () {
+  var btn = this, text = document.getElementById('email').textContent;
+  var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy email'; }, 1600); };
+  var fallback = function () {
+    var r = document.createRange(); r.selectNodeContents(document.getElementById('email'));
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+    btn.textContent = 'Selected, press Ctrl/⌘+C';
+  };
+  try { navigator.clipboard.writeText(text).then(done, fallback); } catch (e) { fallback(); }
+});
+</script>
+
+</html>
