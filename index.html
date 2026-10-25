@@ -1,67 +1,119 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-page="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Guilherme Rigonato</title>
-
-<meta name="description" content="Guilherme Rigonato, BI engineer in Lisbon: Power BI, Qlik Sense and SQL. Projects with code, and experience.">
+<title>Guilherme Rigonato · BI Engineer</title>
+<meta name="description" content="Guilherme Rigonato, BI engineer in Lisbon: Power BI, Qlik Sense and SQL. Projects with live reports, code and experience.">
+<link rel="alternate" hreflang="en" href="https://guilhermerigonato.com/">
+<link rel="alternate" hreflang="pt-PT" href="https://guilhermerigonato.com/pt/">
+<link rel="canonical" href="https://guilhermerigonato.com/">
+<meta property="og:title" content="Guilherme Rigonato · BI Engineer">
+<meta property="og:description" content="Guilherme Rigonato, BI engineer in Lisbon: Power BI, Qlik Sense and SQL. Projects with live reports, code and experience.">
+<meta property="og:image" content="https://guilhermerigonato.com/img/fpa.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Mono:wght@400&display=swap">
 <style>
-/* Layout: one left-aligned reading column, like a well-set CV. Rules separate entries; no cards, no badges. */
 :root {
-  --bg: #f7f8f9;
-  --ink: #1b2430;
-  --muted: #5d6876;
-  --rule: #dce0e5;
-  --accent: #1f5a85;
-  --panel: #ffffff;
+  --bg: #f7f8f9; --ink: #1b2430; --muted: #5d6876; --rule: #dce0e5; --accent: #1f5a85; --panel: #ffffff;
+  --bar: rgba(247, 248, 249, 0.92);
   --serif: "IBM Plex Serif", Georgia, "Times New Roman", serif;
   --sans: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --bg: #121519; --ink: #e3e7eb; --muted: #97a2ad; --rule: #2a3038; --accent: #86b6da; --panel: #181c21; color-scheme: dark; }
+  :root:not([data-theme="light"]) { --bg: #121519; --ink: #e3e7eb; --muted: #97a2ad; --rule: #2a3038; --accent: #86b6da; --panel: #181c21; --bar: rgba(18, 21, 25, 0.92); color-scheme: dark; }
 }
-:root[data-theme="dark"] { --bg: #121519; --ink: #e3e7eb; --muted: #97a2ad; --rule: #2a3038; --accent: #86b6da; --panel: #181c21; color-scheme: dark; }
+:root[data-theme="dark"] { --bg: #121519; --ink: #e3e7eb; --muted: #97a2ad; --rule: #2a3038; --accent: #86b6da; --panel: #181c21; --bar: rgba(18, 21, 25, 0.92); color-scheme: dark; }
 
-body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 1rem; line-height: 1.6; }
-.page {
-  max-width: 46rem; margin: 0 auto; padding-block: 3.5rem 4rem;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
-  display: grid; gap: 3rem;
-}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 4.5rem; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 1rem; line-height: 1.6; }
 h1, h2, h3 { margin: 0; text-wrap: balance; }
 h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(2rem, 5vw, 2.6rem); line-height: 1.15; }
 h2 { font-family: var(--serif); font-weight: 500; font-size: 1.35rem; line-height: 1.3; }
 h3 { font-size: 1.05rem; font-weight: 600; line-height: 1.4; }
-p, ul, ol { margin: 0; }
+p, ul { margin: 0; }
 a { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 a:hover { text-decoration-thickness: 2px; }
 a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
 .muted { color: var(--muted); }
 .small { font-size: 0.9rem; }
+.skip { position: absolute; left: -999px; top: 0.5rem; background: var(--panel); padding: 0.4rem 0.75rem; z-index: 20; }
+.skip:focus { left: 1rem; }
 
-header { display: grid; gap: 0.9rem; }
+/* Top bar: name, section links, language. Stays visible while scrolling. */
+.bar { position: sticky; top: 0; z-index: 10; background: var(--bar); backdrop-filter: saturate(1.4) blur(8px); -webkit-backdrop-filter: saturate(1.4) blur(8px); border-bottom: 1px solid var(--rule); }
+.bar-in { max-width: 62rem; margin: 0 auto; padding: 0.65rem max(16px, env(safe-area-inset-left, 0px)); display: flex; align-items: center; gap: 0.5rem 1.5rem; flex-wrap: wrap; }
+.brand { font-family: var(--serif); font-weight: 600; font-size: 1.05rem; color: var(--ink); text-decoration: none; margin-right: auto; }
+.nav { display: flex; gap: 1.25rem; font-size: 0.95rem; }
+.nav a { color: var(--muted); text-decoration: none; padding-block: 0.2rem; border-bottom: 2px solid transparent; }
+.nav a:hover { color: var(--ink); }
+.nav a[aria-current="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.lang { font-size: 0.9rem; border: 1px solid var(--rule); border-radius: 3px; padding: 0.15rem 0.6rem; text-decoration: none; color: var(--ink); }
+.lang:hover { border-color: var(--accent); }
+@media (max-width: 640px) {
+  .bar-in { gap: 0.35rem 1rem; }
+  .nav { order: 3; width: 100%; overflow-x: auto; gap: 1.1rem; scrollbar-width: none; }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a { white-space: nowrap; }
+}
+
+.page { max-width: 62rem; margin: 0 auto; padding: 3rem max(16px, env(safe-area-inset-left, 0px)) 4rem; display: grid; gap: 3.5rem; }
+.narrow { max-width: 46rem; }
+
+header.hero { display: grid; gap: 0.9rem; }
 .role { font-size: 1.1rem; font-weight: 500; }
 .intro { max-width: 62ch; }
 .facts { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; color: var(--muted); font-size: 0.92rem; }
-.links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; font-size: 0.95rem; }
+.cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.4rem; }
+.btn { display: inline-block; font: inherit; font-size: 0.95rem; font-weight: 500; padding: 0.45rem 1rem; border-radius: 3px; text-decoration: none; border: 1px solid var(--accent); }
+.btn.primary { background: var(--accent); color: var(--bg); }
+.btn.primary:hover { filter: brightness(1.1); }
+.btn.ghost { color: var(--accent); background: transparent; }
+.btn.ghost:hover { background: color-mix(in srgb, var(--accent) 8%, transparent); }
 
 section { display: grid; gap: 1.25rem; }
-.list { display: grid; border-top: 1px solid var(--rule); }
-.entry { display: grid; gap: 0.5rem; padding-block: 1.25rem; border-bottom: 1px solid var(--rule); }
-.entry > * { min-width: 0; }
-.entry .top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.75rem; }
+.sec-head { display: grid; gap: 0.4rem; }
+.links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; font-size: 0.95rem; }
+
+/* Tool filter: a plain segmented control, not chips. */
+.filters { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; padding-block: 0.75rem; border-block: 1px solid var(--rule); }
+.filters .label { font-size: 0.9rem; color: var(--muted); }
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--rule); border-radius: 3px; overflow: hidden; }
+.seg button { font: inherit; font-size: 0.9rem; color: var(--ink); background: var(--panel); border: 0; border-right: 1px solid var(--rule); padding: 0.3rem 0.8rem; cursor: pointer; }
+.seg button:last-child { border-right: 0; }
+.seg button:hover { color: var(--accent); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--bg); }
+.count { font-size: 0.88rem; color: var(--muted); margin-left: auto; font-variant-numeric: tabular-nums; }
+
+.list { display: grid; }
+.proj { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 22rem); gap: 1rem 2rem; padding-block: 1.5rem; border-bottom: 1px solid var(--rule); align-items: start; }
+.proj[hidden] { display: none; }
+.proj .body { display: grid; gap: 0.5rem; min-width: 0; }
+.proj .top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.75rem; }
 .status { font-size: 0.85rem; color: var(--muted); }
-.entry ul { padding-left: 1.1rem; display: grid; gap: 0.15rem; }
-.entry li { font-variant-numeric: tabular-nums; }
+.proj ul { padding-left: 1.1rem; display: grid; gap: 0.15rem; }
+.proj li { font-variant-numeric: tabular-nums; }
 .stack { font-size: 0.88rem; color: var(--muted); }
+.shot { display: block; border: 1px solid var(--rule); border-radius: 3px; overflow: hidden; background: var(--panel); line-height: 0; }
+.shot img { width: 100%; height: auto; aspect-ratio: 1100 / 626; object-fit: cover; object-position: top left; transition: transform 0.25s ease; }
+.shot:hover { border-color: var(--accent); }
+.shot:hover img { transform: scale(1.02); }
+@media (prefers-reduced-motion: reduce) { .shot img { transition: none; } }
+@media (max-width: 760px) {
+  .proj { grid-template-columns: 1fr; }
+  .proj .shot { order: -1; }
+}
+
+.prod { display: grid; }
+.prod article { display: grid; gap: 0.4rem; padding-block: 1.1rem; border-bottom: 1px solid var(--rule); }
+.prod article:first-child { border-top: 1px solid var(--rule); }
 
 .job { display: grid; grid-template-columns: 7.5rem 1fr; gap: 0.25rem 1.5rem; padding-block: 1rem; border-bottom: 1px solid var(--rule); }
+.job:first-child { border-top: 1px solid var(--rule); }
 .job > * { min-width: 0; }
 .job .when { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 0.92rem; padding-top: 0.05rem; }
 .job div { display: grid; gap: 0.2rem; }
@@ -72,185 +124,192 @@ section { display: grid; gap: 1.25rem; }
 .skills p > * { min-width: 0; }
 @media (max-width: 560px) { .skills p { grid-template-columns: 1fr; gap: 0; } }
 
-footer { display: grid; gap: 0.75rem; padding-top: 1.25rem; border-top: 1px solid var(--ink); }
+#contact { padding-top: 1.25rem; border-top: 1px solid var(--ink); }
 .contact { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; align-items: baseline; }
 .email { font-family: var(--mono); font-size: 0.92rem; user-select: all; overflow-wrap: anywhere; }
 button.copy { font: inherit; font-size: 0.85rem; color: var(--accent); background: none; border: 1px solid var(--rule); border-radius: 3px; padding: 0.1rem 0.5rem; cursor: pointer; margin-left: 0.5rem; }
 button.copy:hover { border-color: var(--accent); }
-
-/* Case-study page */
-.steps { padding-left: 1.25rem; display: grid; gap: 1rem; }
-.steps li::marker { color: var(--muted); }
-.figure { margin: 0; background: var(--panel); border: 1px solid var(--rule); padding: 1rem; overflow-x: auto; }
-.figure svg { display: block; min-width: 680px; width: 100%; height: auto; }
-.figure .box { fill: var(--bg); stroke: var(--rule); }
-.figure .box-hl { fill: var(--bg); stroke: var(--accent); stroke-width: 1.5; }
-.figure .t { fill: var(--ink); font-family: var(--sans); font-size: 14px; font-weight: 600; }
-.figure .s { fill: var(--muted); font-family: var(--sans); font-size: 11.5px; }
-.figure .arrow { stroke: var(--muted); stroke-width: 1.25; fill: none; }
-.figure .head-a { fill: var(--muted); }
-pre { margin: 0; background: var(--panel); border: 1px solid var(--rule); padding: 1rem; overflow-x: auto; font-family: var(--mono); font-size: 0.85rem; line-height: 1.7; }
-code { font-family: var(--mono); font-size: 0.88em; }
-.kv { display: grid; grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); gap: 1rem 1.5rem; border-block: 1px solid var(--rule); padding-block: 1rem; }
-.kv div { display: grid; gap: 0.1rem; min-width: 0; }
-.kv b { font-family: var(--serif); font-weight: 500; font-size: 1.35rem; font-variant-numeric: tabular-nums; }
-.kv span { font-size: 0.88rem; color: var(--muted); }
 </style>
-
-<main class="page">
-
-  <header>
-    <h1>Guilherme Rigonato</h1>
-    <p class="role">BI Engineer · Power BI, Qlik Sense, SQL</p>
-    <p class="intro">Ten years building BI in Qlik Sense and Power BI. Seven of them were in sales leadership at a veterinary distributor, where I used the reports I built to run sales, pricing and cash. I work across the stack: source data, SQL, the data model and the dashboard.</p>
-    <p class="facts"><span>Lisbon from December 2026</span><span>No visa sponsorship required</span><span>Full-time</span><span>English and Portuguese</span></p>
-  </header>
-
-  <section aria-labelledby="projects">
-    <h2 id="projects">Projects</h2>
-    <div class="list">
-      <article class="entry">
-        <div class="top"><h3>Where a 10-store retailer loses sales</h3></div>
-        <p>Five years of daily Walmart sales from the public M5 data set, modelled in dbt and DuckDB, with the winning M5 forecast checked against actual sales.</p>
-        <ul>
-          <li>47.7 million rows in a tested star schema: 13 models, 17 data tests</li>
-          <li>Forecast error of 5% per store and day, 75% per item and day</li>
-          <li>Suspected stock-outs cost about $0.79M a year, 80% of it in Foods</li>
-        </ul>
-        <p class="stack">SQL, dbt, DuckDB, Power BI, DAX</p>
-        <p class="links"><a href="/5-retail-bi/">Dashboard</a><a href="https://github.com/Alpralex/5-retail-bi/tree/main/powerbi" target="_blank" rel="noopener">Power BI model</a><a href="https://github.com/Alpralex/5-retail-bi" target="_blank" rel="noopener">Code</a></p>
-      </article>
-      <article class="entry">
-        <div class="top"><h3>Budget vs actual for a four-country group</h3></div>
-        <p>FP&amp;A for a fictional industrial distributor in Portugal, Spain, France and the UK: budget, the 9+3 reforecast, an EBITDA bridge and a price-volume-mix split, on a double-entry ledger with planted stories.</p>
-        <ul>
-          <li>EBITDA 5.7% above budget, but only because Portugal raised prices; without it the group is 15% below</li>
-          <li>Sterling at 1.15 against a budget rate of 1.19 cost €0.36M of UK sales</li>
-          <li>67 tests check that journals balance and both bridges add up to the cent</li>
-        </ul>
-        <p class="stack">SQL, dbt, DuckDB, Power BI, DAX, row-level security, Qlik Sense</p>
-        <p class="links"><a href="/finance-fpa-analytics/">Dashboard</a><a href="https://app.powerbi.com/view?r=eyJrIjoiMjMwNTVhNGYtMmYzNi00ZmMwLTg3NTUtNjNhN2NiMjQzODhlIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Power BI report</a><a href="https://github.com/Alpralex/finance-fpa-analytics" target="_blank" rel="noopener">Code</a></p>
-      </article>
-      <article class="entry">
-        <div class="top"><h3>Where Portugal's public procurement money goes</h3></div>
-        <p>Spend analytics on 1.55 million public contracts from Portal BASE, 2019 to 2026: who buys, how, from whom and at what price against the base price.</p>
-        <ul>
-          <li>Direct awards are half of all contracts but 17% of the value</li>
-          <li>Three to six times more contracts just below the legal limits than just above</li>
-          <li>43% of prior consultations receive a single bid; no private person is ever named</li>
-        </ul>
-        <p class="stack">SQL, dbt, DuckDB, Power BI, DAX, Qlik Sense</p>
-        <p class="links"><a href="/public-procurement-pt/">Dashboard</a><a href="https://app.powerbi.com/view?r=eyJrIjoiZDliMmM5ZDAtOTRjYS00M2ZmLWJjNmMtNmJkZjAwNjU1NjEzIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Power BI report</a><a href="https://github.com/Alpralex/public-procurement-pt-" target="_blank" rel="noopener">Code</a></p>
-      </article>
-      <article class="entry">
-        <div class="top"><h3>InfoCars: used-car pricing for dealers</h3></div>
-        <p>A product I built and sold at Informar Dados. Car ads are collected every day, matched to a catalogue of models and turned into market prices for a dealer.</p>
-        <ul>
-          <li>About 250,000 listings modelled in PostgreSQL</li>
-          <li>5,114 model spellings reduced to 641 real models</li>
-          <li>About €300 saved per negotiation at the dealer</li>
-        </ul>
-        <p class="stack">SQL, PostgreSQL, Python, Power BI, Claude API</p>
-        <p class="links"><a href="/infocars/">Case study</a><a href="https://app.powerbi.com/view?r=eyJrIjoiMTYxODFjYTUtYjZmOC00NDQ5LTgxZmQtNDA5Y2I5YmMzMDdlIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Power BI report</a><a href="https://github.com/Alpralex/infocars-pricing-showcase" target="_blank" rel="noopener">Code</a></p>
-      </article>
-      <article class="entry">
-        <div class="top"><h3>Fact-checking Portugal's 2027 budget debate</h3><span class="status">Preview</span></div>
-        <p>Claims made in Parliament, checked against Eurostat, INE, Banco de Portugal and the Public Finance Council. The page is in Portuguese.</p>
-        <ul>
-          <li>Forecasts compared with the range of five independent institutions</li>
-          <li>The same rules for every party, checked by the build</li>
-          <li>Full check of the 27–28 October debate published by 31 October</li>
-        </ul>
-        <p class="stack">Python, public APIs, HTML and JavaScript</p>
-        <p class="links"><a href="/oe2027-fact-check/">Preview</a><a href="https://github.com/Alpralex/oe2027-fact-check" target="_blank" rel="noopener">Code</a></p>
-      </article>
-      <article class="entry">
-        <div class="top"><h3>Sales director app for a distributor</h3></div>
-        <p>Sales, rep visits, discounts and receivables for an animal-health distributor in Portugal, on synthetic data whose generator and rules are public.</p>
-        <ul>
-          <li>The South fell 16.5% after one of its reps left and visits halved</li>
-          <li>One rep gives 15% discount against about 6% for the rest</li>
-          <li>225 customers with no visit in 60 days bought €5.4M in the last year</li>
-        </ul>
-        <p class="stack">SQL, dbt, DuckDB, Power BI, DAX, Qlik Sense, set analysis</p>
-        <p class="links"><a href="/commercial-analytics/">Dashboard</a><a href="https://app.powerbi.com/view?r=eyJrIjoiOWFmNmE3ZDctOTIyZS00ODM1LWFmMTgtMzBlMmMxZTkyNWQzIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Power BI report</a><a href="https://github.com/Alpralex/commercial-analytics" target="_blank" rel="noopener">Code</a></p>
-      </article>
-      <article class="entry">
-        <div class="top"><h3>Housing affordability in Portugal</h3></div>
-        <p>House prices and incomes in Portugal and six EU countries, from Eurostat, in the same dbt and DuckDB pipeline as the retail project.</p>
-        <ul>
-          <li>From 2015 to 2024, house prices rose 124% and median income 65%</li>
-          <li>Price-to-income index of 136 (2015 = 100), against 106 for the EU</li>
-        </ul>
-        <p class="stack">SQL, dbt, DuckDB, Eurostat API, Power BI, Qlik Sense</p>
-        <p class="links"><a href="/pt-housing-analytics/">Dashboard</a><a href="https://app.powerbi.com/view?r=eyJrIjoiN2Q5OTgwNDgtMTE0YS00MTIwLTkyZTAtZDE0MWZjYmIwYjAwIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Power BI report</a><a href="https://github.com/Alpralex/pt-housing-analytics." target="_blank" rel="noopener">Code</a></p>
-      </article>
-    </div>
-  </section>
-
-  <section aria-labelledby="prod">
-    <h2 id="prod">Work on company data</h2>
-    <p class="muted">These ran in production on private data, so they are described rather than linked.</p>
-    <div class="list">
-      <article class="entry">
-        <h3>Inventory quality for a home-goods retailer</h3>
-        <p>Purchasing, replenishment of 17 stores and shelf availability in one Qlik app. Forecast accuracy was tracked with bias and MAPE so buyers could see where the forecast drifted.</p>
-        <p class="stack">Qlik Sense, SQL · Rover, 2023–2024</p>
-      </article>
-      <article class="entry">
-        <h3>Seven core apps for a veterinary distributor</h3>
-        <p>Sales, four business-segment apps, a daily cash-flow projection and sales-rep visit tracking, on Oracle, used by the company's 10 managers. I later rebuilt them in Power BI to compare, and kept Qlik for its performance on Oracle.</p>
-        <p class="stack">Qlik Sense, Power BI, Oracle SQL · Central Veterinária, 2015–2023</p>
-      </article>
-    </div>
-  </section>
-
-  <section aria-labelledby="exp">
-    <h2 id="exp">Experience</h2>
-    <div class="list">
-      <div class="job"><span class="when">2024 – now</span><div><h3>Co-founder and Data Engineer · Informar Dados</h3><p>Data and analytics consultancy. Built InfoCars end to end.</p></div></div>
-      <div class="job"><span class="when">2023 – 2024</span><div><h3>Data Engineer · Rover</h3><p>IT and analytics consultancy. Built the Qlik inventory-quality app for a home-goods retailer.</p></div></div>
-      <div class="job"><span class="when">2019 – 2023</span><div><h3>Commercial Director · Central Veterinária</h3><p>Led the commercial area and hit the commercial targets in all four years. Kept developing the company's seven Qlik apps.</p></div></div>
-      <div class="job"><span class="when">2016 – 2019</span><div><h3>Commercial Manager, pet segment · Central Veterinária</h3><p>Ran the pet segment with a team of 10: visits to veterinarians, sales in clinic shops, purchasing, pricing and customer coverage.</p></div></div>
-      <div class="job"><span class="when">2015 – 2016</span><div><h3>BI Analyst · Central Veterinária</h3><p>Data models and Qlik dashboards for the commercial team.</p></div></div>
-      <div class="job"><span class="when">Education</span><div><h3>BSc Business Administration · UFU</h3><p>Postgraduate in Enterprise Data Science and Analytics at NOVA IMS, Lisbon, from February 2027, evening classes.</p></div></div>
-    </div>
-  </section>
-
-  <section aria-labelledby="skills">
-    <h2 id="skills">Skills</h2>
-    <div class="skills">
-      <p><span class="muted">BI</span><span>Qlik Sense, Power BI, DAX, Power Query, set analysis, data modelling</span></p>
-      <p><span class="muted">Data</span><span>SQL, PostgreSQL, Oracle, dbt, DuckDB, Python</span></p>
-      <p><span class="muted">AI</span><span>Claude API, tool use, text-to-SQL</span></p>
-    </div>
-  </section>
-
-  <footer>
-    <div class="contact">
-      <p><span class="email" id="email">rigonato.guilherme@gmail.com</span><button class="copy" id="copy-email" type="button">Copy</button></p>
-      <a href="https://www.linkedin.com/in/guilherme-rigonato-b41463116" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="https://github.com/Alpralex" target="_blank" rel="noopener">GitHub</a>
-    </div>
-    <p class="muted small">Euro figures converted from Brazilian reais at about 6.5 BRL per euro.</p>
-  </footer>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="bar"><div class="bar-in">
+<a class="brand" href="/">Guilherme Rigonato</a>
+<nav class="nav" aria-label="Sections"><a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#skills">Skills</a><a href="#contact">Contact</a></nav>
+<a class="lang" href="/pt/" hreflang="pt-PT" lang="pt-PT" data-to="pt" aria-label="Ler em português">Português</a>
+</div></div>
+<main class="page" id="main">
+<header class="hero narrow">
+<h1>Guilherme Rigonato</h1>
+<p class="role">BI Engineer · Power BI, Qlik Sense, SQL</p>
+<p class="intro">Ten years building BI in Qlik Sense and Power BI. Seven of them were in sales leadership at a veterinary distributor, where I used the reports I built to run sales, pricing and cash. I work across the stack: source data, SQL, the data model and the dashboard.</p>
+<p class="facts"><span>Lisbon from December 2026</span><span>No visa sponsorship required</span><span>Full-time</span><span>English and Portuguese</span></p>
+<p class="cta"><a class="btn primary" href="#projects">See the projects</a><a class="btn ghost" href="#contact">Contact me</a></p>
+</header>
+<section id="projects" aria-labelledby="h-projects">
+<div class="sec-head narrow"><h2 id="h-projects">Projects</h2><p class="muted">Every project has its code on GitHub. Most share one model in dbt that feeds a web dashboard, a Power BI report and a Qlik Sense app.</p></div>
+<div class="filters"><span class="label" id="filter-label">Show projects that use</span>
+<div class="seg" role="group" aria-labelledby="filter-label"><button type="button" data-key="all" aria-pressed="true">All</button><button type="button" data-key="powerbi" aria-pressed="false">Power BI</button><button type="button" data-key="qlik" aria-pressed="false">Qlik Sense</button><button type="button" data-key="sql" aria-pressed="false">SQL and dbt</button></div>
+<span class="count" id="count" aria-live="polite" data-tpl="{n} of {t} projects">7 of 7 projects</span></div>
+<div class="list">
+<article class="proj" data-tags="powerbi sql python">
+<div class="body">
+<div class="top"><h3>Where a 10-store retailer loses sales</h3></div>
+<p>Five years of daily Walmart sales from the public M5 data set, modelled in dbt and DuckDB, with the winning M5 forecast checked against actual sales.</p>
+<ul><li>47.7 million rows in a tested star schema: 13 models, 17 data tests</li><li>Forecast error of 5% per store and day, 75% per item and day</li><li>Suspected stock-outs cost about $0.79M a year, 80% of it in Foods</li></ul>
+<p class="stack">SQL, dbt, DuckDB, Python, Power BI, DAX</p>
+<p class="links"><a href="/5-retail-bi/">Web dashboard</a><a href="https://github.com/Alpralex/5-retail-bi/tree/main/powerbi" target="_blank" rel="noopener">Power BI model</a><a href="https://github.com/Alpralex/5-retail-bi" target="_blank" rel="noopener">Code</a></p>
+</div>
+<a class="shot" href="/5-retail-bi/" aria-label="Open web dashboard: Where a 10-store retailer loses sales"><img src="/img/m5.webp" alt="Where a 10-store retailer loses sales: Web dashboard" width="1100" height="626" loading="lazy" decoding="async"></a>
+</article>
+<article class="proj" data-tags="powerbi qlik sql python">
+<div class="body">
+<div class="top"><h3>Budget vs actual for a four-country group</h3></div>
+<p>FP&amp;A for a fictional industrial distributor in Portugal, Spain, France and the UK: budget, the 9+3 reforecast, an EBITDA bridge and a price-volume-mix split, on a double-entry ledger.</p>
+<ul><li>EBITDA 5.7% above budget, but only because Portugal raised prices; without it the group is 15% below</li><li>Sterling at 1.15 against a budget rate of 1.19 cost €0.36M of UK sales</li><li>67 tests check that journals balance and both bridges add up to the cent</li></ul>
+<p class="stack">SQL, dbt, DuckDB, Python, Power BI, DAX, row-level security, Qlik Sense</p>
+<p class="links"><a href="https://app.powerbi.com/view?r=eyJrIjoiMjMwNTVhNGYtMmYzNi00ZmMwLTg3NTUtNjNhN2NiMjQzODhlIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Power BI report</a><a href="/finance-fpa-analytics/">Web dashboard</a><a href="https://github.com/Alpralex/finance-fpa-analytics" target="_blank" rel="noopener">Code</a></p>
+</div>
+<a class="shot" href="https://app.powerbi.com/view?r=eyJrIjoiMjMwNTVhNGYtMmYzNi00ZmMwLTg3NTUtNjNhN2NiMjQzODhlIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener" aria-label="Open power bi report: Budget vs actual for a four-country group"><img src="/img/fpa.webp" alt="Budget vs actual for a four-country group: Power BI report" width="1100" height="626" loading="lazy" decoding="async"></a>
+</article>
+<article class="proj" data-tags="powerbi qlik sql python">
+<div class="body">
+<div class="top"><h3>Where Portugal&#x27;s public procurement money goes</h3></div>
+<p>Spend analytics on 1.55 million public contracts from Portal BASE, 2019 to 2026: who buys, how, from whom and at what price against the base price.</p>
+<ul><li>Direct awards are half of all contracts but 17% of the value</li><li>Three to six times more contracts just below the legal limits than just above</li><li>43% of prior consultations receive a single bid; no private person is ever named</li></ul>
+<p class="stack">SQL, dbt, DuckDB, Python, Power BI, DAX, Qlik Sense</p>
+<p class="links"><a href="https://app.powerbi.com/view?r=eyJrIjoiZDliMmM5ZDAtOTRjYS00M2ZmLWJjNmMtNmJkZjAwNjU1NjEzIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Power BI report</a><a href="/public-procurement-pt/">Web dashboard</a><a href="https://github.com/Alpralex/public-procurement-pt-" target="_blank" rel="noopener">Code</a></p>
+</div>
+<a class="shot" href="https://app.powerbi.com/view?r=eyJrIjoiZDliMmM5ZDAtOTRjYS00M2ZmLWJjNmMtNmJkZjAwNjU1NjEzIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener" aria-label="Open power bi report: Where Portugal&#x27;s public procurement money goes"><img src="/img/procurement.webp" alt="Where Portugal&#x27;s public procurement money goes: Power BI report" width="1100" height="626" loading="lazy" decoding="async"></a>
+</article>
+<article class="proj" data-tags="powerbi qlik sql python">
+<div class="body">
+<div class="top"><h3>InfoCars: used-car pricing for dealers</h3></div>
+<p>A product I built and sold at Informar Dados. Car ads are collected every day, matched to a catalogue of models and turned into market prices for a dealer.</p>
+<ul><li>About 250,000 listings modelled in PostgreSQL</li><li>5,114 model spellings reduced to 641 real models</li><li>About €300 saved per negotiation at the dealer</li></ul>
+<p class="stack">SQL, PostgreSQL, Python, dbt, Power BI, Qlik Sense, Claude API</p>
+<p class="links"><a href="https://app.powerbi.com/view?r=eyJrIjoiMTYxODFjYTUtYjZmOC00NDQ5LTgxZmQtNDA5Y2I5YmMzMDdlIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Power BI report</a><a href="/infocars/">Case study</a><a href="https://github.com/Alpralex/infocars-pricing-showcase" target="_blank" rel="noopener">Code</a></p>
+</div>
+<a class="shot" href="https://app.powerbi.com/view?r=eyJrIjoiMTYxODFjYTUtYjZmOC00NDQ5LTgxZmQtNDA5Y2I5YmMzMDdlIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener" aria-label="Open power bi report: InfoCars: used-car pricing for dealers"><img src="/img/infocars.webp" alt="InfoCars: used-car pricing for dealers: Power BI report" width="1100" height="626" loading="lazy" decoding="async"></a>
+</article>
+<article class="proj" data-tags="powerbi qlik sql python">
+<div class="body">
+<div class="top"><h3>Sales director app for a distributor</h3></div>
+<p>Sales, rep visits, discounts and receivables for an animal-health distributor in Portugal, on synthetic data whose generator and rules are public.</p>
+<ul><li>The South fell 16.5% after one of its reps left and visits halved</li><li>One rep gives 15% discount against about 6% for the rest</li><li>225 customers with no visit in 60 days bought €5.4M in the last year</li></ul>
+<p class="stack">SQL, dbt, DuckDB, Python, Power BI, DAX, Qlik Sense, set analysis</p>
+<p class="links"><a href="https://app.powerbi.com/view?r=eyJrIjoiOWFmNmE3ZDctOTIyZS00ODM1LWFmMTgtMzBlMmMxZTkyNWQzIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Power BI report</a><a href="/commercial-analytics/">Web dashboard</a><a href="https://github.com/Alpralex/commercial-analytics" target="_blank" rel="noopener">Code</a></p>
+</div>
+<a class="shot" href="https://app.powerbi.com/view?r=eyJrIjoiOWFmNmE3ZDctOTIyZS00ODM1LWFmMTgtMzBlMmMxZTkyNWQzIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener" aria-label="Open power bi report: Sales director app for a distributor"><img src="/img/commercial.webp" alt="Sales director app for a distributor: Power BI report" width="1100" height="626" loading="lazy" decoding="async"></a>
+</article>
+<article class="proj" data-tags="powerbi qlik sql python">
+<div class="body">
+<div class="top"><h3>Housing affordability in Portugal</h3></div>
+<p>House prices and incomes in Portugal and six EU countries, from Eurostat, in the same dbt and DuckDB pipeline as the retail project.</p>
+<ul><li>From 2015 to 2024, house prices rose 124% and median income 65%</li><li>Price-to-income index of 136 (2015 = 100), against 106 for the EU</li></ul>
+<p class="stack">SQL, dbt, DuckDB, Python, Eurostat API, Power BI, Qlik Sense</p>
+<p class="links"><a href="https://app.powerbi.com/view?r=eyJrIjoiN2Q5OTgwNDgtMTE0YS00MTIwLTkyZTAtZDE0MWZjYmIwYjAwIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Power BI report</a><a href="/pt-housing-analytics/">Web dashboard</a><a href="https://github.com/Alpralex/pt-housing-analytics." target="_blank" rel="noopener">Code</a></p>
+</div>
+<a class="shot" href="https://app.powerbi.com/view?r=eyJrIjoiN2Q5OTgwNDgtMTE0YS00MTIwLTkyZTAtZDE0MWZjYmIwYjAwIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener" aria-label="Open power bi report: Housing affordability in Portugal"><img src="/img/housing.webp" alt="Housing affordability in Portugal: Power BI report" width="1100" height="626" loading="lazy" decoding="async"></a>
+</article>
+<article class="proj" data-tags="python">
+<div class="body">
+<div class="top"><h3>Fact-checking Portugal&#x27;s 2027 budget debate</h3><span class="status">Preview</span></div>
+<p>Claims made in Parliament, checked against Eurostat, INE, Banco de Portugal and the Public Finance Council. The page is in Portuguese.</p>
+<ul><li>Forecasts compared with the range of five independent institutions</li><li>The same rules for every party, checked by the build</li><li>Full check of the 27–28 October debate published by 31 October</li></ul>
+<p class="stack">Python, public APIs, HTML, JavaScript</p>
+<p class="links"><a href="/oe2027-fact-check/">Preview</a><a href="https://github.com/Alpralex/oe2027-fact-check" target="_blank" rel="noopener">Code</a></p>
+</div>
+<a class="shot" href="/oe2027-fact-check/" aria-label="Open preview: Fact-checking Portugal&#x27;s 2027 budget debate"><img src="/img/oe2027.webp" alt="Fact-checking Portugal&#x27;s 2027 budget debate: Preview" width="1100" height="626" loading="lazy" decoding="async"></a>
+</article>
+</div>
+</section>
+<section aria-labelledby="h-prod" class="narrow">
+<div class="sec-head"><h2 id="h-prod">Work on company data</h2><p class="muted">These ran in production on private data, so they are described rather than linked.</p></div>
+<div class="prod">
+<article><h3>Inventory quality for a home-goods retailer</h3><p>Purchasing, replenishment of 17 stores and shelf availability in one Qlik app. Forecast accuracy was tracked with bias and MAPE so buyers could see where the forecast drifted.</p><p class="stack">Qlik Sense, SQL · Rover, 2023–2024</p></article>
+<article><h3>Seven core apps for a veterinary distributor</h3><p>Sales, four business-segment apps, a daily cash-flow projection and sales-rep visit tracking, on Oracle, used by the company&#x27;s 10 managers. I later rebuilt them in Power BI to compare, and kept Qlik for its performance on Oracle.</p><p class="stack">Qlik Sense, Power BI, Oracle SQL · Central Veterinária, 2015–2023</p></article>
+</div></section>
+<section id="experience" aria-labelledby="h-exp" class="narrow">
+<h2 id="h-exp">Experience</h2><div>
+<div class="job"><span class="when">2024 – now</span><div><h3>Co-founder and Data Engineer · Informar Dados</h3><p>Data and analytics consultancy. Built InfoCars end to end.</p></div></div>
+<div class="job"><span class="when">2023 – 2024</span><div><h3>Data Engineer · Rover</h3><p>IT and analytics consultancy. Built the Qlik inventory-quality app for a home-goods retailer.</p></div></div>
+<div class="job"><span class="when">2019 – 2023</span><div><h3>Commercial Director · Central Veterinária</h3><p>Led the commercial area and hit the commercial targets in all four years. Kept developing the company&#x27;s seven Qlik apps.</p></div></div>
+<div class="job"><span class="when">2016 – 2019</span><div><h3>Commercial Manager, pet segment · Central Veterinária</h3><p>Ran the pet segment with a team of 10: visits to veterinarians, sales in clinic shops, purchasing, pricing and customer coverage.</p></div></div>
+<div class="job"><span class="when">2015 – 2016</span><div><h3>BI Analyst · Central Veterinária</h3><p>Data models and Qlik dashboards for the commercial team.</p></div></div>
+<div class="job"><span class="when">Education</span><div><h3>BSc Business Administration · UFU</h3><p>Postgraduate in Enterprise Data Science and Analytics at NOVA IMS, Lisbon, from February 2027, evening classes.</p></div></div>
+</div></section>
+<section id="skills" aria-labelledby="h-skills" class="narrow">
+<h2 id="h-skills">Skills</h2><div class="skills">
+<p><span class="muted">BI</span><span>Qlik Sense, Power BI, DAX, Power Query, set analysis, data modelling</span></p>
+<p><span class="muted">Data</span><span>SQL, PostgreSQL, Oracle, dbt, DuckDB, Python</span></p>
+<p><span class="muted">AI</span><span>Claude API, tool use, text-to-SQL</span></p>
+</div></section>
+<section id="contact" aria-labelledby="h-contact" class="narrow">
+<h2 id="h-contact">Contact</h2>
+<p class="muted">Based in Lisbon from December 2026. Email or LinkedIn both reach me.</p>
+<div class="contact">
+<p><span class="email" id="email">rigonato.guilherme@gmail.com</span><button class="copy" id="copy-email" type="button" data-label="Copy" data-done="Copied" data-sel="Selected">Copy</button></p>
+<a href="https://www.linkedin.com/in/guilherme-rigonato-b41463116" target="_blank" rel="noopener">LinkedIn</a>
+<a href="https://github.com/Alpralex" target="_blank" rel="noopener">GitHub</a>
+</div>
+<p class="muted small">Euro figures converted from Brazilian reais at about 6.5 BRL per euro.</p>
+</section>
 </main>
-
 <script>
 (function () {
+  // Remember the language the visitor picked; the English home sends a returning Portuguese reader to /pt/.
+  var page = document.documentElement.getAttribute('data-page');
+  try {
+    document.querySelectorAll('a.lang').forEach(function (a) {
+      a.addEventListener('click', function () { localStorage.setItem('lang', a.getAttribute('data-to')); });
+    });
+    if (page === 'en' && localStorage.getItem('lang') === 'pt' && !/[?&]lang=en/.test(location.search)) location.replace('/pt/');
+  } catch (e) {}
+
+  // Tool filter.
+  var buttons = document.querySelectorAll('.seg button');
+  var items = document.querySelectorAll('.proj');
+  var count = document.getElementById('count');
+  var tpl = count ? count.getAttribute('data-tpl') : '';
+  function apply(key) {
+    var n = 0;
+    items.forEach(function (el) {
+      var show = key === 'all' || (' ' + el.getAttribute('data-tags') + ' ').indexOf(' ' + key + ' ') >= 0;
+      el.hidden = !show; if (show) n++;
+    });
+    buttons.forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-key') === key ? 'true' : 'false'); });
+    if (count) count.textContent = tpl.replace('{n}', n).replace('{t}', items.length);
+  }
+  buttons.forEach(function (b) { b.addEventListener('click', function () { apply(b.getAttribute('data-key')); }); });
+
+  // Highlight the section in view.
+  var links = {};
+  document.querySelectorAll('.nav a').forEach(function (a) { links[a.getAttribute('href').slice(1)] = a; });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        Object.keys(links).forEach(function (id) { links[id].removeAttribute('aria-current'); });
+        if (links[en.target.id]) links[en.target.id].setAttribute('aria-current', 'true');
+      });
+    }, { rootMargin: '-35% 0px -60% 0px' });
+    Object.keys(links).forEach(function (id) { var s = document.getElementById(id); if (s) io.observe(s); });
+  }
+
+  // Copy e-mail.
   var btn = document.getElementById('copy-email');
-  if (!btn) return;
-  btn.addEventListener('click', function () {
+  if (btn) btn.addEventListener('click', function () {
     var el = document.getElementById('email'), text = el.textContent;
-    var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1600); };
+    var done = function () { btn.textContent = btn.getAttribute('data-done'); setTimeout(function () { btn.textContent = btn.getAttribute('data-label'); }, 1600); };
     var fallback = function () {
       var r = document.createRange(); r.selectNodeContents(el);
       var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
-      btn.textContent = 'Selected';
+      btn.textContent = btn.getAttribute('data-sel');
     };
     try { navigator.clipboard.writeText(text).then(done, fallback); } catch (e) { fallback(); }
   });
 })();
 </script>
-
+</body>
 </html>
