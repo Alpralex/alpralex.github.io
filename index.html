@@ -121,6 +121,28 @@ code { font-family: var(--mono); font-size: 0.88em; }
         <p class="links"><a href="/5-retail-bi/">Dashboard</a><a href="https://github.com/Alpralex/5-retail-bi/tree/main/powerbi" target="_blank" rel="noopener">Power BI model</a><a href="https://github.com/Alpralex/5-retail-bi" target="_blank" rel="noopener">Code</a></p>
       </article>
       <article class="entry">
+        <div class="top"><h3>Budget vs actual for a four-country group</h3></div>
+        <p>FP&amp;A for a fictional industrial distributor in Portugal, Spain, France and the UK: budget, the 9+3 reforecast, an EBITDA bridge and a price-volume-mix split, on a double-entry ledger with planted stories.</p>
+        <ul>
+          <li>EBITDA 5.7% above budget, but only because Portugal raised prices; without it the group is 15% below</li>
+          <li>Sterling at 1.15 against a budget rate of 1.19 cost €0.36M of UK sales</li>
+          <li>67 tests check that journals balance and both bridges add up to the cent</li>
+        </ul>
+        <p class="stack">SQL, dbt, DuckDB, Power BI, DAX, row-level security, Qlik Sense</p>
+        <p class="links"><a href="/finance-fpa-analytics/">Dashboard</a><a href="https://app.powerbi.com/view?r=eyJrIjoiMjMwNTVhNGYtMmYzNi00ZmMwLTg3NTUtNjNhN2NiMjQzODhlIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Power BI report</a><a href="https://github.com/Alpralex/finance-fpa-analytics" target="_blank" rel="noopener">Code</a></p>
+      </article>
+      <article class="entry">
+        <div class="top"><h3>Where Portugal's public procurement money goes</h3></div>
+        <p>Spend analytics on 1.55 million public contracts from Portal BASE, 2019 to 2026: who buys, how, from whom and at what price against the base price.</p>
+        <ul>
+          <li>Direct awards are half of all contracts but 17% of the value</li>
+          <li>Three to six times more contracts just below the legal limits than just above</li>
+          <li>43% of prior consultations receive a single bid; no private person is ever named</li>
+        </ul>
+        <p class="stack">SQL, dbt, DuckDB, Power BI, DAX, Qlik Sense</p>
+        <p class="links"><a href="/public-procurement-pt/">Dashboard</a><a href="https://app.powerbi.com/view?r=eyJrIjoiZDliMmM5ZDAtOTRjYS00M2ZmLWJjNmMtNmJkZjAwNjU1NjEzIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Power BI report</a><a href="https://github.com/Alpralex/public-procurement-pt-" target="_blank" rel="noopener">Code</a></p>
+      </article>
+      <article class="entry">
         <div class="top"><h3>InfoCars: used-car pricing for dealers</h3></div>
         <p>A product I built and sold at Informar Dados. Car ads are collected every day, matched to a catalogue of models and turned into market prices for a dealer.</p>
         <ul>
@@ -129,7 +151,7 @@ code { font-family: var(--mono); font-size: 0.88em; }
           <li>About €300 saved per negotiation at the dealer</li>
         </ul>
         <p class="stack">SQL, PostgreSQL, Python, Power BI, Claude API</p>
-        <p class="links"><a href="/infocars/">Case study</a><a href="https://github.com/Alpralex/infocars-pricing-showcase" target="_blank" rel="noopener">Code</a></p>
+        <p class="links"><a href="/infocars/">Case study</a><a href="https://app.powerbi.com/view?r=eyJrIjoiMTYxODFjYTUtYjZmOC00NDQ5LTgxZmQtNDA5Y2I5YmMzMDdlIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Power BI report</a><a href="https://github.com/Alpralex/infocars-pricing-showcase" target="_blank" rel="noopener">Code</a></p>
       </article>
       <article class="entry">
         <div class="top"><h3>Fact-checking Portugal's 2027 budget debate</h3><span class="status">Preview</span></div>
@@ -143,14 +165,15 @@ code { font-family: var(--mono); font-size: 0.88em; }
         <p class="links"><a href="/oe2027-fact-check/">Preview</a><a href="https://github.com/Alpralex/oe2027-fact-check" target="_blank" rel="noopener">Code</a></p>
       </article>
       <article class="entry">
-        <div class="top"><h3>Sales director app for a distributor</h3><span class="status">In progress, November 2026</span></div>
-        <p>A Qlik Sense app for an animal-health distributor in Portugal, built on synthetic data whose generator and rules are public.</p>
+        <div class="top"><h3>Sales director app for a distributor</h3></div>
+        <p>Sales, rep visits, discounts and receivables for an animal-health distributor in Portugal, on synthetic data whose generator and rules are public.</p>
         <ul>
-          <li>Revenue, customer coverage, rep visits, discounts and receivables in one model</li>
-          <li>One fact table for sales, visits and invoices, with set analysis for year to date and aging</li>
+          <li>The South fell 16.5% after one of its reps left and visits halved</li>
+          <li>One rep gives 15% discount against about 6% for the rest</li>
+          <li>225 customers with no visit in 60 days bought €5.4M in the last year</li>
         </ul>
-        <p class="stack">Qlik Sense, set analysis, Python</p>
-        <p class="links"><a href="https://github.com/Alpralex/commercial-analytics" target="_blank" rel="noopener">Code</a></p>
+        <p class="stack">SQL, dbt, DuckDB, Power BI, DAX, Qlik Sense, set analysis</p>
+        <p class="links"><a href="/commercial-analytics/">Dashboard</a><a href="https://app.powerbi.com/view?r=eyJrIjoiOWFmNmE3ZDctOTIyZS00ODM1LWFmMTgtMzBlMmMxZTkyNWQzIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Power BI report</a><a href="https://github.com/Alpralex/commercial-analytics" target="_blank" rel="noopener">Code</a></p>
       </article>
       <article class="entry">
         <div class="top"><h3>Housing affordability in Portugal</h3></div>
@@ -159,8 +182,8 @@ code { font-family: var(--mono); font-size: 0.88em; }
           <li>From 2015 to 2024, house prices rose 124% and median income 65%</li>
           <li>Price-to-income index of 136 (2015 = 100), against 106 for the EU</li>
         </ul>
-        <p class="stack">SQL, dbt, DuckDB, Eurostat API</p>
-        <p class="links"><a href="/pt-housing-analytics/">Dashboard</a></p>
+        <p class="stack">SQL, dbt, DuckDB, Eurostat API, Power BI, Qlik Sense</p>
+        <p class="links"><a href="/pt-housing-analytics/">Dashboard</a><a href="https://app.powerbi.com/view?r=eyJrIjoiN2Q5OTgwNDgtMTE0YS00MTIwLTkyZTAtZDE0MWZjYmIwYjAwIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Power BI report</a><a href="https://github.com/Alpralex/pt-housing-analytics." target="_blank" rel="noopener">Code</a></p>
       </article>
     </div>
   </section>
