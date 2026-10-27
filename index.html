@@ -8,8 +8,6 @@
 <link rel="alternate" hreflang="en" href="https://guilhermerigonato.com/">
 <link rel="alternate" hreflang="pt-PT" href="https://guilhermerigonato.com/pt/">
 <link rel="canonical" href="https://guilhermerigonato.com/">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="icon" href="/favicon.ico" sizes="32x32">
 <meta property="og:title" content="Guilherme Rigonato · BI Engineer">
 <meta property="og:description" content="Guilherme Rigonato, BI engineer in Lisbon: Power BI, Qlik Sense and SQL. Projects with live reports, code and experience.">
 <meta property="og:image" content="https://guilhermerigonato.com/img/fpa.webp">
@@ -150,20 +148,20 @@ button.copy:hover { border-color: var(--accent); }
 <p class="cta"><a class="btn primary" href="#projects">See the projects</a><a class="btn ghost" href="#contact">Contact me</a><a class="btn ghost" href="/Guilherme_Rigonato_CV.pdf" download>Download CV (PDF)</a></p>
 </header>
 <section id="projects" aria-labelledby="h-projects">
-<div class="sec-head narrow"><h2 id="h-projects">Projects</h2><p class="muted">Most projects come in three versions built on the same data: a Power BI report, a web dashboard and a Qlik Sense app. Click an image to open the live report. The code is on GitHub, where every Power BI model is checked automatically against Microsoft’s best-practice rules.</p></div>
+<div class="sec-head narrow"><h2 id="h-projects">Projects</h2><p class="muted">Most projects come in three versions built on the same data: a Power BI report, a web dashboard and a Qlik Sense app. Click an image to open the live report. The code is on GitHub.</p></div>
 <div class="filters"><span class="label" id="filter-label">Show projects that use</span>
 <div class="seg" role="group" aria-labelledby="filter-label"><button type="button" data-key="all" aria-pressed="true">All</button><button type="button" data-key="powerbi" aria-pressed="false">Power BI</button><button type="button" data-key="qlik" aria-pressed="false">Qlik Sense</button><button type="button" data-key="sql" aria-pressed="false">SQL and dbt</button></div>
 <span class="count" id="count" aria-live="polite" data-tpl="{n} of {t} projects">7 of 7 projects</span></div>
 <div class="list">
-<article class="proj" data-tags="powerbi qlik sql python">
+<article class="proj" data-tags="powerbi sql python">
 <div class="body">
-<div class="top"><h3>Sales director dashboard for a distributor</h3></div>
-<p>The app a sales director opens every morning: sales, sales reps&#x27; visits, discounts and late payments, for an animal-health distributor in Portugal. The data is synthetic, modelled on the kind of app I relied on as a commercial director.</p>
-<ul><li>Spots that the South fell 16.5% after a sales rep left and visits halved</li><li>Finds the rep who gives 15% discount when the others give about 6%</li><li>Lists 225 customers nobody has visited in 60 days, who bought €5.4M last year</li></ul>
-<p class="stack"><span class="tl">Tools:</span> SQL, dbt, DuckDB, Python, Power BI, DAX, row-level security, calculation groups, Qlik Sense, set analysis</p>
-<p class="links"><a href="https://app.powerbi.com/view?r=eyJrIjoiN2IzMWEwZWUtNmQxYy00NGQ0LTgzZjctYzJhNzk0MDk3MmUxIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Power BI report</a><a href="/commercial-analytics/">Web dashboard</a><a href="https://github.com/Alpralex/commercial-analytics" target="_blank" rel="noopener">Code</a></p>
+<div class="top"><h3>Where a 10-store retailer loses sales</h3></div>
+<p>Five years of real daily sales from 10 Walmart stores in the US. The data is public: Walmart released it as the M5 data set for a forecasting competition. I built the data model and dashboard to show where the stores lose sales and how good the competition&#x27;s best forecast really is.</p>
+<ul><li>Empty shelves cost about $0.79M a year, and 80% of that is in food</li><li>The forecast is accurate per store (5% error) but not per product (75%), so stock planning needs a safety margin</li><li>47.7 million rows of sales, with automated checks on the data</li></ul>
+<p class="stack"><span class="tl">Tools:</span> SQL, dbt, DuckDB, Python, Power BI, DAX</p>
+<p class="links"><a href="/5-retail-bi/">Web dashboard</a><a href="https://github.com/Alpralex/5-retail-bi/tree/main/powerbi" target="_blank" rel="noopener">Power BI model</a><a href="https://github.com/Alpralex/5-retail-bi" target="_blank" rel="noopener">Code</a></p>
 </div>
-<a class="shot" href="https://app.powerbi.com/view?r=eyJrIjoiN2IzMWEwZWUtNmQxYy00NGQ0LTgzZjctYzJhNzk0MDk3MmUxIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener" aria-label="Open power bi report: Sales director dashboard for a distributor"><img src="/img/commercial.webp" alt="Sales director dashboard for a distributor: Power BI report" width="1100" height="626" loading="lazy" decoding="async"></a>
+<a class="shot" href="/5-retail-bi/" aria-label="Open web dashboard: Where a 10-store retailer loses sales"><img src="/img/m5.webp" alt="Where a 10-store retailer loses sales: Web dashboard" width="1100" height="626" loading="lazy" decoding="async"></a>
 </article>
 <article class="proj" data-tags="powerbi qlik sql python">
 <div class="body">
@@ -181,19 +179,9 @@ button.copy:hover { border-color: var(--accent); }
 <p>Every public contract published in Portugal from 2019 to 2026: 1.55 million contracts worth €120 billion, from the government&#x27;s open data. The report shows who buys, what, from whom, and how much competition there is.</p>
 <ul><li>Contracts awarded without a tender are half of all contracts but only 17% of the money</li><li>Far more contracts sit just below the legal limits for awarding without a tender than just above them</li><li>Real open data, cleaned and checked; private individuals are never named</li></ul>
 <p class="stack"><span class="tl">Tools:</span> SQL, dbt, DuckDB, Python, Power BI, DAX, Qlik Sense</p>
-<p class="links"><a href="https://app.powerbi.com/view?r=eyJrIjoiZDliMmM5ZDAtOTRjYS00M2ZmLWJjNmMtNmJkZjAwNjU1NjEzIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Power BI report</a><a href="/public-procurement-pt/">Web dashboard</a><a href="https://github.com/Alpralex/public-procurement-pt" target="_blank" rel="noopener">Code</a></p>
+<p class="links"><a href="https://app.powerbi.com/view?r=eyJrIjoiZDliMmM5ZDAtOTRjYS00M2ZmLWJjNmMtNmJkZjAwNjU1NjEzIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Power BI report</a><a href="/public-procurement-pt/">Web dashboard</a><a href="https://github.com/Alpralex/public-procurement-pt-" target="_blank" rel="noopener">Code</a></p>
 </div>
 <a class="shot" href="https://app.powerbi.com/view?r=eyJrIjoiZDliMmM5ZDAtOTRjYS00M2ZmLWJjNmMtNmJkZjAwNjU1NjEzIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener" aria-label="Open power bi report: Where Portugal&#x27;s public procurement money goes"><img src="/img/procurement.webp" alt="Where Portugal&#x27;s public procurement money goes: Power BI report" width="1100" height="626" loading="lazy" decoding="async"></a>
-</article>
-<article class="proj" data-tags="powerbi sql python">
-<div class="body">
-<div class="top"><h3>Where a 10-store retailer loses sales</h3></div>
-<p>Five years of real daily sales from 10 Walmart stores in the US. The data is public: Walmart released it as the M5 data set for a forecasting competition. I built the data model and dashboard to show where the stores lose sales and how good the competition&#x27;s best forecast really is.</p>
-<ul><li>Empty shelves cost about $0.79M a year, and 80% of that is in food</li><li>The forecast is accurate per store (5% error) but not per product (75%), so stock planning needs a safety margin</li><li>47.7 million rows of sales, with automated checks on the data</li></ul>
-<p class="stack"><span class="tl">Tools:</span> SQL, dbt, DuckDB, Python, Power BI, DAX</p>
-<p class="links"><a href="/5-retail-bi/">Web dashboard</a><a href="https://github.com/Alpralex/m5-retail-bi/tree/main/powerbi" target="_blank" rel="noopener">Power BI model</a><a href="https://github.com/Alpralex/m5-retail-bi" target="_blank" rel="noopener">Code</a></p>
-</div>
-<a class="shot" href="/5-retail-bi/" aria-label="Open web dashboard: Where a 10-store retailer loses sales"><img src="/img/m5.webp" alt="Where a 10-store retailer loses sales: Web dashboard" width="1100" height="626" loading="lazy" decoding="async"></a>
 </article>
 <article class="proj" data-tags="powerbi qlik sql python">
 <div class="body">
@@ -207,11 +195,21 @@ button.copy:hover { border-color: var(--accent); }
 </article>
 <article class="proj" data-tags="powerbi qlik sql python">
 <div class="body">
+<div class="top"><h3>Sales director dashboard for a distributor</h3></div>
+<p>The app a sales director opens every morning: sales, sales reps&#x27; visits, discounts and late payments, for an animal-health distributor in Portugal. The data is synthetic, modelled on the kind of app I relied on as a commercial director.</p>
+<ul><li>Spots that the South fell 16.5% after a sales rep left and visits halved</li><li>Finds the rep who gives 15% discount when the others give about 6%</li><li>Lists 225 customers nobody has visited in 60 days, who bought €5.4M last year</li></ul>
+<p class="stack"><span class="tl">Tools:</span> SQL, dbt, DuckDB, Python, Power BI, DAX, Qlik Sense, set analysis</p>
+<p class="links"><a href="https://app.powerbi.com/view?r=eyJrIjoiOWFmNmE3ZDctOTIyZS00ODM1LWFmMTgtMzBlMmMxZTkyNWQzIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Power BI report</a><a href="/commercial-analytics/">Web dashboard</a><a href="https://github.com/Alpralex/commercial-analytics" target="_blank" rel="noopener">Code</a></p>
+</div>
+<a class="shot" href="https://app.powerbi.com/view?r=eyJrIjoiOWFmNmE3ZDctOTIyZS00ODM1LWFmMTgtMzBlMmMxZTkyNWQzIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener" aria-label="Open power bi report: Sales director dashboard for a distributor"><img src="/img/commercial.webp" alt="Sales director dashboard for a distributor: Power BI report" width="1100" height="626" loading="lazy" decoding="async"></a>
+</article>
+<article class="proj" data-tags="powerbi qlik sql python">
+<div class="body">
 <div class="top"><h3>Is housing in Portugal getting less affordable?</h3></div>
 <p>House prices, rents and incomes in Portugal compared with six other EU countries, from official Eurostat data.</p>
-<ul><li>From 2015 to 2024, house prices rose 124% while incomes rose 65%, both before inflation</li><li>By mid-2026 prices were three times their 2015 level, the steepest rise of the seven countries</li><li>Compared with incomes, homes cost 36% more than in 2015; across the EU, 6% more</li></ul>
+<ul><li>From 2015 to 2024, house prices rose 124% while incomes rose 65%</li><li>Compared with incomes, homes cost 36% more than in 2015; across the EU, 6% more</li></ul>
 <p class="stack"><span class="tl">Tools:</span> SQL, dbt, DuckDB, Python, Eurostat API, Power BI, Qlik Sense</p>
-<p class="links"><a href="https://app.powerbi.com/view?r=eyJrIjoiN2Q5OTgwNDgtMTE0YS00MTIwLTkyZTAtZDE0MWZjYmIwYjAwIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Power BI report</a><a href="/pt-housing-analytics/">Web dashboard</a><a href="https://github.com/Alpralex/pt-housing-analytics" target="_blank" rel="noopener">Code</a></p>
+<p class="links"><a href="https://app.powerbi.com/view?r=eyJrIjoiN2Q5OTgwNDgtMTE0YS00MTIwLTkyZTAtZDE0MWZjYmIwYjAwIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Power BI report</a><a href="/pt-housing-analytics/">Web dashboard</a><a href="https://github.com/Alpralex/pt-housing-analytics." target="_blank" rel="noopener">Code</a></p>
 </div>
 <a class="shot" href="https://app.powerbi.com/view?r=eyJrIjoiN2Q5OTgwNDgtMTE0YS00MTIwLTkyZTAtZDE0MWZjYmIwYjAwIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener" aria-label="Open power bi report: Is housing in Portugal getting less affordable?"><img src="/img/housing.webp" alt="Is housing in Portugal getting less affordable?: Power BI report" width="1100" height="626" loading="lazy" decoding="async"></a>
 </article>
@@ -253,7 +251,7 @@ button.copy:hover { border-color: var(--accent); }
 <p class="muted">Based in Lisbon from December 2026. Email or LinkedIn both reach me.</p>
 <div class="contact">
 <p><span class="email" id="email">rigonato.guilherme@gmail.com</span><button class="copy" id="copy-email" type="button" data-label="Copy" data-done="Copied" data-sel="Selected">Copy</button></p>
-<a href="https://www.linkedin.com/in/guilherme-rigonato-b41463116" target="_blank" rel="noopener">LinkedIn</a>
+<a href="https://www.linkedin.com/in/guilherme-rigonato" target="_blank" rel="noopener">LinkedIn</a>
 <a href="https://github.com/Alpralex" target="_blank" rel="noopener">GitHub</a>
 <a href="/Guilherme_Rigonato_CV.pdf" download>Download CV (PDF)</a>
 </div>
@@ -315,7 +313,5 @@ button.copy:hover { border-color: var(--accent); }
   });
 })();
 </script>
-<script data-goatcounter="https://guilhermerigonato.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-<script>document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a[href]");if(!a||!window.goatcounter||!goatcounter.count)return;var h=a.getAttribute("href"),k=/app\.powerbi\.com/.test(h)?"power-bi":/\.pdf$/.test(h)?"cv":/github\.com/.test(h)?"github":/linkedin\.com/.test(h)?"linkedin":"";if(k)goatcounter.count({path:"click-"+k+"-"+location.pathname,title:a.textContent.trim().slice(0,60),event:true});});</script>
 </body>
 </html>
