@@ -4,7 +4,7 @@
 <head><meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Competition and price in Portuguese public tenders</title>
-<meta name="description" content="Python notebook (pandas, statsmodels, Altair): how the signed price of Portuguese public tenders changes with the number of bidders, 2019 to 2026."><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<meta name="description" content="Python notebook (pandas, statsmodels, pyfixest, Altair): how the signed price of Portuguese public tenders changes with the number of bidders, 2019 to 2026, with buyer and category fixed effects."><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <style type="text/css">
     pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -7813,7 +7813,9 @@ independently of the SQL models, and checks that both give the same totals.</p>
 <ul>
 <li>With a single bid, open tenders sign at a median <strong>99.3%</strong> of the base price. With ten or more bids, at <strong>79.4%</strong>.</li>
 <li>After controlling for category, year, contract type and contract size, <strong>each doubling of the number of bidders
-goes with a price about 5.7% lower</strong> (open tenders and prior consultations together).</li>
+goes with a price about 5.7% lower</strong> (open tenders and prior consultations together).
+It holds within the same buyer and within the same CPV class and size band: −5.5% to −5.8%
+(<a href="#robustness">section 6</a>), from about −10% in architecture and engineering to −3% in energy.</li>
 <li>Single-bid tenders are becoming more common: <strong>9.0% of open tenders in 2019, 12.6% in 2025</strong>; for prior consultations
 <strong>35.6% to 47.0%</strong>.</li>
 </ul>
@@ -7822,8 +7824,8 @@ supplier acted wrongly, and it does not prove that adding bidders <em>causes</em
 <p><strong>The charts are interactive</strong> (hover for values, click a legend or a bar to filter the other charts). They are
 built with <a href="https://altair-viz.github.io/">Altair</a>, which writes Vega-Lite specifications that run in the browser.
 GitHub shows notebooks without JavaScript, so open the
-<a href="https://guilhermerigonato.com/public-procurement-pt/notebook/">interactive version</a> to use them.</p>
-<p><strong>Run it:</strong> <code>pip install pandas pyarrow altair statsmodels</code>, put the Portal BASE files in <code>data/raw/</code>
+<a href="/public-procurement-pt/notebook/">interactive version</a> to use them.</p>
+<p><strong>Run it:</strong> <code>pip install pandas pyarrow altair statsmodels pyfixest</code>, put the Portal BASE files in <code>data/raw/</code>
 (see <a href="https://github.com/Alpralex/public-procurement-pt/blob/main/scripts/get_data.py" target="_blank" rel="noopener"><code>scripts/get_data.py</code></a>) and run all cells (about 2 minutes).</p>
 </div>
 </div>
@@ -7889,7 +7891,8 @@ GitHub shows notebooks without JavaScript, so open the
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">COLS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"idcontrato"</span><span class="p">,</span> <span class="s2">"idprocedimento"</span><span class="p">,</span> <span class="s2">"tipoContrato"</span><span class="p">,</span> <span class="s2">"tipoprocedimento"</span><span class="p">,</span> <span class="s2">"concorrentes"</span><span class="p">,</span>
-        <span class="s2">"precoContratual"</span><span class="p">,</span> <span class="s2">"precoBaseProcedimento"</span><span class="p">,</span> <span class="s2">"CPV"</span><span class="p">,</span> <span class="s2">"TipoCriterioAdjudicacao"</span><span class="p">,</span> <span class="s2">"nAnuncio"</span><span class="p">]</span>
+        <span class="s2">"precoContratual"</span><span class="p">,</span> <span class="s2">"precoBaseProcedimento"</span><span class="p">,</span> <span class="s2">"CPV"</span><span class="p">,</span> <span class="s2">"TipoCriterioAdjudicacao"</span><span class="p">,</span> <span class="s2">"nAnuncio"</span><span class="p">,</span>
+        <span class="s2">"adjudicante"</span><span class="p">,</span> <span class="s2">"prazoExecucao"</span><span class="p">]</span>
 
 <span class="n">frames</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">RAW</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">"contratos_*.parquet"</span><span class="p">)):</span>
@@ -8174,12 +8177,12 @@ competitive procedure groups where the count is available: <strong>open tenders<
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
 <style type="text/css">
 </style>
-<table id="T_efef8">
+<table id="T_01878">
 <thead>
 <tr>
 <th class="index_name level0">procedure_group</th>
-<th class="col_heading level0 col0" id="T_efef8_level0_col0">Open tender</th>
-<th class="col_heading level0 col1" id="T_efef8_level0_col1">Prior consultation</th>
+<th class="col_heading level0 col0" id="T_01878_level0_col0">Open tender</th>
+<th class="col_heading level0 col1" id="T_01878_level0_col1">Prior consultation</th>
 </tr>
 <tr>
 <th class="index_name level0">year</th>
@@ -8189,44 +8192,44 @@ competitive procedure groups where the count is available: <strong>open tenders<
 </thead>
 <tbody>
 <tr>
-<th class="row_heading level0 row0" id="T_efef8_level0_row0">2019</th>
-<td class="data row0 col0" id="T_efef8_row0_col0">9.0%</td>
-<td class="data row0 col1" id="T_efef8_row0_col1">35.6%</td>
+<th class="row_heading level0 row0" id="T_01878_level0_row0">2019</th>
+<td class="data row0 col0" id="T_01878_row0_col0">9.0%</td>
+<td class="data row0 col1" id="T_01878_row0_col1">35.6%</td>
 </tr>
 <tr>
-<th class="row_heading level0 row1" id="T_efef8_level0_row1">2020</th>
-<td class="data row1 col0" id="T_efef8_row1_col0">8.2%</td>
-<td class="data row1 col1" id="T_efef8_row1_col1">36.7%</td>
+<th class="row_heading level0 row1" id="T_01878_level0_row1">2020</th>
+<td class="data row1 col0" id="T_01878_row1_col0">8.2%</td>
+<td class="data row1 col1" id="T_01878_row1_col1">36.7%</td>
 </tr>
 <tr>
-<th class="row_heading level0 row2" id="T_efef8_level0_row2">2021</th>
-<td class="data row2 col0" id="T_efef8_row2_col0">8.4%</td>
-<td class="data row2 col1" id="T_efef8_row2_col1">42.1%</td>
+<th class="row_heading level0 row2" id="T_01878_level0_row2">2021</th>
+<td class="data row2 col0" id="T_01878_row2_col0">8.4%</td>
+<td class="data row2 col1" id="T_01878_row2_col1">42.1%</td>
 </tr>
 <tr>
-<th class="row_heading level0 row3" id="T_efef8_level0_row3">2022</th>
-<td class="data row3 col0" id="T_efef8_row3_col0">9.7%</td>
-<td class="data row3 col1" id="T_efef8_row3_col1">46.1%</td>
+<th class="row_heading level0 row3" id="T_01878_level0_row3">2022</th>
+<td class="data row3 col0" id="T_01878_row3_col0">9.7%</td>
+<td class="data row3 col1" id="T_01878_row3_col1">46.1%</td>
 </tr>
 <tr>
-<th class="row_heading level0 row4" id="T_efef8_level0_row4">2023</th>
-<td class="data row4 col0" id="T_efef8_row4_col0">9.4%</td>
-<td class="data row4 col1" id="T_efef8_row4_col1">42.8%</td>
+<th class="row_heading level0 row4" id="T_01878_level0_row4">2023</th>
+<td class="data row4 col0" id="T_01878_row4_col0">9.4%</td>
+<td class="data row4 col1" id="T_01878_row4_col1">42.8%</td>
 </tr>
 <tr>
-<th class="row_heading level0 row5" id="T_efef8_level0_row5">2024</th>
-<td class="data row5 col0" id="T_efef8_row5_col0">10.1%</td>
-<td class="data row5 col1" id="T_efef8_row5_col1">43.8%</td>
+<th class="row_heading level0 row5" id="T_01878_level0_row5">2024</th>
+<td class="data row5 col0" id="T_01878_row5_col0">10.1%</td>
+<td class="data row5 col1" id="T_01878_row5_col1">43.8%</td>
 </tr>
 <tr>
-<th class="row_heading level0 row6" id="T_efef8_level0_row6">2025</th>
-<td class="data row6 col0" id="T_efef8_row6_col0">12.6%</td>
-<td class="data row6 col1" id="T_efef8_row6_col1">47.0%</td>
+<th class="row_heading level0 row6" id="T_01878_level0_row6">2025</th>
+<td class="data row6 col0" id="T_01878_row6_col0">12.6%</td>
+<td class="data row6 col1" id="T_01878_row6_col1">47.0%</td>
 </tr>
 <tr>
-<th class="row_heading level0 row7" id="T_efef8_level0_row7">2026</th>
-<td class="data row7 col0" id="T_efef8_row7_col0">13.1%</td>
-<td class="data row7 col1" id="T_efef8_row7_col1">47.5%</td>
+<th class="row_heading level0 row7" id="T_01878_level0_row7">2026</th>
+<td class="data row7 col0" id="T_01878_row7_col0">13.1%</td>
+<td class="data row7 col1" id="T_01878_row7_col1">47.5%</td>
 </tr>
 </tbody>
 </table>
@@ -8270,23 +8273,23 @@ competitive procedure groups where the count is available: <strong>open tenders<
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[7]:</div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
 <style>
-  #altair-viz-c4f13bf0f91a435182c7e6622e9c2382.vega-embed {
+  #altair-viz-3d77a84fa69e404e8feb7a380f4d1f5b.vega-embed {
     width: 100%;
     display: flex;
   }
 
-  #altair-viz-c4f13bf0f91a435182c7e6622e9c2382.vega-embed details,
-  #altair-viz-c4f13bf0f91a435182c7e6622e9c2382.vega-embed details summary {
+  #altair-viz-3d77a84fa69e404e8feb7a380f4d1f5b.vega-embed details,
+  #altair-viz-3d77a84fa69e404e8feb7a380f4d1f5b.vega-embed details summary {
     position: relative;
   }
 </style>
-<div id="altair-viz-c4f13bf0f91a435182c7e6622e9c2382"></div>
+<div id="altair-viz-3d77a84fa69e404e8feb7a380f4d1f5b"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-c4f13bf0f91a435182c7e6622e9c2382") {
-      outputDiv = document.getElementById("altair-viz-c4f13bf0f91a435182c7e6622e9c2382");
+    if (outputDiv.id !== "altair-viz-3d77a84fa69e404e8feb7a380f4d1f5b") {
+      outputDiv = document.getElementById("altair-viz-3d77a84fa69e404e8feb7a380f4d1f5b");
     }
 
     const paths = {
@@ -8370,13 +8373,13 @@ competitive procedure groups where the count is available: <strong>open tenders<
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
 <style type="text/css">
 </style>
-<table id="T_8f70f">
+<table id="T_0aab5">
 <thead>
 <tr>
 <th class="blank level0"> </th>
-<th class="col_heading level0 col0" id="T_8f70f_level0_col0">open_tenders</th>
-<th class="col_heading level0 col1" id="T_8f70f_level0_col1">single_bid_share</th>
-<th class="col_heading level0 col2" id="T_8f70f_level0_col2">median_bidders</th>
+<th class="col_heading level0 col0" id="T_0aab5_level0_col0">open_tenders</th>
+<th class="col_heading level0 col1" id="T_0aab5_level0_col1">single_bid_share</th>
+<th class="col_heading level0 col2" id="T_0aab5_level0_col2">median_bidders</th>
 </tr>
 <tr>
 <th class="index_name level0">cpv_short_name</th>
@@ -8387,52 +8390,52 @@ competitive procedure groups where the count is available: <strong>open tenders<
 </thead>
 <tbody>
 <tr>
-<th class="row_heading level0 row0" id="T_8f70f_level0_row0">Software</th>
-<td class="data row0 col0" id="T_8f70f_row0_col0">3,214</td>
-<td class="data row0 col1" id="T_8f70f_row0_col1">36.8%</td>
-<td class="data row0 col2" id="T_8f70f_row0_col2">2</td>
+<th class="row_heading level0 row0" id="T_0aab5_level0_row0">Software</th>
+<td class="data row0 col0" id="T_0aab5_row0_col0">3,214</td>
+<td class="data row0 col1" id="T_0aab5_row0_col1">36.8%</td>
+<td class="data row0 col2" id="T_0aab5_row0_col2">2</td>
 </tr>
 <tr>
-<th class="row_heading level0 row1" id="T_8f70f_level0_row1">IT services</th>
-<td class="data row1 col0" id="T_8f70f_row1_col0">5,016</td>
-<td class="data row1 col1" id="T_8f70f_row1_col1">32.3%</td>
-<td class="data row1 col2" id="T_8f70f_row1_col2">2</td>
+<th class="row_heading level0 row1" id="T_0aab5_level0_row1">IT services</th>
+<td class="data row1 col0" id="T_0aab5_row1_col0">5,016</td>
+<td class="data row1 col1" id="T_0aab5_row1_col1">32.3%</td>
+<td class="data row1 col2" id="T_0aab5_row1_col2">2</td>
 </tr>
 <tr>
-<th class="row_heading level0 row2" id="T_8f70f_level0_row2">Other community services</th>
-<td class="data row2 col0" id="T_8f70f_row2_col0">1,280</td>
-<td class="data row2 col1" id="T_8f70f_row2_col1">26.4%</td>
-<td class="data row2 col2" id="T_8f70f_row2_col2">3</td>
+<th class="row_heading level0 row2" id="T_0aab5_level0_row2">Other community services</th>
+<td class="data row2 col0" id="T_0aab5_row2_col0">1,280</td>
+<td class="data row2 col1" id="T_0aab5_row2_col1">26.4%</td>
+<td class="data row2 col2" id="T_0aab5_row2_col2">3</td>
 </tr>
 <tr>
-<th class="row_heading level0 row3" id="T_8f70f_level0_row3">Repair and maintenance</th>
-<td class="data row3 col0" id="T_8f70f_row3_col0">5,286</td>
-<td class="data row3 col1" id="T_8f70f_row3_col1">20.2%</td>
-<td class="data row3 col2" id="T_8f70f_row3_col2">3</td>
+<th class="row_heading level0 row3" id="T_0aab5_level0_row3">Repair and maintenance</th>
+<td class="data row3 col0" id="T_0aab5_row3_col0">5,286</td>
+<td class="data row3 col1" id="T_0aab5_row3_col1">20.2%</td>
+<td class="data row3 col2" id="T_0aab5_row3_col2">3</td>
 </tr>
 <tr>
-<th class="row_heading level0 row4" id="T_8f70f_level0_row4">Postal and telecom services</th>
-<td class="data row4 col0" id="T_8f70f_row4_col0">1,446</td>
-<td class="data row4 col1" id="T_8f70f_row4_col1">19.4%</td>
-<td class="data row4 col2" id="T_8f70f_row4_col2">2</td>
+<th class="row_heading level0 row4" id="T_0aab5_level0_row4">Postal and telecom services</th>
+<td class="data row4 col0" id="T_0aab5_row4_col0">1,446</td>
+<td class="data row4 col1" id="T_0aab5_row4_col1">19.4%</td>
+<td class="data row4 col2" id="T_0aab5_row4_col2">2</td>
 </tr>
 <tr>
-<th class="row_heading level0 row5" id="T_8f70f_level0_row5">Recreation, culture and sport</th>
-<td class="data row5 col0" id="T_8f70f_row5_col0">1,387</td>
-<td class="data row5 col1" id="T_8f70f_row5_col1">17.8%</td>
-<td class="data row5 col2" id="T_8f70f_row5_col2">4</td>
+<th class="row_heading level0 row5" id="T_0aab5_level0_row5">Recreation, culture and sport</th>
+<td class="data row5 col0" id="T_0aab5_row5_col0">1,387</td>
+<td class="data row5 col1" id="T_0aab5_row5_col1">17.8%</td>
+<td class="data row5 col2" id="T_0aab5_row5_col2">4</td>
 </tr>
 <tr>
-<th class="row_heading level0 row6" id="T_8f70f_level0_row6">Industrial machinery</th>
-<td class="data row6 col0" id="T_8f70f_row6_col0">1,791</td>
-<td class="data row6 col1" id="T_8f70f_row6_col1">16.0%</td>
-<td class="data row6 col2" id="T_8f70f_row6_col2">4</td>
+<th class="row_heading level0 row6" id="T_0aab5_level0_row6">Industrial machinery</th>
+<td class="data row6 col0" id="T_0aab5_row6_col0">1,791</td>
+<td class="data row6 col1" id="T_0aab5_row6_col1">16.0%</td>
+<td class="data row6 col2" id="T_0aab5_row6_col2">4</td>
 </tr>
 <tr>
-<th class="row_heading level0 row7" id="T_8f70f_level0_row7">Telecom equipment</th>
-<td class="data row7 col0" id="T_8f70f_row7_col0">2,084</td>
-<td class="data row7 col1" id="T_8f70f_row7_col1">15.7%</td>
-<td class="data row7 col2" id="T_8f70f_row7_col2">4</td>
+<th class="row_heading level0 row7" id="T_0aab5_level0_row7">Telecom equipment</th>
+<td class="data row7 col0" id="T_0aab5_row7_col0">2,084</td>
+<td class="data row7 col1" id="T_0aab5_row7_col1">15.7%</td>
+<td class="data row7 col2" id="T_0aab5_row7_col2">4</td>
 </tr>
 </tbody>
 </table>
@@ -8699,23 +8702,23 @@ The medians are pre-computed in pandas for every category, so the page only filt
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[10]:</div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
 <style>
-  #altair-viz-c6c330c64cd04436901b1b0deb1cdf5f.vega-embed {
+  #altair-viz-c98be5a6f57446f9aa8e26780192287a.vega-embed {
     width: 100%;
     display: flex;
   }
 
-  #altair-viz-c6c330c64cd04436901b1b0deb1cdf5f.vega-embed details,
-  #altair-viz-c6c330c64cd04436901b1b0deb1cdf5f.vega-embed details summary {
+  #altair-viz-c98be5a6f57446f9aa8e26780192287a.vega-embed details,
+  #altair-viz-c98be5a6f57446f9aa8e26780192287a.vega-embed details summary {
     position: relative;
   }
 </style>
-<div id="altair-viz-c6c330c64cd04436901b1b0deb1cdf5f"></div>
+<div id="altair-viz-c98be5a6f57446f9aa8e26780192287a"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-c6c330c64cd04436901b1b0deb1cdf5f") {
-      outputDiv = document.getElementById("altair-viz-c6c330c64cd04436901b1b0deb1cdf5f");
+    if (outputDiv.id !== "altair-viz-c98be5a6f57446f9aa8e26780192287a") {
+      outputDiv = document.getElementById("altair-viz-c98be5a6f57446f9aa8e26780192287a");
     }
 
     const paths = {
@@ -8857,45 +8860,45 @@ Doubling the number of bidders: -5.7% on the price (95% CI -5.8% to -5.6%)
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
 <style type="text/css">
 </style>
-<table id="T_9cf5b">
+<table id="T_2d0c8">
 <thead>
 <tr>
 <th class="blank level0"> </th>
-<th class="col_heading level0 col0" id="T_9cf5b_level0_col0">price_vs_single_bid</th>
-<th class="col_heading level0 col1" id="T_9cf5b_level0_col1">ci_low</th>
-<th class="col_heading level0 col2" id="T_9cf5b_level0_col2">ci_high</th>
+<th class="col_heading level0 col0" id="T_2d0c8_level0_col0">price_vs_single_bid</th>
+<th class="col_heading level0 col1" id="T_2d0c8_level0_col1">ci_low</th>
+<th class="col_heading level0 col2" id="T_2d0c8_level0_col2">ci_high</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<th class="row_heading level0 row0" id="T_9cf5b_level0_row0">2 bids</th>
-<td class="data row0 col0" id="T_9cf5b_row0_col0">-5.4%</td>
-<td class="data row0 col1" id="T_9cf5b_row0_col1">-5.5%</td>
-<td class="data row0 col2" id="T_9cf5b_row0_col2">-5.2%</td>
+<th class="row_heading level0 row0" id="T_2d0c8_level0_row0">2 bids</th>
+<td class="data row0 col0" id="T_2d0c8_row0_col0">-5.4%</td>
+<td class="data row0 col1" id="T_2d0c8_row0_col1">-5.5%</td>
+<td class="data row0 col2" id="T_2d0c8_row0_col2">-5.2%</td>
 </tr>
 <tr>
-<th class="row_heading level0 row1" id="T_9cf5b_level0_row1">3 bids</th>
-<td class="data row1 col0" id="T_9cf5b_row1_col0">-6.5%</td>
-<td class="data row1 col1" id="T_9cf5b_row1_col1">-6.7%</td>
-<td class="data row1 col2" id="T_9cf5b_row1_col2">-6.4%</td>
+<th class="row_heading level0 row1" id="T_2d0c8_level0_row1">3 bids</th>
+<td class="data row1 col0" id="T_2d0c8_row1_col0">-6.5%</td>
+<td class="data row1 col1" id="T_2d0c8_row1_col1">-6.7%</td>
+<td class="data row1 col2" id="T_2d0c8_row1_col2">-6.4%</td>
 </tr>
 <tr>
-<th class="row_heading level0 row2" id="T_9cf5b_level0_row2">4 bids</th>
-<td class="data row2 col0" id="T_9cf5b_row2_col0">-11.2%</td>
-<td class="data row2 col1" id="T_9cf5b_row2_col1">-11.6%</td>
-<td class="data row2 col2" id="T_9cf5b_row2_col2">-10.9%</td>
+<th class="row_heading level0 row2" id="T_2d0c8_level0_row2">4 bids</th>
+<td class="data row2 col0" id="T_2d0c8_row2_col0">-11.2%</td>
+<td class="data row2 col1" id="T_2d0c8_row2_col1">-11.6%</td>
+<td class="data row2 col2" id="T_2d0c8_row2_col2">-10.9%</td>
 </tr>
 <tr>
-<th class="row_heading level0 row3" id="T_9cf5b_level0_row3">5 bids</th>
-<td class="data row3 col0" id="T_9cf5b_row3_col0">-12.4%</td>
-<td class="data row3 col1" id="T_9cf5b_row3_col1">-12.8%</td>
-<td class="data row3 col2" id="T_9cf5b_row3_col2">-12.0%</td>
+<th class="row_heading level0 row3" id="T_2d0c8_level0_row3">5 bids</th>
+<td class="data row3 col0" id="T_2d0c8_row3_col0">-12.4%</td>
+<td class="data row3 col1" id="T_2d0c8_row3_col1">-12.8%</td>
+<td class="data row3 col2" id="T_2d0c8_row3_col2">-12.0%</td>
 </tr>
 <tr>
-<th class="row_heading level0 row4" id="T_9cf5b_level0_row4">6+ bids</th>
-<td class="data row4 col0" id="T_9cf5b_row4_col0">-17.5%</td>
-<td class="data row4 col1" id="T_9cf5b_row4_col1">-17.9%</td>
-<td class="data row4 col2" id="T_9cf5b_row4_col2">-17.2%</td>
+<th class="row_heading level0 row4" id="T_2d0c8_level0_row4">6+ bids</th>
+<td class="data row4 col0" id="T_2d0c8_row4_col0">-17.5%</td>
+<td class="data row4 col1" id="T_2d0c8_row4_col1">-17.9%</td>
+<td class="data row4 col2" id="T_2d0c8_row4_col2">-17.2%</td>
 </tr>
 </tbody>
 </table>
@@ -8939,23 +8942,23 @@ Doubling the number of bidders: -5.7% on the price (95% CI -5.8% to -5.6%)
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[13]:</div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
 <style>
-  #altair-viz-aa726321cd0b462fa6d0cc8551377cd1.vega-embed {
+  #altair-viz-e47e48a298b14cad994d3ce606844f37.vega-embed {
     width: 100%;
     display: flex;
   }
 
-  #altair-viz-aa726321cd0b462fa6d0cc8551377cd1.vega-embed details,
-  #altair-viz-aa726321cd0b462fa6d0cc8551377cd1.vega-embed details summary {
+  #altair-viz-e47e48a298b14cad994d3ce606844f37.vega-embed details,
+  #altair-viz-e47e48a298b14cad994d3ce606844f37.vega-embed details summary {
     position: relative;
   }
 </style>
-<div id="altair-viz-aa726321cd0b462fa6d0cc8551377cd1"></div>
+<div id="altair-viz-e47e48a298b14cad994d3ce606844f37"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-aa726321cd0b462fa6d0cc8551377cd1") {
-      outputDiv = document.getElementById("altair-viz-aa726321cd0b462fa6d0cc8551377cd1");
+    if (outputDiv.id !== "altair-viz-e47e48a298b14cad994d3ce606844f37") {
+      outputDiv = document.getElementById("altair-viz-e47e48a298b14cad994d3ce606844f37");
     }
 
     const paths = {
@@ -9054,6 +9057,319 @@ At the two-bid price (-5.4%): about €312m lower
 </div>
 </div>
 </div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3ecf5023">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><a id="robustness"></a></p>
+<h2 id="6.-Robustness:-same-buyer,-same-category,-same-size">6. Robustness: same buyer, same category, same size<a class="anchor-link" href="#6.-Robustness:-same-buyer,-same-category,-same-size">¶</a></h2><p>A fair objection to section 4: tenders that get a single bid may be different to begin with, for example a very
+specific specification or a short deadline, and those features could raise the price by themselves. Two checks
+narrow the comparison:</p>
+<ul>
+<li><strong>Contracting-authority fixed effects.</strong> Each buyer is compared only with itself: does the <em>same</em> hospital or
+municipality pay less in its tenders that drew more bids? This absorbs how each buyer writes specifications and
+sets base prices.</li>
+<li><strong>Category × size cells.</strong> Each tender is compared only with tenders of the same CPV class (5 digits, e.g. road
+works rather than all construction) and the same base-price decile. A variant uses the full 8-digit CPV code.</li>
+</ul>
+<p>Standard errors are clustered by buyer. The fixed effects are absorbed with
+<a href="https://github.com/py-econometrics/pyfixest">pyfixest</a>, which handles thousands of buyers quickly.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=b03630a7">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [15]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyfixest</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="n">sample</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">s</span><span class="p">[</span><span class="s2">"buyer"</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="s2">"adjudicante"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^(\d</span><span class="si">{9}</span><span class="s2">)"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">"not reported"</span><span class="p">)</span>   <span class="c1"># NIF only, never the name</span>
+<span class="n">s</span><span class="p">[</span><span class="s2">"cpv5"</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="s2">"CPV"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^(\d</span><span class="si">{5}</span><span class="s2">)\d</span><span class="si">{3}</span><span class="s2">"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">"00000"</span><span class="p">)</span>
+<span class="n">s</span><span class="p">[</span><span class="s2">"cpv8"</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="s2">"CPV"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^(\d</span><span class="si">{8}</span><span class="s2">)"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">"00000000"</span><span class="p">)</span>
+<span class="n">s</span><span class="p">[</span><span class="s2">"price_band"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">qcut</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"log_base"</span><span class="p">],</span> <span class="mi">10</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>                    <span class="c1"># base-price deciles</span>
+<span class="n">s</span><span class="p">[</span><span class="s2">"cell"</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="s2">"cpv5"</span><span class="p">]</span> <span class="o">+</span> <span class="s2">"_"</span> <span class="o">+</span> <span class="n">s</span><span class="p">[</span><span class="s2">"price_band"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<span class="n">s</span><span class="p">[</span><span class="s2">"buyer_cpv"</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="s2">"buyer"</span><span class="p">]</span> <span class="o">+</span> <span class="s2">"_"</span> <span class="o">+</span> <span class="n">s</span><span class="p">[</span><span class="s2">"cpv_division"</span><span class="p">]</span>
+<span class="n">duration</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"prazoExecucao"</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">"coerce"</span><span class="p">)</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">lower</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">s</span><span class="p">[</span><span class="s2">"duration_band"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">qcut</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">duplicates</span><span class="o">=</span><span class="s2">"drop"</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">SPECS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"Section 4 model (CPV division, year, size)"</span><span class="p">:</span> <span class="s2">"procedure_group + cpv_division + year + contract_type"</span><span class="p">,</span>
+    <span class="s2">"+ contracting-authority fixed effects"</span><span class="p">:</span> <span class="s2">"procedure_group + cpv_division + year + contract_type + buyer"</span><span class="p">,</span>
+    <span class="s2">"CPV class x base-price decile"</span><span class="p">:</span> <span class="s2">"procedure_group + year + contract_type + cell"</span><span class="p">,</span>
+    <span class="s2">"CPV class x decile + buyer"</span><span class="p">:</span> <span class="s2">"procedure_group + year + contract_type + cell + buyer"</span><span class="p">,</span>
+    <span class="s2">"+ buyer x CPV division + contract duration"</span><span class="p">:</span> <span class="s2">"procedure_group + year + contract_type + cell + buyer_cpv + duration_band"</span><span class="p">,</span>
+    <span class="s2">"8-digit CPV x decile + buyer"</span><span class="p">:</span> <span class="s2">"procedure_group + year + contract_type + cpv8^price_band + buyer"</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">doubling</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">var</span><span class="o">=</span><span class="s2">"log_bidders"</span><span class="p">):</span>
+    <span class="n">b</span><span class="p">,</span> <span class="n">se</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">coef</span><span class="p">()[</span><span class="n">var</span><span class="p">],</span> <span class="n">fit</span><span class="o">.</span><span class="n">se</span><span class="p">()[</span><span class="n">var</span><span class="p">]</span>
+    <span class="k">return</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">b</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="mf">1.96</span> <span class="o">*</span> <span class="n">se</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="mf">1.96</span> <span class="o">*</span> <span class="n">se</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+<span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">"ignore"</span><span class="p">)</span>      <span class="c1"># pyfixest notes the singleton cells it drops</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">fe</span> <span class="ow">in</span> <span class="n">SPECS</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">fit</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">feols</span><span class="p">(</span><span class="sa">f</span><span class="s2">"log_ratio ~ log_bidders + log_base | </span><span class="si">{</span><span class="n">fe</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">vcov</span><span class="o">=</span><span class="p">{</span><span class="s2">"CRV1"</span><span class="p">:</span> <span class="s2">"buyer"</span><span class="p">})</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">name</span><span class="p">,</span> <span class="n">fit</span><span class="o">.</span><span class="n">_N</span><span class="p">,</span> <span class="o">*</span><span class="n">doubling</span><span class="p">(</span><span class="n">fit</span><span class="p">)))</span>
+<span class="n">robust</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"model"</span><span class="p">,</span> <span class="s2">"contracts"</span><span class="p">,</span> <span class="s2">"doubling_bidders"</span><span class="p">,</span> <span class="s2">"ci_low"</span><span class="p">,</span> <span class="s2">"ci_high"</span><span class="p">])</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"model"</span><span class="p">)</span>
+
+<span class="n">varied</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"buyer"</span><span class="p">)[</span><span class="s2">"bidders"</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">'buyer'</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> buyers; </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">'buyer'</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">varied</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2"> of the sample comes from buyers "</span>
+      <span class="s2">"whose tenders drew different numbers of bids"</span><span class="p">)</span>
+<span class="n">robust</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">format</span><span class="p">({</span><span class="s2">"contracts"</span><span class="p">:</span> <span class="s2">"</span><span class="si">{:,}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"doubling_bidders"</span><span class="p">:</span> <span class="s2">"</span><span class="si">{:+.1%}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"ci_low"</span><span class="p">:</span> <span class="s2">"</span><span class="si">{:+.1%}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"ci_high"</span><span class="p">:</span> <span class="s2">"</span><span class="si">{:+.1%}</span><span class="s2">"</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>6,804 buyers; 98% of the sample comes from buyers whose tenders drew different numbers of bids
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[15]:</div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
+<style type="text/css">
+</style>
+<table id="T_db7ea">
+<thead>
+<tr>
+<th class="blank level0"> </th>
+<th class="col_heading level0 col0" id="T_db7ea_level0_col0">contracts</th>
+<th class="col_heading level0 col1" id="T_db7ea_level0_col1">doubling_bidders</th>
+<th class="col_heading level0 col2" id="T_db7ea_level0_col2">ci_low</th>
+<th class="col_heading level0 col3" id="T_db7ea_level0_col3">ci_high</th>
+</tr>
+<tr>
+<th class="index_name level0">model</th>
+<th class="blank col0"> </th>
+<th class="blank col1"> </th>
+<th class="blank col2"> </th>
+<th class="blank col3"> </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th class="row_heading level0 row0" id="T_db7ea_level0_row0">Section 4 model (CPV division, year, size)</th>
+<td class="data row0 col0" id="T_db7ea_row0_col0">272,342</td>
+<td class="data row0 col1" id="T_db7ea_row0_col1">-5.7%</td>
+<td class="data row0 col2" id="T_db7ea_row0_col2">-5.9%</td>
+<td class="data row0 col3" id="T_db7ea_row0_col3">-5.4%</td>
+</tr>
+<tr>
+<th class="row_heading level0 row1" id="T_db7ea_level0_row1">+ contracting-authority fixed effects</th>
+<td class="data row1 col0" id="T_db7ea_row1_col0">270,434</td>
+<td class="data row1 col1" id="T_db7ea_row1_col1">-5.8%</td>
+<td class="data row1 col2" id="T_db7ea_row1_col2">-6.0%</td>
+<td class="data row1 col3" id="T_db7ea_row1_col3">-5.6%</td>
+</tr>
+<tr>
+<th class="row_heading level0 row2" id="T_db7ea_level0_row2">CPV class x base-price decile</th>
+<td class="data row2 col0" id="T_db7ea_row2_col0">268,153</td>
+<td class="data row2 col1" id="T_db7ea_row2_col1">-5.5%</td>
+<td class="data row2 col2" id="T_db7ea_row2_col2">-5.7%</td>
+<td class="data row2 col3" id="T_db7ea_row2_col3">-5.3%</td>
+</tr>
+<tr>
+<th class="row_heading level0 row3" id="T_db7ea_level0_row3">CPV class x decile + buyer</th>
+<td class="data row3 col0" id="T_db7ea_row3_col0">266,241</td>
+<td class="data row3 col1" id="T_db7ea_row3_col1">-5.7%</td>
+<td class="data row3 col2" id="T_db7ea_row3_col2">-5.8%</td>
+<td class="data row3 col3" id="T_db7ea_row3_col3">-5.5%</td>
+</tr>
+<tr>
+<th class="row_heading level0 row4" id="T_db7ea_level0_row4">+ buyer x CPV division + contract duration</th>
+<td class="data row4 col0" id="T_db7ea_row4_col0">253,782</td>
+<td class="data row4 col1" id="T_db7ea_row4_col1">-5.5%</td>
+<td class="data row4 col2" id="T_db7ea_row4_col2">-5.7%</td>
+<td class="data row4 col3" id="T_db7ea_row4_col3">-5.4%</td>
+</tr>
+<tr>
+<th class="row_heading level0 row5" id="T_db7ea_level0_row5">8-digit CPV x decile + buyer</th>
+<td class="data row5 col0" id="T_db7ea_row5_col0">261,545</td>
+<td class="data row5 col1" id="T_db7ea_row5_col1">-5.7%</td>
+<td class="data row5 col2" id="T_db7ea_row5_col2">-5.9%</td>
+<td class="data row5 col3" id="T_db7ea_row5_col3">-5.5%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b8efc9eb">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>The effect hardly moves: about <strong>−5.5% to −5.8% per doubling</strong> in every specification, against −5.7% in section 4.
+The same buyer, buying the same kind of thing at a similar size, still pays less when more firms bid.</p>
+<h3 id="Is-it-the-same-in-every-category?">Is it the same in every category?<a class="anchor-link" href="#Is-it-the-same-in-every-category?">¶</a></h3><p>The −5.7% is an average. The cell below fits the strictest model (CPV class × decile + buyer) separately for each
+CPV division with at least 2,000 contracts.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=9d6071ef">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [16]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">cpv_names</span> <span class="o">=</span> <span class="n">cpv</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"cpv_division"</span><span class="p">)[</span><span class="s2">"cpv_short_name"</span><span class="p">]</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">"ignore"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">division</span><span class="p">,</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"cpv_division"</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2000</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">fit</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">feols</span><span class="p">(</span><span class="s2">"log_ratio ~ log_bidders + log_base | procedure_group + year + contract_type + cell + buyer"</span><span class="p">,</span>
+                       <span class="n">data</span><span class="o">=</span><span class="n">g</span><span class="p">,</span> <span class="n">vcov</span><span class="o">=</span><span class="p">{</span><span class="s2">"CRV1"</span><span class="p">:</span> <span class="s2">"buyer"</span><span class="p">})</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cpv_names</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">division</span><span class="p">,</span> <span class="n">division</span><span class="p">),</span> <span class="n">fit</span><span class="o">.</span><span class="n">_N</span><span class="p">,</span> <span class="o">*</span><span class="n">doubling</span><span class="p">(</span><span class="n">fit</span><span class="p">),</span> <span class="n">g</span><span class="p">[</span><span class="s2">"bidders"</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span>
+<span class="n">by_division</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"category"</span><span class="p">,</span> <span class="s2">"contracts"</span><span class="p">,</span> <span class="s2">"doubling_bidders"</span><span class="p">,</span> <span class="s2">"ci_low"</span><span class="p">,</span> <span class="s2">"ci_high"</span><span class="p">,</span> <span class="s2">"single_bid_share"</span><span class="p">])</span>
+                 <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">"doubling_bidders"</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="n">negative</span> <span class="o">=</span> <span class="p">(</span><span class="n">by_division</span><span class="p">[</span><span class="s2">"ci_high"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">by_division</span><span class="p">)</span><span class="si">}</span><span class="s2"> categories, </span><span class="si">{</span><span class="n">by_division</span><span class="p">[</span><span class="s1">'contracts'</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> contracts; "</span>
+      <span class="sa">f</span><span class="s2">"clearly negative (whole 95% CI below zero) in </span><span class="si">{</span><span class="n">negative</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="n">base</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">by_division</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s2">"category:N"</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Axis</span><span class="p">(</span><span class="n">labelLimit</span><span class="o">=</span><span class="mi">260</span><span class="p">)))</span>
+<span class="n">alt</span><span class="o">.</span><span class="n">layer</span><span class="p">(</span>
+    <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"x"</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">]}))</span><span class="o">.</span><span class="n">mark_rule</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">MUTED</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">"x:Q"</span><span class="p">),</span>
+    <span class="n">base</span><span class="o">.</span><span class="n">mark_rule</span><span class="p">(</span><span class="n">strokeWidth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">0.35</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">"ci_low:Q"</span><span class="p">,</span> <span class="n">x2</span><span class="o">=</span><span class="s2">"ci_high:Q"</span><span class="p">),</span>
+    <span class="n">base</span><span class="o">.</span><span class="n">mark_point</span><span class="p">(</span><span class="n">filled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">BLUE</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s2">"doubling_bidders:Q"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Price change when the number of bidders doubles (95% CI)"</span><span class="p">,</span>
+                <span class="n">axis</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Axis</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">"%"</span><span class="p">)),</span>
+        <span class="n">tooltip</span><span class="o">=</span><span class="p">[</span><span class="n">alt</span><span class="o">.</span><span class="n">Tooltip</span><span class="p">(</span><span class="s2">"category:N"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Category"</span><span class="p">),</span>
+                 <span class="n">alt</span><span class="o">.</span><span class="n">Tooltip</span><span class="p">(</span><span class="s2">"doubling_bidders:Q"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Doubling bidders"</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"+.1%"</span><span class="p">),</span>
+                 <span class="n">alt</span><span class="o">.</span><span class="n">Tooltip</span><span class="p">(</span><span class="s2">"ci_low:Q"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"95% CI low"</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"+.1%"</span><span class="p">),</span>
+                 <span class="n">alt</span><span class="o">.</span><span class="n">Tooltip</span><span class="p">(</span><span class="s2">"ci_high:Q"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"95% CI high"</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"+.1%"</span><span class="p">),</span>
+                 <span class="n">alt</span><span class="o">.</span><span class="n">Tooltip</span><span class="p">(</span><span class="s2">"contracts:Q"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Contracts"</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">","</span><span class="p">),</span>
+                 <span class="n">alt</span><span class="o">.</span><span class="n">Tooltip</span><span class="p">(</span><span class="s2">"single_bid_share:Q"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Single bid"</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">".0%"</span><span class="p">)]),</span>
+<span class="p">)</span><span class="o">.</span><span class="n">properties</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">560</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Step</span><span class="p">(</span><span class="mi">17</span><span class="p">),</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Same buyer, same CPV class and size: effect by category"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>28 categories, 239,225 contracts; clearly negative (whole 95% CI below zero) in 27
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[16]:</div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
+<style>
+  #altair-viz-55e807a2e11f434593428240ae664a21.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-55e807a2e11f434593428240ae664a21.vega-embed details,
+  #altair-viz-55e807a2e11f434593428240ae664a21.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-55e807a2e11f434593428240ae664a21"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-55e807a2e11f434593428240ae664a21") {
+      outputDiv = document.getElementById("altair-viz-55e807a2e11f434593428240ae664a21");
+    }
+
+    const paths = {
+      "vega": "/assets/vega/vega.min.js?noext",
+      "vega-lib": "/assets/vega/vega.min.js?noext",
+      "vega-lite": "/assets/vega/vega-lite.min.js?noext",
+      "vega-embed": "/assets/vega/vega-embed.min.js?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      let deps = ["vega-embed"];
+      require(deps, displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "6")
+        .then(() => maybeLoadScript("vega-lite", "6.4.1"))
+        .then(() => maybeLoadScript("vega-embed", "7"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"stroke": null}, "axis": {"gridColor": "#e4e3df", "domainColor": "#52514e", "tickColor": "#52514e", "labelColor": "#52514e", "titleColor": "#52514e", "labelFontSize": 11, "titleFontSize": 11, "titleFontWeight": "normal"}, "legend": {"labelColor": "#52514e", "titleColor": "#52514e"}, "title": {"anchor": "start", "fontSize": 13, "color": "#0b0b0b"}, "font": "system-ui, -apple-system, Segoe UI, sans-serif"}, "layer": [{"data": {"name": "data-d285a7403ed98ae579761d64a864032b"}, "mark": {"type": "rule", "color": "#52514e"}, "encoding": {"x": {"field": "x", "type": "quantitative"}}}, {"data": {"name": "data-fff49afef5add944210704502dc102d2"}, "mark": {"type": "rule", "color": "#2a78d6", "opacity": 0.35, "strokeWidth": 3}, "encoding": {"x": {"field": "ci_low", "type": "quantitative"}, "x2": {"field": "ci_high"}, "y": {"axis": {"labelLimit": 260}, "field": "category", "sort": null, "title": null, "type": "nominal"}}}, {"data": {"name": "data-fff49afef5add944210704502dc102d2"}, "mark": {"type": "point", "color": "#2a78d6", "filled": true, "opacity": 1, "size": 70}, "encoding": {"tooltip": [{"field": "category", "title": "Category", "type": "nominal"}, {"field": "doubling_bidders", "format": "+.1%", "title": "Doubling bidders", "type": "quantitative"}, {"field": "ci_low", "format": "+.1%", "title": "95% CI low", "type": "quantitative"}, {"field": "ci_high", "format": "+.1%", "title": "95% CI high", "type": "quantitative"}, {"field": "contracts", "format": ",", "title": "Contracts", "type": "quantitative"}, {"field": "single_bid_share", "format": ".0%", "title": "Single bid", "type": "quantitative"}], "x": {"axis": {"format": "%"}, "field": "doubling_bidders", "title": "Price change when the number of bidders doubles (95% CI)", "type": "quantitative"}, "y": {"axis": {"labelLimit": 260}, "field": "category", "sort": null, "title": null, "type": "nominal"}}}], "height": {"step": 17}, "title": "Same buyer, same CPV class and size: effect by category", "width": 560, "$schema": "https://vega.github.io/schema/vega-lite/v6.4.1.json", "datasets": {"data-d285a7403ed98ae579761d64a864032b": [{"x": 0}], "data-fff49afef5add944210704502dc102d2": [{"category": "Architecture and engineering", "contracts": 19101, "doubling_bidders": -0.09858428953001197, "ci_low": -0.10478693555526175, "ci_high": -0.0923386673471942, "single_bid_share": 0.37974747730845293}, {"category": "IT services", "contracts": 12027, "doubling_bidders": -0.07855154359978422, "ci_low": -0.08708389882022682, "ci_high": -0.06993944273183506, "single_bid_share": 0.5508285532186106}, {"category": "Health and social services", "contracts": 3001, "doubling_bidders": -0.0658004543119155, "ci_low": -0.07988362118222525, "ci_high": -0.051501732546961, "single_bid_share": 0.5514909314478943}, {"category": "Business services", "contracts": 21439, "doubling_bidders": -0.06378201735127609, "ci_low": -0.06820842230118573, "ci_high": -0.059334585101646686, "single_bid_share": 0.4987982404426103}, {"category": "Medical and pharmaceutical", "contracts": 12086, "doubling_bidders": -0.06274434918877714, "ci_low": -0.0730549206021649, "ci_high": -0.05231909149544334, "single_bid_share": 0.3181022130234039}, {"category": "Other community services", "contracts": 4651, "doubling_bidders": -0.06145091197005981, "ci_low": -0.07438084907025799, "ci_high": -0.04834035709283402, "single_bid_share": 0.6689447236180904}, {"category": "Repair and maintenance", "contracts": 12787, "doubling_bidders": -0.061233662698535585, "ci_low": -0.06745017964636113, "ci_high": -0.05497570551650577, "single_bid_share": 0.5177615204766574}, {"category": "Agricultural, forestry and gardening services", "contracts": 4196, "doubling_bidders": -0.05893391303693751, "ci_low": -0.06765860852833105, "ci_high": -0.050127573297939265, "single_bid_share": 0.3898639754278192}, {"category": "Industrial machinery", "contracts": 2797, "doubling_bidders": -0.058598125630714315, "ci_low": -0.06967124911596212, "ci_high": -0.04739320565567395, "single_bid_share": 0.4325117370892019}, {"category": "Software", "contracts": 4390, "doubling_bidders": -0.0575088107597711, "ci_low": -0.0655515500292625, "ci_high": -0.04939684813723222, "single_bid_share": 0.5200974421437271}, {"category": "Furniture and cleaning products", "contracts": 8830, "doubling_bidders": -0.056235777851344926, "ci_low": -0.06315625482321119, "ci_high": -0.049264179225771976, "single_bid_share": 0.42299687825182103}, {"category": "Education and training", "contracts": 2685, "doubling_bidders": -0.05443275250830493, "ci_low": -0.07146504763232864, "ci_high": -0.037088030720694554, "single_bid_share": 0.6962025316455697}, {"category": "Telecom equipment", "contracts": 3060, "doubling_bidders": -0.0524764718812164, "ci_low": -0.062042246461228245, "ci_high": -0.042813140622377066, "single_bid_share": 0.44579677328049816}, {"category": "Agriculture and food raw materials", "contracts": 1840, "doubling_bidders": -0.05053973541439383, "ci_low": -0.06567456691891482, "ci_high": -0.03515973973413711, "single_bid_share": 0.54296875}, {"category": "Laboratory and precision equipment", "contracts": 1945, "doubling_bidders": -0.050481157840496116, "ci_low": -0.06782457654573504, "ci_high": -0.03281505934257334, "single_bid_share": 0.40811258278145696}, {"category": "Waste, cleaning and environment", "contracts": 9771, "doubling_bidders": -0.049301270501584504, "ci_low": -0.05541080266186782, "ci_high": -0.04315222234501115, "single_bid_share": 0.3351664538937445}, {"category": "Office and IT equipment", "contracts": 10233, "doubling_bidders": -0.04909213721576222, "ci_low": -0.055380549050161876, "ci_high": -0.042761862890219327, "single_bid_share": 0.4181717143651014}, {"category": "Electrical equipment", "contracts": 3076, "doubling_bidders": -0.04856761933551601, "ci_low": -0.060757790508280896, "ci_high": -0.03621923522074366, "single_bid_share": 0.45556805399325084}, {"category": "Transport services", "contracts": 4908, "doubling_bidders": -0.04519059733787778, "ci_low": -0.05772265805999299, "ci_high": -0.03249186323951492, "single_bid_share": 0.5565619579880516}, {"category": "Recreation, culture and sport", "contracts": 5657, "doubling_bidders": -0.04492034831506697, "ci_low": -0.052738951990202176, "ci_high": -0.037037210619919714, "single_bid_share": 0.6791694574681849}, {"category": "Construction materials", "contracts": 8072, "doubling_bidders": -0.04460386175161146, "ci_low": -0.051856385548676776, "ci_high": -0.037295862074494535, "single_bid_share": 0.4067418369743951}, {"category": "Food and beverages", "contracts": 9418, "doubling_bidders": -0.04231276637959758, "ci_low": -0.0504308457615662, "ci_high": -0.03412528371872314, "single_bid_share": 0.4621926229508197}, {"category": "Financial and insurance", "contracts": 4161, "doubling_bidders": -0.03906451535195865, "ci_low": -0.04975470158217643, "ci_high": -0.02825406535213626, "single_bid_share": 0.3789914115833517}, {"category": "Construction work", "contracts": 50950, "doubling_bidders": -0.03885626326325475, "ci_low": -0.041070110875761845, "ci_high": -0.03663730461884951, "single_bid_share": 0.27941873921044147}, {"category": "Printed matter", "contracts": 1767, "doubling_bidders": -0.038499073688369245, "ci_low": -0.05416346024441676, "ci_high": -0.022575262807014385, "single_bid_share": 0.4517374517374517}, {"category": "Transport equipment", "contracts": 9697, "doubling_bidders": -0.03769500874988352, "ci_low": -0.04465587122216064, "ci_high": -0.030683427793137485, "single_bid_share": 0.4638949671772429}, {"category": "Energy and fuel", "contracts": 3592, "doubling_bidders": -0.03227719964214937, "ci_low": -0.04363685357607905, "ci_high": -0.020782616065665893, "single_bid_share": 0.2752780586450961}, {"category": "Hotel, catering and retail services", "contracts": 3088, "doubling_bidders": -0.009909102327410935, "ci_low": -0.026442075057009906, "ci_high": 0.00690463354968518, "single_bid_share": 0.49398315282791816}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b8931527">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>The effect is negative and clear in almost every category, but its size varies. It is largest in services where
+the price is mostly a quote (architecture and engineering, IT services) and smallest where prices follow a market
+(energy and fuel, construction), with hotel and catering services close to zero.</p>
+<p>What these checks still cannot hold constant: the time bidders had to submit and how restrictive the
+specification was. Neither is in the contracts file; the announcements dataset has the deadline and is the next test.</p>
+</div>
+</div>
+</div>
+</div>
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=14647af8">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -9071,8 +9387,8 @@ and the notebook leaves those out.</li>
 <li><strong>The sample</strong> is single-contract procedures with a plausible base price (counted in the cell below), so
 multi-lot tenders are left out.</li>
 </ul>
-<p>Next steps that would sharpen this: buyer fixed effects (does the <em>same</em> buyer pay less when more firms bid?),
-and the announcements dataset, to measure how long each tender was open.</p>
+<p>Section 6 already compares each buyer with itself and each tender with others of the same CPV class and size.
+The next step is the announcements dataset, to measure how long each tender was open.</p>
 </div>
 </div>
 </div>
@@ -9081,7 +9397,7 @@ and the announcements dataset, to measure how long each tender was open.</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [15]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [17]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Sample: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">comp</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> open tenders and prior consultations with a reported bid count "</span>
