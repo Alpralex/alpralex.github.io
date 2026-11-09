@@ -3,40 +3,43 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Guilherme Rigonato · Engenheiro de BI</title>
-<meta name="description" content="Guilherme Rigonato, engenheiro de BI em Lisboa: Power BI, Qlik Sense e SQL. Projetos com relatórios ao vivo, código e experiência.">
+<title>Guilherme Rigonato · Senior BI Developer</title>
+<meta name="description" content="Guilherme Rigonato, senior BI developer em Lisboa: Qlik Sense, Power BI, SQL, dbt e Python. Projetos com relatórios ao vivo, código e experiência.">
 <link rel="alternate" hreflang="en" href="https://guilhermerigonato.com/">
 <link rel="alternate" hreflang="pt-PT" href="https://guilhermerigonato.com/pt/">
 <link rel="canonical" href="https://guilhermerigonato.com/pt/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
-<meta property="og:title" content="Guilherme Rigonato · Engenheiro de BI">
-<meta property="og:description" content="Guilherme Rigonato, engenheiro de BI em Lisboa: Power BI, Qlik Sense e SQL. Projetos com relatórios ao vivo, código e experiência.">
+<meta property="og:title" content="Guilherme Rigonato · Senior BI Developer">
+<meta property="og:description" content="Guilherme Rigonato, senior BI developer em Lisboa: Qlik Sense, Power BI, SQL, dbt e Python. Projetos com relatórios ao vivo, código e experiência.">
 <meta property="og:image" content="https://guilhermerigonato.com/img/fpa.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Mono:wght@400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 :root {
-  --bg: #f7f8f9; --ink: #1b2430; --muted: #5d6876; --rule: #dce0e5; --accent: #1f5a85; --panel: #ffffff;
-  --bar: rgba(247, 248, 249, 0.92);
-  --serif: "IBM Plex Serif", Georgia, "Times New Roman", serif;
-  --sans: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  /* Almanac palette, the same one the Power BI reports and the web dashboards use. */
+  --bg: #c4cbd2; --ink: #182027; --muted: #3b434b; --rule: #a1a9af; --accent: #970d63; --accent-soft: #f1dce6; --on-accent: #ffffff; --panel: #eef1f4;
+  --bar: rgba(196, 203, 210, 0.94);
+  --display: "Hanken Grotesk", system-ui, "Helvetica Neue", Arial, sans-serif;
+  --body: "Newsreader", Georgia, serif;
   --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --bg: #121519; --ink: #e3e7eb; --muted: #97a2ad; --rule: #2a3038; --accent: #86b6da; --panel: #181c21; --bar: rgba(18, 21, 25, 0.92); color-scheme: dark; }
+  :root:not([data-theme="light"]) { --bg: #13171b; --ink: #e3e7eb; --muted: #9aa4ae; --rule: #333b44; --accent: #e07ab0; --accent-soft: #3a1f2e; --on-accent: #13171b; --panel: #1b2026; --bar: rgba(19, 23, 27, 0.94); color-scheme: dark; }
 }
-:root[data-theme="dark"] { --bg: #121519; --ink: #e3e7eb; --muted: #97a2ad; --rule: #2a3038; --accent: #86b6da; --panel: #181c21; --bar: rgba(18, 21, 25, 0.92); color-scheme: dark; }
+:root[data-theme="dark"] { --bg: #13171b; --ink: #e3e7eb; --muted: #9aa4ae; --rule: #333b44; --accent: #e07ab0; --accent-soft: #3a1f2e; --on-accent: #13171b; --panel: #1b2026; --bar: rgba(19, 23, 27, 0.94); color-scheme: dark; }
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 4.5rem; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 1rem; line-height: 1.6; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 1.06rem; line-height: 1.55; }
 h1, h2, h3 { margin: 0; text-wrap: balance; }
-h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(2rem, 5vw, 2.6rem); line-height: 1.15; }
-h2 { font-family: var(--serif); font-weight: 500; font-size: 1.35rem; line-height: 1.3; }
-h3 { font-size: 1.05rem; font-weight: 600; line-height: 1.4; }
+h1 { font-family: var(--display); font-weight: 600; font-size: clamp(2rem, 5vw, 2.7rem); line-height: 1.15; letter-spacing: -0.02em; padding-bottom: 0.5rem; border-bottom: 2px solid var(--ink); }
+h2 { font-family: var(--display); font-weight: 600; font-size: 1.4rem; line-height: 1.3; letter-spacing: -0.01em; }
+h3 { font-family: var(--display); font-size: 1.08rem; font-weight: 600; line-height: 1.4; }
+/* Interface text (menus, buttons, labels, dates) uses the display face, as in the reports. */
+.nav, .lang, .role, .facts, .btn, .links, .filters, .status, .stack, .job .when, .skills b, .skills strong, button.copy, .skip { font-family: var(--display); }
 p, ul { margin: 0; }
 a { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 a:hover { text-decoration-thickness: 2px; }
@@ -49,13 +52,13 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
 /* Top bar: name, section links, language. Stays visible while scrolling. */
 .bar { position: sticky; top: 0; z-index: 10; background: var(--bar); backdrop-filter: saturate(1.4) blur(8px); -webkit-backdrop-filter: saturate(1.4) blur(8px); border-bottom: 1px solid var(--rule); }
 .bar-in { max-width: 62rem; margin: 0 auto; padding: 0.65rem max(16px, env(safe-area-inset-left, 0px)); display: flex; align-items: center; gap: 0.5rem 1.5rem; flex-wrap: wrap; }
-.brand { font-family: var(--serif); font-weight: 600; font-size: 1.05rem; color: var(--ink); text-decoration: none; margin-right: auto; }
+.brand { font-family: var(--display); font-weight: 600; font-size: 1.05rem; color: var(--ink); text-decoration: none; margin-right: auto; }
 .nav { display: flex; gap: 1.25rem; font-size: 0.95rem; }
 .nav a { color: var(--muted); text-decoration: none; padding-block: 0.2rem; border-bottom: 2px solid transparent; }
 .nav a:hover { color: var(--ink); }
 .nav a[aria-current="true"] { color: var(--ink); border-bottom-color: var(--accent); }
-.lang { font-size: 0.9rem; border: 1px solid var(--rule); border-radius: 3px; padding: 0.15rem 0.6rem; text-decoration: none; color: var(--ink); }
-.lang:hover { border-color: var(--accent); }
+.lang { font-size: 0.88rem; border: 1px solid var(--ink); border-radius: 2px; padding: 0.15rem 0.6rem; text-decoration: none; color: var(--ink); }
+.lang:hover { background: var(--accent-soft); }
 @media (max-width: 640px) {
   .bar-in { gap: 0.35rem 1rem; }
   .nav { order: 3; width: 100%; overflow-x: auto; gap: 1.1rem; scrollbar-width: none; }
@@ -71,11 +74,11 @@ header.hero { display: grid; gap: 0.9rem; }
 .intro { max-width: 62ch; }
 .facts { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; color: var(--muted); font-size: 0.92rem; }
 .cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.4rem; }
-.btn { display: inline-block; font: inherit; font-size: 0.95rem; font-weight: 500; padding: 0.45rem 1rem; border-radius: 3px; text-decoration: none; border: 1px solid var(--accent); }
-.btn.primary { background: var(--accent); color: var(--bg); }
-.btn.primary:hover { filter: brightness(1.1); }
-.btn.ghost { color: var(--accent); background: transparent; }
-.btn.ghost:hover { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.btn { display: inline-block; font-size: 0.92rem; font-weight: 500; padding: 0.45rem 1rem; border-radius: 2px; text-decoration: none; border: 1px solid var(--ink); color: var(--ink); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn.primary:hover { filter: brightness(0.9); }
+.btn.ghost { background: transparent; }
+.btn.ghost:hover { background: var(--accent-soft); }
 
 section { display: grid; gap: 1.25rem; }
 .sec-head { display: grid; gap: 0.4rem; }
@@ -84,15 +87,15 @@ section { display: grid; gap: 1.25rem; }
 /* Tool filter: a plain segmented control, not chips. */
 .filters { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; padding-block: 0.75rem; border-block: 1px solid var(--rule); }
 .filters .label { font-size: 0.9rem; color: var(--muted); }
-.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--rule); border-radius: 3px; overflow: hidden; }
-.seg button { font: inherit; font-size: 0.9rem; color: var(--ink); background: var(--panel); border: 0; border-right: 1px solid var(--rule); padding: 0.3rem 0.8rem; cursor: pointer; }
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--ink); border-radius: 2px; overflow: hidden; }
+.seg button { font-family: var(--display); font-size: 0.88rem; color: var(--ink); background: var(--panel); border: 0; border-right: 1px solid var(--ink); padding: 0.3rem 0.8rem; cursor: pointer; }
 .seg button:last-child { border-right: 0; }
-.seg button:hover { color: var(--accent); }
-.seg button[aria-pressed="true"] { background: var(--accent); color: var(--bg); }
+.seg button:hover { background: var(--accent-soft); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
 .count { font-size: 0.88rem; color: var(--muted); margin-left: auto; font-variant-numeric: tabular-nums; }
 
-.list { display: grid; }
-.proj { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 22rem); gap: 1rem 2rem; padding-block: 1.5rem; border-bottom: 1px solid var(--rule); align-items: start; }
+.list { display: grid; gap: 1rem; }
+.proj { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 22rem); gap: 1rem 2rem; padding: 1.25rem; background: var(--panel); border: 1px solid var(--rule); border-top: 2px solid var(--ink); border-radius: 2px; align-items: start; }
 .proj[hidden] { display: none; }
 .proj .body { display: grid; gap: 0.5rem; min-width: 0; }
 .proj .top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.75rem; }
@@ -101,7 +104,7 @@ section { display: grid; gap: 1.25rem; }
 .proj li { font-variant-numeric: tabular-nums; }
 .stack { font-size: 0.88rem; color: var(--muted); }
 .stack .tl { color: var(--ink); font-weight: 500; }
-.shot { display: block; border: 1px solid var(--rule); border-radius: 3px; overflow: hidden; background: var(--panel); line-height: 0; }
+.shot { display: block; border: 1px solid var(--rule); border-radius: 2px; overflow: hidden; background: var(--bg); line-height: 0; }
 .shot img { width: 100%; height: auto; aspect-ratio: 1100 / 626; object-fit: cover; object-position: top left; transition: transform 0.25s ease; }
 .shot:hover { border-color: var(--accent); }
 .shot:hover img { transform: scale(1.02); }
@@ -129,9 +132,9 @@ section { display: grid; gap: 1.25rem; }
 
 #contact { padding-top: 1.25rem; border-top: 1px solid var(--ink); }
 .contact { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; align-items: baseline; }
-.email { font-family: var(--mono); font-size: 0.92rem; user-select: all; overflow-wrap: anywhere; }
-button.copy { font: inherit; font-size: 0.85rem; color: var(--accent); background: none; border: 1px solid var(--rule); border-radius: 3px; padding: 0.1rem 0.5rem; cursor: pointer; margin-left: 0.5rem; }
-button.copy:hover { border-color: var(--accent); }
+.email { font-family: var(--mono); font-size: 0.9rem; user-select: all; overflow-wrap: anywhere; }
+button.copy { font-size: 0.82rem; color: var(--ink); background: none; border: 1px solid var(--ink); border-radius: 2px; padding: 0.1rem 0.5rem; cursor: pointer; margin-left: 0.5rem; }
+button.copy:hover { background: var(--accent-soft); }
 </style>
 </head>
 <body>
@@ -144,13 +147,13 @@ button.copy:hover { border-color: var(--accent); }
 <main class="page" id="main">
 <header class="hero narrow">
 <h1>Guilherme Rigonato</h1>
-<p class="role">Engenheiro de BI · Power BI, Qlik Sense, SQL</p>
-<p class="intro">Dez anos a construir relatórios e painéis em Qlik Sense e Power BI. Durante sete deles estive na liderança comercial de um distribuidor veterinário e geri vendas, preços e tesouraria com os relatórios que eu próprio construí. Acompanho um projeto desde os dados em bruto até ao painel final.</p>
+<p class="role">Senior BI Developer · Qlik Sense, Power BI, SQL</p>
+<p class="intro">Dez anos a construir relatórios e painéis em Qlik Sense e Power BI, com SQL, dbt e Python por trás. Durante sete deles estive na liderança comercial de um distribuidor veterinário e geri vendas, preços e tesouraria com os relatórios que eu próprio construí. Acompanho um projeto desde os dados em bruto até ao painel final.</p>
 <p class="facts"><span>Em Lisboa a partir de dezembro de 2026</span><span>Não preciso de patrocínio de visto</span><span>Tempo inteiro</span><span>Português e inglês</span></p>
-<p class="cta"><a class="btn primary" href="#projects">Ver os projetos</a><a class="btn ghost" href="#contact">Contactar</a><a class="btn ghost" href="/Guilherme_Rigonato_CV.pdf" download>Descarregar CV (PDF, em inglês)</a></p>
+<p class="cta"><a class="btn primary" href="#projects">Ver os projetos</a><a class="btn ghost" href="#contact">Contactar</a><a class="btn ghost" href="/Guilherme_Rigonato_CV_pt.pdf" download>Descarregar CV (PDF)</a></p>
 </header>
 <section id="projects" aria-labelledby="h-projects">
-<div class="sec-head narrow"><h2 id="h-projects">Projetos</h2><p class="muted">A maioria dos projetos tem três versões sobre os mesmos dados: um relatório Power BI, um painel web e uma app Qlik Sense. Clique numa imagem para abrir o relatório. O código está no GitHub, onde cada modelo Power BI é verificado automaticamente com as regras de boas práticas da Microsoft. Os painéis estão em inglês.</p></div>
+<div class="sec-head narrow"><h2 id="h-projects">Projetos</h2><p class="muted">A maioria dos projetos tem quatro versões sobre os mesmos dados: um relatório Power BI, um painel web com filtro cruzado, um notebook Python passo a passo e uma app Qlik Sense. Clique numa imagem para abrir o relatório. O código está no GitHub, onde cada modelo Power BI é verificado automaticamente com as regras de boas práticas da Microsoft. Os painéis estão em inglês.</p></div>
 <div class="filters"><span class="label" id="filter-label">Mostrar projetos que usam</span>
 <div class="seg" role="group" aria-labelledby="filter-label"><button type="button" data-key="all" aria-pressed="true">Todos</button><button type="button" data-key="powerbi" aria-pressed="false">Power BI</button><button type="button" data-key="qlik" aria-pressed="false">Qlik Sense</button><button type="button" data-key="sql" aria-pressed="false">SQL e dbt</button></div>
 <span class="count" id="count" aria-live="polite" data-tpl="{n} de {t} projetos">7 de 7 projetos</span></div>
@@ -161,9 +164,9 @@ button.copy:hover { border-color: var(--accent); }
 <p>A app que um diretor comercial abre todas as manhãs: vendas, visitas dos delegados, descontos e pagamentos em atraso, de um distribuidor de saúde animal em Portugal. Os dados são sintéticos, inspirados no tipo de app em que me apoiei como diretor comercial.</p>
 <ul><li>Mostra que o Sul caiu 16,5% depois da saída de um delegado, com as visitas reduzidas a metade</li><li>Identifica o delegado que dá 15% de desconto quando os restantes dão cerca de 6%</li><li>Lista 225 clientes sem visita há 60 dias, que compraram 5,4 M€ no último ano</li></ul>
 <p class="stack"><span class="tl">Ferramentas:</span> SQL, dbt, DuckDB, Python (pandas, Altair), Power BI, DAX, row-level security, calculation groups, Qlik Sense, set analysis</p>
-<p class="links"><a href="https://app.powerbi.com/view?r=eyJrIjoiN2IzMWEwZWUtNmQxYy00NGQ0LTgzZjctYzJhNzk0MDk3MmUxIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Relatório Power BI</a><a href="/commercial-analytics/">Painel web</a><a href="/commercial-analytics/notebook/">Notebook Python</a><a href="https://github.com/Alpralex/commercial-analytics" target="_blank" rel="noopener">Código</a></p>
+<p class="links"><a href="https://app.powerbi.com/view?r=eyJrIjoiN2IzMWEwZWUtNmQxYy00NGQ0LTgzZjctYzJhNzk0MDk3MmUxIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9&amp;pageName=c0a1b2c3d4e5f6a7b801" target="_blank" rel="noopener">Relatório Power BI</a><a href="/commercial-analytics/">Painel web</a><a href="/commercial-analytics/notebook/">Notebook Python</a><a href="https://github.com/Alpralex/commercial-analytics" target="_blank" rel="noopener">Código</a></p>
 </div>
-<a class="shot" href="https://app.powerbi.com/view?r=eyJrIjoiN2IzMWEwZWUtNmQxYy00NGQ0LTgzZjctYzJhNzk0MDk3MmUxIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener" aria-label="Abrir relatório power bi: Painel de direção comercial para um distribuidor"><img src="/img/commercial.webp" alt="Painel de direção comercial para um distribuidor: Relatório Power BI" width="1100" height="626" loading="lazy" decoding="async"></a>
+<a class="shot" href="https://app.powerbi.com/view?r=eyJrIjoiN2IzMWEwZWUtNmQxYy00NGQ0LTgzZjctYzJhNzk0MDk3MmUxIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9&amp;pageName=c0a1b2c3d4e5f6a7b801" target="_blank" rel="noopener" aria-label="Abrir relatório power bi: Painel de direção comercial para um distribuidor"><img src="/img/commercial.webp" alt="Painel de direção comercial para um distribuidor: Relatório Power BI" width="1100" height="626" loading="lazy" decoding="async"></a>
 </article>
 <article class="proj" data-tags="powerbi qlik sql python">
 <div class="body">
@@ -201,9 +204,9 @@ button.copy:hover { border-color: var(--accent); }
 <p>Um produto que construí e vendi através da minha empresa, a Informar Dados. Todos os dias recolhia anúncios de carros usados, identificava o modelo de cada carro e mostrava ao stand o preço de mercado, para comprar e definir preços com confiança. O painel aqui usa dados de exemplo.</p>
 <ul><li>Cerca de 250 000 anúncios de carros na base de dados</li><li>5114 grafias diferentes de nomes de carros reduzidas a 641 modelos reais</li><li>Cerca de 300 € poupados por negociação no stand que o comprou</li></ul>
 <p class="stack"><span class="tl">Ferramentas:</span> SQL, PostgreSQL, Python (pandas, Altair), dbt, Power BI, Qlik Sense, Claude API</p>
-<p class="links"><a href="https://app.powerbi.com/view?r=eyJrIjoiMTYxODFjYTUtYjZmOC00NDQ5LTgxZmQtNDA5Y2I5YmMzMDdlIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Relatório Power BI</a><a href="/infocars/dashboard/">Painel web</a><a href="/infocars/">Estudo de caso</a><a href="/infocars/notebook/">Notebook Python</a><a href="https://github.com/Alpralex/infocars-pricing-showcase" target="_blank" rel="noopener">Código</a></p>
+<p class="links"><a href="https://app.powerbi.com/view?r=eyJrIjoiMTYxODFjYTUtYjZmOC00NDQ5LTgxZmQtNDA5Y2I5YmMzMDdlIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9&amp;pageName=a0c1b2c3d4e5f6a7b801" target="_blank" rel="noopener">Relatório Power BI</a><a href="/infocars/dashboard/">Painel web</a><a href="/infocars/">Estudo de caso</a><a href="/infocars/notebook/">Notebook Python</a><a href="https://github.com/Alpralex/infocars-pricing-showcase" target="_blank" rel="noopener">Código</a></p>
 </div>
-<a class="shot" href="https://app.powerbi.com/view?r=eyJrIjoiMTYxODFjYTUtYjZmOC00NDQ5LTgxZmQtNDA5Y2I5YmMzMDdlIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener" aria-label="Abrir relatório power bi: InfoCars: preços de carros usados para stands"><img src="/img/infocars.webp" alt="InfoCars: preços de carros usados para stands: Relatório Power BI" width="1100" height="626" loading="lazy" decoding="async"></a>
+<a class="shot" href="https://app.powerbi.com/view?r=eyJrIjoiMTYxODFjYTUtYjZmOC00NDQ5LTgxZmQtNDA5Y2I5YmMzMDdlIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9&amp;pageName=a0c1b2c3d4e5f6a7b801" target="_blank" rel="noopener" aria-label="Abrir relatório power bi: InfoCars: preços de carros usados para stands"><img src="/img/infocars.webp" alt="InfoCars: preços de carros usados para stands: Relatório Power BI" width="1100" height="626" loading="lazy" decoding="async"></a>
 </article>
 <article class="proj" data-tags="powerbi qlik sql python">
 <div class="body">
@@ -255,7 +258,8 @@ button.copy:hover { border-color: var(--accent); }
 <p><span class="email" id="email">rigonato.guilherme@gmail.com</span><button class="copy" id="copy-email" type="button" data-label="Copiar" data-done="Copiado" data-sel="Selecionado">Copiar</button></p>
 <a href="https://www.linkedin.com/in/guilherme-rigonato" target="_blank" rel="noopener">LinkedIn</a>
 <a href="https://github.com/Alpralex" target="_blank" rel="noopener">GitHub</a>
-<a href="/Guilherme_Rigonato_CV.pdf" download>Descarregar CV (PDF, em inglês)</a>
+<a href="/Guilherme_Rigonato_CV_pt.pdf" download>Descarregar CV (PDF)</a>
+<a href="/Guilherme_Rigonato_CV.pdf" download>CV in English (PDF)</a>
 </div>
 <p class="muted small">Valores em euros convertidos de reais a cerca de 6,5 BRL por euro.</p>
 </section>
