@@ -105,7 +105,7 @@ code { font-family: var(--mono); font-size: 0.88em; }
     <h1>InfoCars</h1>
     <p class="role">Used-car pricing for dealers · 2025</p>
     <p class="intro">Dealers in Brazil price used cars by browsing a few listing sites. InfoCars answered two questions from the whole market instead: what a car should sell for, and which cars in stock are priced out of line. I designed and built it end to end at Informar Dados, and sold it to a car dealer.</p>
-    <p class="links"><a href="https://github.com/Alpralex/infocars-pricing-showcase" target="_blank" rel="noopener">Code</a><a href="#run">Run the demo</a></p>
+    <p class="links"><a href="/infocars/dashboard/">Interactive dashboard</a><a href="https://app.powerbi.com/view?r=eyJrIjoiMTYxODFjYTUtYjZmOC00NDQ5LTgxZmQtNDA5Y2I5YmMzMDdlIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Power BI report</a><a href="/infocars/notebook/">Python notebook</a><a href="https://github.com/Alpralex/infocars-pricing-showcase" target="_blank" rel="noopener">Code</a><a href="#run">Run the demo</a></p>
   </header>
 
   <div class="kv" aria-label="Results in production">
@@ -155,6 +155,7 @@ code { font-family: var(--mono); font-size: 0.88em; }
       <li><h3>Drop bad prices</h3><p>An ad is dropped when its price is missing, out of range, or far from comparable cars. The most common error is a price typed without its last digit. It still looks like a plausible car price, so only a comparison with similar cars catches it.</p></li>
       <li><h3>Build market statistics</h3><p>For each version, year and state: median asking price, 25th and 75th percentiles, and median days on the site. An ad that disappears counts as sold on its last day online. In production these were materialised views in PostgreSQL.</p></li>
       <li><h3>Answer the dealer</h3><p>Dashboards show what similar cars sell for, where a car sits against the market and which stock is priced out of line. The assistant answers the same questions in plain language.</p></li>
+      <li><h3>Turn the market into decisions</h3><p>The showcase rebuilds the screens the dealer used every day: a <a href="/infocars/dashboard/#buy">buy list</a> of private ads priced under their market with the offer to make and the expected margin, <a href="/infocars/dashboard/#drivers">what moves the price</a> once the car and its age are fixed (about R$ 5,800 per 10,000 km; private sellers ask 2% under, dealers 2% over), and the <a href="/infocars/dashboard/#risk">stock at risk</a> of getting stuck, with the cut that brings each ad back into range and whether earlier cuts worked.</p></li>
     </ol>
     <p>Comparing the dealer's own figures before and after adoption, the saving was about R$2,000 (roughly €300) per vehicle negotiation, and time in stock came down to one to three months.</p>
   </section>
@@ -209,4 +210,5 @@ pytest                     # 33 tests</pre>
 
 <script data-goatcounter="https://guilhermerigonato.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <script>document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a[href]");if(!a||!window.goatcounter||!goatcounter.count)return;var h=a.getAttribute("href"),k=/app\.powerbi\.com/.test(h)?"power-bi":/\.pdf$/.test(h)?"cv":/github\.com/.test(h)?"github":/linkedin\.com/.test(h)?"linkedin":"";if(k)goatcounter.count({path:"click-"+k+"-"+location.pathname,title:a.textContent.trim().slice(0,60),event:true});});</script>
+
 </html>
