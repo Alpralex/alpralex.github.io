@@ -8,26 +8,29 @@
 <meta name="description" content="InfoCars case study by Guilherme Rigonato: used-car pricing built end to end, from collection to SQL model, dashboards and an AI assistant.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Mono:wght@400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: one left-aligned reading column, like a well-set CV. Rules separate entries; no cards, no badges. */
 :root {
-  --bg: #f7f8f9;
-  --ink: #1b2430;
-  --muted: #5d6876;
-  --rule: #dce0e5;
-  --accent: #1f5a85;
-  --panel: #ffffff;
-  --serif: "IBM Plex Serif", Georgia, "Times New Roman", serif;
-  --sans: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  /* Almanac palette, the same one the Power BI reports use. */
+  --bg: #c4cbd2;
+  --ink: #182027;
+  --muted: #3b434b;
+  --rule: #a1a9af;
+  --accent: #970d63;
+  --accent-soft: #f1dce6;
+  --panel: #eef1f4;
+  --serif: "Hanken Grotesk", system-ui, "Helvetica Neue", Arial, sans-serif;
+  --display: "Hanken Grotesk", system-ui, "Helvetica Neue", Arial, sans-serif;
+  --sans: "Newsreader", Georgia, serif;
   --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --bg: #121519; --ink: #e3e7eb; --muted: #97a2ad; --rule: #2a3038; --accent: #86b6da; --panel: #181c21; color-scheme: dark; }
+  :root:not([data-theme="light"]) { --bg: #13171b; --ink: #e3e7eb; --muted: #9aa4ae; --rule: #333b44; --accent: #e07ab0; --accent-soft: #3a1f2e; --panel: #1b2026; color-scheme: dark; }
 }
-:root[data-theme="dark"] { --bg: #121519; --ink: #e3e7eb; --muted: #97a2ad; --rule: #2a3038; --accent: #86b6da; --panel: #181c21; color-scheme: dark; }
+:root[data-theme="dark"] { --bg: #13171b; --ink: #e3e7eb; --muted: #9aa4ae; --rule: #333b44; --accent: #e07ab0; --accent-soft: #3a1f2e; --panel: #1b2026; color-scheme: dark; }
 
-body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 1rem; line-height: 1.6; }
+body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 1.06rem; line-height: 1.55; }
 .page {
   max-width: 46rem; margin: 0 auto; padding-block: 3.5rem 4rem;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
@@ -35,9 +38,10 @@ body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-
   display: grid; gap: 3rem;
 }
 h1, h2, h3 { margin: 0; text-wrap: balance; }
-h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(2rem, 5vw, 2.6rem); line-height: 1.15; }
-h2 { font-family: var(--serif); font-weight: 500; font-size: 1.35rem; line-height: 1.3; }
-h3 { font-size: 1.05rem; font-weight: 600; line-height: 1.4; }
+h1 { font-family: var(--display); font-weight: 600; font-size: clamp(2rem, 5vw, 2.7rem); line-height: 1.15; letter-spacing: -0.02em; padding-bottom: 0.5rem; border-bottom: 2px solid var(--ink); }
+h2 { font-family: var(--display); font-weight: 600; font-size: 1.4rem; line-height: 1.3; letter-spacing: -0.01em; }
+h3 { font-family: var(--display); font-size: 1.08rem; font-weight: 600; line-height: 1.4; }
+.small, .role, .facts, .links, .status, .stack, .job .when, .skills b, .kv span, button.copy { font-family: var(--display); }
 p, ul, ol { margin: 0; }
 a { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 a:hover { text-decoration-thickness: 2px; }
@@ -75,25 +79,25 @@ section { display: grid; gap: 1.25rem; }
 footer { display: grid; gap: 0.75rem; padding-top: 1.25rem; border-top: 1px solid var(--ink); }
 .contact { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; align-items: baseline; }
 .email { font-family: var(--mono); font-size: 0.92rem; user-select: all; overflow-wrap: anywhere; }
-button.copy { font: inherit; font-size: 0.85rem; color: var(--accent); background: none; border: 1px solid var(--rule); border-radius: 3px; padding: 0.1rem 0.5rem; cursor: pointer; margin-left: 0.5rem; }
-button.copy:hover { border-color: var(--accent); }
+button.copy { font-size: 0.82rem; color: var(--ink); background: none; border: 1px solid var(--ink); border-radius: 2px; padding: 0.1rem 0.5rem; cursor: pointer; margin-left: 0.5rem; }
+button.copy:hover { background: var(--accent-soft); }
 
 /* Case-study page */
 .steps { padding-left: 1.25rem; display: grid; gap: 1rem; }
 .steps li::marker { color: var(--muted); }
-.figure { margin: 0; background: var(--panel); border: 1px solid var(--rule); padding: 1rem; overflow-x: auto; }
+.figure { margin: 0; background: var(--panel); border: 1px solid var(--rule); border-top: 2px solid var(--ink); border-radius: 2px; padding: 1rem; overflow-x: auto; }
 .figure svg { display: block; min-width: 680px; width: 100%; height: auto; }
 .figure .box { fill: var(--bg); stroke: var(--rule); }
 .figure .box-hl { fill: var(--bg); stroke: var(--accent); stroke-width: 1.5; }
-.figure .t { fill: var(--ink); font-family: var(--sans); font-size: 14px; font-weight: 600; }
-.figure .s { fill: var(--muted); font-family: var(--sans); font-size: 11.5px; }
+.figure .t { fill: var(--ink); font-family: var(--display); font-size: 14px; font-weight: 600; }
+.figure .s { fill: var(--muted); font-family: var(--display); font-size: 11.5px; }
 .figure .arrow { stroke: var(--muted); stroke-width: 1.25; fill: none; }
 .figure .head-a { fill: var(--muted); }
-pre { margin: 0; background: var(--panel); border: 1px solid var(--rule); padding: 1rem; overflow-x: auto; font-family: var(--mono); font-size: 0.85rem; line-height: 1.7; }
+pre { margin: 0; background: var(--panel); border: 1px solid var(--rule); border-radius: 2px; padding: 1rem; overflow-x: auto; font-family: var(--mono); font-size: 0.85rem; line-height: 1.7; }
 code { font-family: var(--mono); font-size: 0.88em; }
-.kv { display: grid; grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); gap: 1rem 1.5rem; border-block: 1px solid var(--rule); padding-block: 1rem; }
+.kv { display: grid; grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); gap: 1rem 1.5rem; background: var(--panel); border: 1px solid var(--rule); border-top: 2px solid var(--ink); border-radius: 2px; padding: 1rem; }
 .kv div { display: grid; gap: 0.1rem; min-width: 0; }
-.kv b { font-family: var(--serif); font-weight: 500; font-size: 1.35rem; font-variant-numeric: tabular-nums; }
+.kv b { font-family: var(--mono); font-weight: 500; font-size: 1.25rem; font-variant-numeric: tabular-nums; }
 .kv span { font-size: 0.88rem; color: var(--muted); }
 </style>
 
