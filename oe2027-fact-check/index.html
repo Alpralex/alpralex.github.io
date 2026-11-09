@@ -7,38 +7,38 @@
 <meta name="description" content="Checagem independente das afirmações sobre factos e números no debate do Orçamento do Estado para 2027 na Assembleia da República.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Mono:wght@400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-/* Visual sóbrio do portfólio (IBM Plex, azul #1f5a85). Layout: painel de checagem — barra fixa com navegação e filtros globais; visão geral → tema → ficha (drill-down), ficha abre em painel lateral */
-/* Paleta dos vereditos validada (validate_palette.js) para daltonismo nos dois temas. O azul de destaque fica reservado à interface e à série principal dos gráficos. */
+/* Visual sóbrio do portfólio (tema Almanac dos relatórios Power BI, magenta #970d63). Layout: painel de checagem — barra fixa com navegação e filtros globais; visão geral → tema → ficha (drill-down), ficha abre em painel lateral */
+/* Paleta dos vereditos validada (validate_palette.js) para daltonismo nos dois temas. O magenta de destaque fica reservado à interface e à série principal dos gráficos. */
 :root{
-  --bg:#f7f8f9; --surface:#ffffff; --surface-2:#f1f3f5; --ink:#1b2430; --muted:#5d6876; --faint:#8a94a0; --line:#dce0e5;
-  --accent:#1f5a85; --accent-ink:#ffffff; --accent-soft:#e8f0f6; --accent-2:#163f5e;
+  --bg:#c4cbd2; --surface:#eef1f4; --surface-2:#e2e6ea; --ink:#182027; --muted:#3b434b; --faint:#6e767d; --line:#a1a9af;
+  --accent:#970d63; --accent-ink:#ffffff; --accent-soft:#f1dce6; --accent-2:#76004b;
   --v:#1F7A35; --vr:#1666AA; --i:#9A6C00; --e:#7444B4; --f:#C13C3B; --n:#00969F; --nv:#7C8490;
   --v-bg:#E3F1E6; --vr-bg:#E1ECF7; --i-bg:#F6EDD6; --e-bg:#EEE6F7; --f-bg:#F8E2E1; --n-bg:#DDF2F3; --nv-bg:#ECEEF1;
   --p-mp:#256ABF; --p-p:#6DA7EC; --p-c:#8F8B84; --p-o:#EC835A; --p-mo:#C13C3B;
-  --band:rgba(31,90,133,.05); --scrim:rgba(27,36,48,.42);
+  --band:rgba(151,13,99,.05); --scrim:rgba(24,32,39,.42);
   --shadow:none;
-  --f-display:"IBM Plex Serif",Georgia,serif;
-  --f-ui:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
-  --f-body:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
-  --f-mono:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
+  --f-display:"Hanken Grotesk",system-ui,"Helvetica Neue",Arial,sans-serif;
+  --f-ui:"Hanken Grotesk",system-ui,"Helvetica Neue",Arial,sans-serif;
+  --f-body:"Newsreader",Georgia,serif;
+  --f-mono:"Hanken Grotesk",system-ui,"Helvetica Neue",Arial,sans-serif;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#121519; --surface:#181c21; --surface-2:#1e2329; --ink:#e3e7eb; --muted:#97a2ad; --faint:#6c7782; --line:#2a3038;
-  --accent:#86b6da; --accent-ink:#121519; --accent-soft:#1b2a36; --accent-2:#b9d6ec;
+  --bg:#13171b; --surface:#1b2026; --surface-2:#242a31; --ink:#e3e7eb; --muted:#9aa4ae; --faint:#8a939b; --line:#333b44;
+  --accent:#e07ab0; --accent-ink:#13171b; --accent-soft:#3a1f2e; --accent-2:#f0a8cd;
   --v:#3D9A4C; --vr:#4A8FE0; --i:#B98712; --e:#9A7AE0; --f:#E0625C; --n:#21A8B0; --nv:#9AA2AE;
   --v-bg:#17301D; --vr-bg:#172A42; --i-bg:#33280E; --e-bg:#2A2140; --f-bg:#3A1B1A; --n-bg:#123234; --nv-bg:#262626;
   --p-mp:#3987E5; --p-p:#86B6EF; --p-c:#8F8B84; --p-o:#EC835A; --p-mo:#E66767;
-  --band:rgba(134,182,218,.06); --scrim:rgba(0,0,0,.6);
+  --band:rgba(224,122,176,.06); --scrim:rgba(0,0,0,.6);
   --shadow:none; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#121519; --surface:#181c21; --surface-2:#1e2329; --ink:#e3e7eb; --muted:#97a2ad; --faint:#6c7782; --line:#2a3038;
-  --accent:#86b6da; --accent-ink:#121519; --accent-soft:#1b2a36; --accent-2:#b9d6ec;
+  --bg:#13171b; --surface:#1b2026; --surface-2:#242a31; --ink:#e3e7eb; --muted:#9aa4ae; --faint:#8a939b; --line:#333b44;
+  --accent:#e07ab0; --accent-ink:#13171b; --accent-soft:#3a1f2e; --accent-2:#f0a8cd;
   --v:#3D9A4C; --vr:#4A8FE0; --i:#B98712; --e:#9A7AE0; --f:#E0625C; --n:#21A8B0; --nv:#9AA2AE;
   --v-bg:#17301D; --vr-bg:#172A42; --i-bg:#33280E; --e-bg:#2A2140; --f-bg:#3A1B1A; --n-bg:#123234; --nv-bg:#262626;
   --p-mp:#3987E5; --p-p:#86B6EF; --p-c:#8F8B84; --p-o:#EC835A; --p-mo:#E66767;
-  --band:rgba(134,182,218,.06); --scrim:rgba(0,0,0,.6);
+  --band:rgba(224,122,176,.06); --scrim:rgba(0,0,0,.6);
   --shadow:none; color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;padding-block:0 56px;
