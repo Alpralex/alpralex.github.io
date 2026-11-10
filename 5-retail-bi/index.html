@@ -120,9 +120,97 @@ td.hit-x.on { outline: 2px solid var(--signal); outline-offset: -2px; font-weigh
 .legend button[aria-pressed="true"] { font-weight: 600; text-decoration: underline; }
 </style>
 
+<style id="i18n-style">
+.crumb { max-width: none; display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.4rem; }
+.lang-sw { margin-left: auto; display: inline-flex; border: 1px solid var(--rule); border-radius: 2px; overflow: hidden; }
+.lang-sw button { font-family: var(--display); font-size: 0.8rem; letter-spacing: 0.04em; padding: 0.2rem 0.55rem; background: var(--sheet); color: var(--ink); border: 0; border-right: 1px solid var(--rule); cursor: pointer; }
+.lang-sw button:last-child { border-right: 0; }
+.lang-sw button[aria-pressed="true"] { background: var(--signal-soft); box-shadow: inset 0 -2px 0 var(--signal); font-weight: 600; }
+.lang-sw button:focus-visible { outline: 2px solid var(--signal); outline-offset: -2px; }
+</style>
+<script id="i18n-core">
+// Language layer shared by the portfolio dashboards. English is written in the page; Portuguese (pt-PT) comes from I18N.add({...}).
+// Order of choice: ?lang= in the URL (the home page adds it), then the visitor's last choice (localStorage "lang", the same key the home page uses), then English.
+(function () {
+  var KEY = 'lang';
+  function pick() {
+    var q = null;
+    try { q = new URLSearchParams(location.search).get('lang'); } catch (e) {}
+    if (q === 'pt' || q === 'en') { try { localStorage.setItem(KEY, q); } catch (e) {} return q; }
+    try { var s = localStorage.getItem(KEY); if (s === 'pt' || s === 'en') return s; } catch (e) {}
+    try { if (/^\/pt\/?$/.test(new URL(document.referrer).pathname)) return 'pt'; } catch (e) {}
+    return 'en';
+  }
+  var I = window.I18N = { lang: pick(), dict: {}, fns: [] };
+  function norm(s) { return String(s).replace(/\s+/g, ' ').trim(); }
+  I.add = function (d) { for (var k in d) I.dict[norm(k)] = d[k]; };
+  I.pt = function () { return I.lang === 'pt'; };
+  // Inline pair for sentences whose word order differs: I18N.p('English', 'Português').
+  I.p = function (en, pt) { return I.lang === 'pt' ? pt : en; };
+  // Text: the Portuguese entry for an English string, or the string itself.
+  I.t = function (s) { if (I.lang !== 'pt') return s; var v = I.dict[norm(s)]; return v == null ? s : v; };
+  // Numbers already formatted the English way ("1,234.5") become "1 234,5" in Portuguese.
+  I.n = function (s) {
+    s = String(s); if (I.lang !== 'pt') return s;
+    return s.replace(/(\d),(?=\d{3}(?:\D|$))/g, '$1 ').replace(/(\d)\.(\d)/g, '$1,$2');
+  };
+  I.locale = function () { return I.lang === 'pt' ? 'pt-PT' : 'en-US'; };
+  I.on = function (fn) { I.fns.push(fn); };
+  var ATTRS = ['aria-label', 'title', 'placeholder'];
+  function swapAttrs(el) {
+    ATTRS.forEach(function (a) {
+      if (!el.hasAttribute(a)) return;
+      el._enA = el._enA || {};
+      if (el._enA[a] == null) { if (!(norm(el.getAttribute(a)) in I.dict)) return; el._enA[a] = el.getAttribute(a); }
+      el.setAttribute(a, I.t(el._enA[a]));
+    });
+    if (el.tagName === 'A' && (el.getAttribute('href') === '/' || el._enHref != null)) {
+      if (el._enHref == null) el._enHref = el.getAttribute('href');
+      el.setAttribute('href', I.lang === 'pt' ? '/pt/' : '/?lang=en');
+    }
+  }
+  // Static text in the page: a whole element when its markup has an entry, otherwise each text node.
+  function walk(node) {
+    for (var c = node.firstChild; c; c = c.nextSibling) {
+      if (c.nodeType === 3) {
+        if (c._en == null) { var k = norm(c.nodeValue); if (!k || !(k in I.dict)) continue; c._en = c.nodeValue; }
+        var en = c._en, lead = en.match(/^\s*/)[0], trail = en.match(/\s*$/)[0];
+        c.nodeValue = I.lang === 'pt' ? lead + I.dict[norm(en)] + trail : en;
+      } else if (c.nodeType === 1) {
+        if (/^(SCRIPT|STYLE|SVG|svg)$/.test(c.tagName) || c.hasAttribute('data-i18n-skip')) continue;
+        swapAttrs(c);
+        if (c._enH == null && c.children.length && (norm(c.innerHTML) in I.dict)) c._enH = c.innerHTML;
+        if (c._enH != null) { c.innerHTML = I.lang === 'pt' ? I.dict[norm(c._enH)] : c._enH; continue; }
+        walk(c);
+      }
+    }
+  }
+  I.apply = function () {
+    document.documentElement.lang = I.lang === 'pt' ? 'pt-PT' : 'en';
+    if (I._title == null) I._title = document.title;
+    document.title = I.t(I._title);
+    walk(document.body);
+    document.querySelectorAll('.lang-sw button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.lang === I.lang)); });
+  };
+  I.set = function (lang) {
+    if (lang === I.lang) return;
+    I.lang = lang;
+    try { localStorage.setItem(KEY, lang); } catch (e) {}
+    try { var u = new URL(location.href); u.searchParams.set('lang', lang); history.replaceState(history.state, '', u); } catch (e) {}
+    I.apply();
+    I.fns.forEach(function (fn) { try { fn(); } catch (e) { if (window.console) console.error(e); } });
+  };
+  // Runs after the page script: translate the static text and wire the EN / PT buttons.
+  I.start = function () {
+    document.querySelectorAll('.lang-sw button').forEach(function (b) { b.addEventListener('click', function () { I.set(b.dataset.lang); }); });
+    I.apply();
+  };
+})();
+</script>
+
 <main class="wrap">
   <header>
-    <p class="crumb"><a href="/">Guilherme Rigonato</a> <span class="label">/ Projects</span></p>
+    <p class="crumb"><a href="/">Guilherme Rigonato</a> <span class="label">/ Projects</span><span class="lang-sw" role="group" aria-label="Language · Idioma" data-i18n-skip><button type="button" data-lang="en" lang="en" title="English">EN</button><button type="button" data-lang="pt" lang="pt-PT" title="Português">PT</button></span></p>
     <span class="label">Walmart M5 data · 10 stores · 2011–2016</span>
     <h1>Where is a 10-store retailer losing sales?</h1>
     <p>Five years of daily sales for 3,049 products, modelled in SQL with dbt, checked by automated tests, and compared with the forecast that won the M5 competition.</p>
@@ -196,15 +284,110 @@ td.hit-x.on { outline: 2px solid var(--signal); outline-offset: -2px; font-weigh
   </section>
 </main>
 
+<script id="i18n-pt">
+I18N.add({
+"M5 Retail Dashboard": "Painel de retalho M5",
+"/ Projects": "/ Projetos",
+"Walmart M5 data · 10 stores · 2011–2016": "Dados M5 da Walmart · 10 lojas · 2011–2016",
+"Where is a 10-store retailer losing sales?": "Onde é que um retalhista com 10 lojas está a perder vendas?",
+"Five years of daily sales for 3,049 products, modelled in SQL with dbt, checked by automated tests, and compared with the forecast that won the M5 competition.": "Cinco anos de vendas diárias de 3049 artigos, modelados em SQL com dbt, validados por testes automáticos e comparados com a previsão que venceu a competição M5.",
+"47.7M item-store-day rows": "47,7 milhões de linhas artigo-loja-dia",
+"dbt + DuckDB · 13 models · 17 tests": "dbt + DuckDB · 13 modelos · 17 testes",
+"Prices in US dollars": "Preços em dólares americanos",
+"Key findings": "Principais conclusões",
+"Finding 1": "Conclusão 1",
+"Finding 2": "Conclusão 2",
+"Finding 3": "Conclusão 3",
+"Food is 56% of revenue but 80% of sales lost to empty shelves.": "A alimentação pesa 56% da faturação, mas 80% das vendas perdidas por prateleira vazia.",
+"Suspected stock-outs cost about $0.79M in the last year, 1.7% of revenue. Store CA_3 alone accounts for almost a quarter of it.": "As suspeitas de rutura custaram cerca de 0,79 M$ no último ano, 1,7% da faturação. Só a loja CA_3 responde por quase um quarto desse valor.",
+"The forecast is excellent for the store and weak for the shelf.": "A previsão é excelente para a loja e fraca para a prateleira.",
+"Store-day error is 5%, with almost no bias. Item-day error is 75%, so replenishment needs safety stock at item level.": "Por loja e dia, o erro é de 5% e quase sem enviesamento. Por artigo e dia chega aos 75%, por isso a reposição precisa de stock de segurança ao nível do artigo.",
+"Hobbies is under-forecast by 4.4%.": "A previsão de Lazer fica 4,4% abaixo das vendas.",
+"It has the highest error in every store and is under-forecast in 8 of 10, the pattern that leads to empty shelves.": "É a categoria com maior erro em todas as lojas e fica abaixo das vendas em 8 das 10, o padrão que deixa prateleiras vazias.",
+"Filters": "Filtros",
+"Category": "Categoria",
+"All": "Todas",
+"Foods": "Alimentação",
+"Household": "Casa",
+"Hobbies": "Lazer",
+"Store": "Loja",
+"All 10 stores": "As 10 lojas",
+"Clear filters": "Limpar filtros",
+"Headline numbers": "Números principais",
+"Weekly revenue": "Faturação semanal",
+"Forecast against actual sales": "Previsão face às vendas reais",
+"Units per day over the 28 out-of-sample days, 23 May to 19 Jun 2016": "Unidades por dia nos 28 dias fora da amostra, de 23 de maio a 19 de junho de 2016",
+"Actual": "Real",
+"M5 winning forecast": "Previsão vencedora do M5",
+"Forecast": "Previsão",
+"Forecast error by store and category": "Erro de previsão por loja e categoria",
+"WAPE at store-day level for each category; darker means less accurate. Bias below zero means under-forecast.": "WAPE ao nível loja-dia em cada categoria; quanto mais escuro, menos rigorosa a previsão. Enviesamento negativo significa previsão abaixo das vendas.",
+"Estimated revenue lost to suspected stock-outs": "Faturação perdida estimada por suspeitas de rutura",
+"Last 365 days, by store": "Últimos 365 dias, por loja",
+"Largest suspected stock-outs": "Maiores suspeitas de rutura",
+"Fast-moving items with 7 to 56 days in a row without a sale, ranked by estimated lost revenue": "Artigos de alta rotação com 7 a 56 dias seguidos sem vendas, ordenados pela faturação perdida estimada",
+"How the numbers are built": "Como os números são calculados",
+"Data:": "Dados:",
+"the public M5 Forecasting dataset (Walmart, 2020): daily unit sales for 3,049 items in 10 stores in California, Texas and Wisconsin, weekly shelf prices and a calendar. The forecast is the published submission of the competition winner.": "o conjunto de dados público M5 Forecasting (Walmart, 2020): vendas diárias em unidades de 3049 artigos em 10 lojas da Califórnia, do Texas e do Wisconsin, preços semanais de prateleira e um calendário. A previsão é a submissão publicada pelo vencedor da competição.",
+"Model:": "Modelo:",
+"dbt on DuckDB. Staging views unpivot the wide CSVs; marts form a star schema (dim_date, dim_item, dim_store, fct_sales_daily, fct_forecast_eval) with tests for keys, relationships, accepted values and row counts.": "dbt sobre DuckDB. As views de staging passam os CSV de formato largo para formato longo (unpivot); os marts formam um modelo em estrela (dim_date, dim_item, dim_store, fct_sales_daily, fct_forecast_eval) com testes de chaves, relações, valores aceites e contagem de linhas.",
+"= sum of absolute errors ÷ sum of actual units.": "= soma dos erros absolutos ÷ soma das unidades vendidas.",
+"Bias": "Enviesamento",
+"= (forecast − actual) ÷ actual. MAPE is not used because most item-days sell zero units.": "= (previsão − real) ÷ real. Não se usa o MAPE porque, na maioria dos dias, cada artigo vende zero unidades.",
+"Suspected stock-out:": "Suspeita de rutura:",
+"M5 has no inventory data. A run of 7 to 56 days with zero sales, for an item that averages 2 or more units a day, is treated as an empty shelf. Lost units = run length × the item's average daily units; lost revenue uses its average price. This is an estimate, not a measured loss.": "o M5 não tem dados de inventário. Uma sequência de 7 a 56 dias sem vendas, num artigo que vende em média 2 ou mais unidades por dia, é tratada como prateleira vazia. Unidades perdidas = dias da sequência × média diária de unidades do artigo; a faturação perdida usa o preço médio do artigo. É uma estimativa, não uma perda medida.",
+"Code:": "Código:",
+"California": "Califórnia",
+"Revenue, last 52 weeks": "Faturação, últimas 52 semanas",
+" vs prior 52 weeks": " face às 52 semanas anteriores",
+"Forecast error (WAPE)": "Erro de previsão (WAPE)",
+"store-day level, 28 days": "nível loja-dia, 28 dias",
+"Forecast bias": "Enviesamento da previsão",
+"under-forecast": "previsão abaixo das vendas",
+"over-forecast": "previsão acima das vendas",
+"close to neutral": "quase neutro",
+"Est. lost to stock-outs": "Perda estimada por ruturas",
+" of revenue, last 365 days": " da faturação, últimos 365 dias",
+" by store, full weeks from Jan 2011 to Jun 2016. Click a line to pick that store.": " por loja, semanas completas de jan 2011 a jun 2016. Clique numa linha para escolher essa loja.",
+"By state, full weeks from Jan 2011 to Jun 2016. Click a line or a state to see its stores.": "Por estado, semanas completas de jan 2011 a jun 2016. Clique numa linha ou num estado para ver as suas lojas.",
+", full weeks from Jan 2011 to Jun 2016": ", semanas completas de jan 2011 a jun 2016",
+"By state, full weeks from Jan 2011 to Jun 2016": "Por estado, semanas completas de jan 2011 a jun 2016",
+"Pick the line nearest the pointer": "Escolher a linha mais próxima do cursor",
+"Week of ": "Semana de ",
+"Daily forecast against actual units": "Previsão diária face às unidades vendidas",
+" units": " unidades",
+"Estimated lost revenue by store": "Faturação perdida estimada por loja",
+"Pick store ": "Escolher a loja ",
+" estimated lost": " de perda estimada",
+"Item": "Artigo",
+"Started": "Início",
+"Days without sales": "Dias sem vendas",
+"Est. lost units": "Unid. perdidas (est.)",
+"Est. lost revenue": "Faturação perdida (est.)",
+"No suspected stock-outs for this selection.": "Nenhuma suspeita de rutura nesta seleção.",
+"State: ": "Estado: ",
+"Store: ": "Loja: ",
+"Category: ": "Categoria: ",
+"Click a line, a bar, a cell of the error table or a stock-out row to filter every chart.": "Clique numa linha, numa barra, numa célula da tabela de erros ou numa rutura da lista para filtrar todos os gráficos.",
+"Filtered by": "Filtrado por",
+"Clear this filter": "Limpar este filtro",
+"All panels follow the selection.": "Todos os painéis seguem a seleção.",
+"The data files did not load. Reload the page to try again.": "Os ficheiros de dados não carregaram. Recarregue a página para tentar de novo.",
+", bias ": ", enviesamento "
+});
+</script>
 <script>
 (function () {
   var state = { cat: 'ALL', store: 'ALL', st: '' };
+  var T = I18N.t, N = I18N.n;
+  var CATN = { FOODS: 'Foods', HOUSEHOLD: 'Household', HOBBIES: 'Hobbies' };
+  function catName(c) { return T(CATN[c] || c); }
   var D = {};
   var STATES = [['CA', 'California', '--s1'], ['TX', 'Texas', '--s2'], ['WI', 'Wisconsin', '--s3']];
-  var fmtUsd = function (v) { var a = Math.abs(v); return (v < 0 ? '−' : '') + '$' + (a >= 1e6 ? (a / 1e6).toFixed(a >= 1e7 ? 1 : 2) + 'M' : a >= 1e3 ? Math.round(a / 1e3) + 'k' : Math.round(a)); };
-  var fmtInt = function (v) { return Math.round(v).toLocaleString('en-US'); };
-  var pct = function (v, d) { return (v * 100).toFixed(d == null ? 1 : d) + '%'; };
-  var signed = function (v) { return (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v * 100).toFixed(1) + '%'; };
+  var fmtUsd = function (v) { var a = Math.abs(v), n = a >= 1e6 ? (a / 1e6).toFixed(a >= 1e7 ? 1 : 2) : a >= 1e3 ? Math.round(a / 1e3) : Math.round(a), u = a >= 1e6 ? 'M' : a >= 1e3 ? 'k' : ''; return (v < 0 ? '−' : '') + (I18N.pt() ? N(n) + '\u00a0' + u + '$' : '$' + n + u); };
+  var fmtInt = function (v) { return Math.round(v).toLocaleString(I18N.locale()); };
+  var pct = function (v, d) { return N((v * 100).toFixed(d == null ? 1 : d)) + '%'; };
+  var signed = function (v) { return (v > 0 ? '+' : v < 0 ? '−' : '') + N(Math.abs(v * 100).toFixed(1)) + '%'; };
   var NS = 'http://www.w3.org/2000/svg';
   function el(tag, attrs, parent) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
   function txt(parent, x, y, s, attrs) { var t = el('text', Object.assign({ x: x, y: y }, attrs || {}), parent); t.textContent = s; return t; }
@@ -220,14 +403,14 @@ td.hit-x.on { outline: 2px solid var(--signal); outline-offset: -2px; font-weigh
     hit.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } });
   }
 
-  var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  function dayLabel(iso) { return Number(iso.slice(8, 10)) + ' ' + monthNames[Number(iso.slice(5, 7)) - 1]; }
+  var MONTHS = { en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], pt: ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'] };
+  function dayLabel(iso) { return Number(iso.slice(8, 10)) + ' ' + MONTHS[I18N.lang][Number(iso.slice(5, 7)) - 1]; }
 
   // Tooltip shared by line charts: crosshair snaps to the nearest x.
   function lineChart(host, xs, series, opts) {
     host.innerHTML = '';
     var W = 480, H = opts.height || 260, m = { l: 48, r: opts.right || 16, t: 12, b: 28 };
-    var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': opts.aria }, host);
+    var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': T(opts.aria) }, host);
     var maxV = niceMax(Math.max.apply(null, series.map(function (s) { return Math.max.apply(null, s.values); })) * 1.05);
     var X = function (i) { return m.l + i / (xs.length - 1) * (W - m.l - m.r); };
     var Y = function (v) { return H - m.b - v / maxV * (H - m.t - m.b); };
@@ -254,7 +437,7 @@ td.hit-x.on { outline: 2px solid var(--signal); outline-offset: -2px; font-weigh
       var i = Math.max(0, Math.min(xs.length - 1, Math.round((px - m.l) / (W - m.l - m.r) * (xs.length - 1))));
       cross.setAttribute('x1', X(i)); cross.setAttribute('x2', X(i)); cross.setAttribute('visibility', 'visible');
       dots.forEach(function (d, k) { d.setAttribute('cx', X(i)); d.setAttribute('cy', Y(series[k].values[i])); d.setAttribute('visibility', 'visible'); });
-      tip.innerHTML = opts.tipTitle(xs[i]) + series.map(function (s) { return '<br>' + s.name + ': ' + opts.fmtTip(s.values[i]); }).join('');
+      tip.innerHTML = opts.tipTitle(xs[i]) + series.map(function (s) { return '<br>' + T(s.name) + ': ' + opts.fmtTip(s.values[i]); }).join('');
       tip.style.left = (X(i) / W * r.width) + 'px'; tip.style.top = (Y(Math.max.apply(null, series.map(function (s) { return s.values[i]; }))) / H * r.height) + 'px';
       tip.hidden = false;
     }
@@ -266,7 +449,7 @@ td.hit-x.on { outline: 2px solid var(--signal); outline-offset: -2px; font-weigh
       var i = Math.max(0, Math.min(xs.length - 1, Math.round((px - m.l) / (W - m.l - m.r) * (xs.length - 1))));
       var best = 0; series.forEach(function (s, k) { if (Math.abs(Y(s.values[i]) - py) < Math.abs(Y(series[best].values[i]) - py)) best = k; });
       opts.onPick(best);
-    }, opts.pickLabel);
+    }, T(opts.pickLabel));
   }
 
   function renderKpis() {
@@ -280,10 +463,10 @@ td.hit-x.on { outline: 2px solid var(--signal); outline-offset: -2px; font-weigh
     var lost = 0; D.stockouts.forEach(function (r) { if (catOk(r[2]) && storeOk(r[1])) lost += r[6]; });
     var yoy = revL / revP - 1, bias = fc / act - 1;
     var tiles = [
-      ['Revenue, last 52 weeks', fmtUsd(revL), '<span class="' + (yoy >= 0 ? 'up' : 'down') + '">' + signed(yoy) + '</span> vs prior 52 weeks'],
-      ['Forecast error (WAPE)', pct(sdErr / act), 'store-day level, 28 days'],
-      ['Forecast bias', signed(bias), bias < -0.02 ? '<span class="down">under-forecast</span>' : bias > 0.02 ? '<span class="down">over-forecast</span>' : 'close to neutral'],
-      ['Est. lost to stock-outs', fmtUsd(lost), pct(lost / revL) + ' of revenue, last 365 days']
+      [T('Revenue, last 52 weeks'), fmtUsd(revL), '<span class="' + (yoy >= 0 ? 'up' : 'down') + '">' + signed(yoy) + '</span>' + T(' vs prior 52 weeks')],
+      [T('Forecast error (WAPE)'), pct(sdErr / act), T('store-day level, 28 days')],
+      [T('Forecast bias'), signed(bias), bias < -0.02 ? '<span class="down">' + T('under-forecast') + '</span>' : bias > 0.02 ? '<span class="down">' + T('over-forecast') + '</span>' : T('close to neutral')],
+      [T('Est. lost to stock-outs'), fmtUsd(lost), pct(lost / revL) + T(' of revenue, last 365 days')]
     ];
     document.getElementById('kpis').innerHTML = tiles.map(function (t) { return '<div class="kpi"><span class="label">' + t[0] + '</span><span class="v">' + t[1] + '</span><span class="d">' + t[2] + '</span></div>'; }).join('');
   }
@@ -293,21 +476,21 @@ td.hit-x.on { outline: 2px solid var(--signal); outline-offset: -2px; font-weigh
     var series;
     var COLORS = ['--s1', '--s2', '--s3', '--muted'];
     if (state.store === 'ALL' && state.st) {
-      var stName = STATES.find(function (s) { return s[0] === state.st; })[1];
+      var stName = T(STATES.find(function (s) { return s[0] === state.st; })[1]);
       series = D.stores.filter(function (s) { return s[0].indexOf(state.st) === 0; }).map(function (s, k) { return { name: s[0], key: s[0], color: COLORS[k % 4], values: weeks.map(function () { return 0; }) }; });
       D.weekly.forEach(function (r) { if (!catOk(r[2])) return; var s = series.find(function (x) { return x.key === r[1]; }); if (s) s.values[idx[r[0]]] += r[4]; });
-      document.getElementById('rev-sub').textContent = stName + ' by store, full weeks from Jan 2011 to Jun 2016. Click a line to pick that store.';
+      document.getElementById('rev-sub').textContent = stName + T(' by store, full weeks from Jan 2011 to Jun 2016. Click a line to pick that store.');
     } else if (state.store === 'ALL') {
       series = STATES.map(function (s) { return { name: s[1], color: s[2], key: s[0], values: weeks.map(function () { return 0; }) }; });
       D.weekly.forEach(function (r) { if (!catOk(r[2])) return; var s = series.find(function (x) { return r[1].indexOf(x.key) === 0; }); s.values[idx[r[0]]] += r[4]; });
-      document.getElementById('rev-sub').textContent = 'By state, full weeks from Jan 2011 to Jun 2016. Click a line or a state to see its stores.';
+      document.getElementById('rev-sub').textContent = T('By state, full weeks from Jan 2011 to Jun 2016. Click a line or a state to see its stores.');
     } else {
       var st = STATES.find(function (s) { return state.store.indexOf(s[0]) === 0; });
       series = [{ name: state.store, color: st[2], values: weeks.map(function () { return 0; }) }];
       D.weekly.forEach(function (r) { if (r[1] === state.store && catOk(r[2])) series[0].values[idx[r[0]]] += r[4]; });
-      document.getElementById('rev-sub').textContent = 'Store ' + state.store + ', ' + st[1] + ', full weeks from Jan 2011 to Jun 2016';
+      document.getElementById('rev-sub').textContent = T('Store') + ' ' + state.store + ', ' + T(st[1]) + T(', full weeks from Jan 2011 to Jun 2016');
     }
-    document.getElementById('rev-legend').innerHTML = series.length > 1 && !state.st ? series.map(function (s) { return '<button type="button" data-st="' + s.key + '" aria-pressed="false"><i style="background:var(' + s.color + ')"></i>' + s.name + '</button>'; }).join('') : series.length > 1 ? series.map(function (s) { return '<span><i style="background:var(' + s.color + ')"></i>' + s.name + '</span>'; }).join('') : '';
+    document.getElementById('rev-legend').innerHTML = series.length > 1 && !state.st ? series.map(function (s) { return '<button type="button" data-st="' + s.key + '" aria-pressed="false"><i style="background:var(' + s.color + ')"></i>' + T(s.name) + '</button>'; }).join('') : series.length > 1 ? series.map(function (s) { return '<span><i style="background:var(' + s.color + ')"></i>' + T(s.name) + '</span>'; }).join('') : '';
     document.querySelectorAll('#rev-legend button').forEach(function (b) { b.addEventListener('click', function () { pickState(b.dataset.st); }); });
     lineChart(document.getElementById('rev-chart'), weeks, series, {
       aria: 'Weekly revenue', endLabels: true,
@@ -315,7 +498,7 @@ td.hit-x.on { outline: 2px solid var(--signal); outline-offset: -2px; font-weigh
       fmtY: fmtUsd, fmtTip: fmtUsd,
       ticks: function (xs) { var out = []; xs.forEach(function (w, i) { if (w.slice(5, 7) === '01' && Number(w.slice(8, 10)) <= 7) out.push(i); }); return out; },
       tickLabel: function (w) { return w.slice(0, 4); },
-      tipTitle: function (w) { return 'Week of ' + dayLabel(w) + ' ' + w.slice(0, 4); }
+      tipTitle: function (w) { return T('Week of ') + dayLabel(w) + ' ' + w.slice(0, 4); }
     });
   }
 
@@ -328,8 +511,8 @@ td.hit-x.on { outline: 2px solid var(--signal); outline-offset: -2px; font-weigh
       { name: 'Forecast', color: '--s2', values: f, dash: '6 4' }
     ], {
       aria: 'Daily forecast against actual units',
-      fmtY: function (v) { return v >= 1000 ? Math.round(v / 1000) + 'k' : Math.round(v); },
-      fmtTip: function (v) { return fmtInt(v) + ' units'; },
+      fmtY: function (v) { return v >= 1000 ? Math.round(v / 1000) + (I18N.pt() ? '\u00a0mil' : 'k') : Math.round(v); },
+      fmtTip: function (v) { return fmtInt(v) + T(' units'); },
       ticks: function (xs) { return [0, 7, 14, 21, 27]; },
       tickLabel: dayLabel,
       tipTitle: function (d) { return dayLabel(d) + ' 2016'; }
@@ -348,12 +531,12 @@ td.hit-x.on { outline: 2px solid var(--signal); outline-offset: -2px; font-weigh
     });
     function wape(c) { var e = 0; for (var d in c.days) e += Math.abs(c.days[d]); return e / c.a; }
     var heat = function (w) { return w < 0.06 ? 1 : w < 0.09 ? 2 : w < 0.12 ? 3 : w < 0.15 ? 4 : 5; };
-    var head = '<thead><tr><th>Store</th>' + cats.map(function (c) { return '<th>' + c.charAt(0) + c.slice(1).toLowerCase() + '</th><th>Bias</th>'; }).join('') + '</tr></thead>';
+    var head = '<thead><tr><th>' + T('Store') + '</th>' + cats.map(function (c) { return '<th>' + catName(c) + '</th><th>' + T('Bias') + '</th>'; }).join('') + '</tr></thead>';
     var one = state.store !== 'ALL';
     var body = stores.map(function (s) {
       return '<tr><td class="hit-x' + (one ? ' on' : '') + '" tabindex="0" data-store="' + s + '">' + s + '</td>' + cats.map(function (c) {
         var x = cell[s + '|' + c], w = wape(x), b = x.f / x.a - 1;
-        return '<td class="cell hit-x heat-' + heat(w) + (one && state.cat === c ? ' on' : '') + '" tabindex="0" data-store="' + s + '" data-cat="' + c + '" title="' + s + ' ' + c + ': WAPE ' + pct(w) + ', bias ' + signed(b) + '">' + pct(w) + '</td><td class="cell">' + signed(b) + '</td>';
+        return '<td class="cell hit-x heat-' + heat(w) + (one && state.cat === c ? ' on' : '') + '" tabindex="0" data-store="' + s + '" data-cat="' + c + '" title="' + s + ' ' + catName(c) + ': WAPE ' + pct(w) + T(', bias ') + signed(b) + '">' + pct(w) + '</td><td class="cell">' + signed(b) + '</td>';
       }).join('') + '</tr>';
     }).join('');
     document.getElementById('acc-table').innerHTML = head + '<tbody>' + body + '</tbody>';
@@ -366,7 +549,7 @@ td.hit-x.on { outline: 2px solid var(--signal); outline-offset: -2px; font-weigh
     D.stockouts.forEach(function (r) { if (catOk(r[2])) byStore[r[1]] += r[6]; });
     var rows = Object.keys(byStore).map(function (k) { return [k, byStore[k]]; }).sort(function (a, b) { return b[1] - a[1]; });
     var W = 480, rowH = 26, m = { l: 48, r: 56, t: 4, b: 4 }, H = m.t + m.b + rows.length * rowH;
-    var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': 'Estimated lost revenue by store' }, host);
+    var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': T('Estimated lost revenue by store') }, host);
     var maxV = Math.max.apply(null, rows.map(function (r) { return r[1]; })) || 1;
     var tip = document.createElement('div'); tip.className = 'tip'; tip.hidden = true; host.appendChild(tip);
     rows.forEach(function (r, i) {
@@ -376,17 +559,17 @@ td.hit-x.on { outline: 2px solid var(--signal); outline-offset: -2px; font-weigh
       el('rect', { x: m.l, y: y + 5, width: Math.max(2, w), height: rowH - 10, rx: 4, fill: css('--s1'), opacity: (state.store === 'ALL' || sel) && storeOk(r[0]) ? 1 : 0.35 }, g);
       txt(g, m.l + w + 6, y + rowH / 2 + 4, fmtUsd(r[1]), { class: 'lbl' });
       var hit = el('rect', { x: 0, y: y, width: W, height: rowH, fill: 'transparent' }, g);
-      clickable(hit, function () { pickStore(r[0]); }, 'Pick store ' + r[0]);
-      hit.addEventListener('pointerenter', function () { var b = svg.getBoundingClientRect(); tip.innerHTML = r[0] + '<br>' + fmtUsd(r[1]) + ' estimated lost'; tip.style.left = ((m.l + w / 2) / W * b.width) + 'px'; tip.style.top = (y / H * b.height) + 'px'; tip.hidden = false; });
+      clickable(hit, function () { pickStore(r[0]); }, T('Pick store ') + r[0]);
+      hit.addEventListener('pointerenter', function () { var b = svg.getBoundingClientRect(); tip.innerHTML = r[0] + '<br>' + fmtUsd(r[1]) + T(' estimated lost'); tip.style.left = ((m.l + w / 2) / W * b.width) + 'px'; tip.style.top = (y / H * b.height) + 'px'; tip.hidden = false; });
       hit.addEventListener('pointerleave', function () { tip.hidden = true; });
     });
   }
 
   function renderTop() {
     var rows = D.stockouts.filter(function (r) { return catOk(r[2]) && storeOk(r[1]); }).slice(0, 12);
-    var head = '<thead><tr><th>Item</th><th>Store</th><th>Started</th><th>Days without sales</th><th>Est. lost units</th><th>Est. lost revenue</th></tr></thead>';
+    var head = '<thead><tr>' + ['Item', 'Store', 'Started', 'Days without sales', 'Est. lost units', 'Est. lost revenue'].map(function (h) { return '<th>' + T(h) + '</th>'; }).join('') + '</tr></thead>';
     var body = rows.map(function (r) { return '<tr class="hit-x" tabindex="0" data-store="' + r[1] + '" data-cat="' + r[2] + '"><td class="cell">' + r[0] + '</td><td>' + r[1] + '</td><td>' + dayLabel(r[3]) + ' ' + r[3].slice(0, 4) + '</td><td>' + r[4] + '</td><td>' + fmtInt(r[5]) + '</td><td>' + fmtUsd(r[6]) + '</td></tr>'; }).join('');
-    document.getElementById('top-table').innerHTML = head + '<tbody>' + (body || '<tr><td colspan="6">No suspected stock-outs for this selection.</td></tr>') + '</tbody>';
+    document.getElementById('top-table').innerHTML = head + '<tbody>' + (body || '<tr><td colspan="6">' + T('No suspected stock-outs for this selection.') + '</td></tr>') + '</tbody>';
     cellClicks('top-table', 'tr.hit-x', function (tr) { pickStoreCat(tr.dataset.store, tr.dataset.cat); });
   }
 
@@ -410,11 +593,11 @@ td.hit-x.on { outline: 2px solid var(--signal); outline-offset: -2px; font-weigh
   // Selection bar: one chip per active filter, each clears itself
   function renderSelection() {
     var bar = document.getElementById('xf'), chips = [];
-    if (state.st) chips.push(['st', 'State: ' + STATES.find(function (s) { return s[0] === state.st; })[1]]);
-    if (state.store !== 'ALL') chips.push(['store', 'Store: ' + state.store]);
-    if (state.cat !== 'ALL') chips.push(['cat', 'Category: ' + state.cat.charAt(0) + state.cat.slice(1).toLowerCase()]);
-    if (!chips.length) { bar.innerHTML = '<span>Click a line, a bar, a cell of the error table or a stock-out row to filter every chart.</span>'; return; }
-    bar.innerHTML = '<span>Filtered by</span>' + chips.map(function (c) { return '<button type="button" data-k="' + c[0] + '" title="Clear this filter">' + c[1] + ' &times;</button>'; }).join('') + '<span>All panels follow the selection.</span>';
+    if (state.st) chips.push(['st', T('State: ') + T(STATES.find(function (s) { return s[0] === state.st; })[1])]);
+    if (state.store !== 'ALL') chips.push(['store', T('Store: ') + state.store]);
+    if (state.cat !== 'ALL') chips.push(['cat', T('Category: ') + catName(state.cat)]);
+    if (!chips.length) { bar.innerHTML = '<span>' + T('Click a line, a bar, a cell of the error table or a stock-out row to filter every chart.') + '</span>'; return; }
+    bar.innerHTML = '<span>' + T('Filtered by') + '</span>' + chips.map(function (c) { return '<button type="button" data-k="' + c[0] + '" title="' + T('Clear this filter') + '">' + c[1] + ' &times;</button>'; }).join('') + '<span>' + T('All panels follow the selection.') + '</span>';
     bar.querySelectorAll('button').forEach(function (b) { b.addEventListener('click', function () {
       var k = b.dataset.k; if (k === 'st') { state.st = ''; state.store = 'ALL'; } else if (k === 'store') state.store = 'ALL'; else state.cat = 'ALL';
       syncControls(); render();
@@ -442,10 +625,15 @@ td.hit-x.on { outline: 2px solid var(--signal); outline-offset: -2px; font-weigh
       D.weeks = Array.from(new Set(D.weekly.map(function (r) { return r[0]; }))).sort();
       D.fcDays = Array.from(new Set(D.forecast.map(function (r) { return r[0]; }))).sort();
       var sel = document.getElementById('store-sel');
-      D.stores.forEach(function (s) { var o = document.createElement('option'); o.value = s[0]; o.textContent = s[0] + ' · ' + s[1]; sel.appendChild(o); });
+      D.stores.forEach(function (s) { var o = document.createElement('option'); o.value = s[0]; o.textContent = s[0] + ' · ' + T(s[1]); o._st = s[1]; sel.appendChild(o); });
       render();
     })
-    .catch(function () { document.getElementById('kpis').innerHTML = '<p>The data files did not load. Reload the page to try again.</p>'; });
+    .catch(function () { document.getElementById('kpis').innerHTML = '<p>' + T('The data files did not load. Reload the page to try again.') + '</p>'; });
+  I18N.on(function () {
+    document.querySelectorAll('#store-sel option').forEach(function (o) { if (o._st) o.textContent = o.value + ' · ' + T(o._st); });
+    if (D.weekly) render();
+  });
+  I18N.start();
 })();
 </script>
 
