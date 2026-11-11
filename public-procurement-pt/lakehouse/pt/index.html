@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lakehouse de contratação pública em Databricks · Guilherme Rigonato</title>
+<meta name="description" content="Os 1,56 milhões de contratos públicos de Portugal num lakehouse Databricks: pipeline Lakeflow, tabelas Delta, dbt, painel AI/BI e Genie. Vídeo e código.">
+<link rel="canonical" href="https://guilhermerigonato.com/public-procurement-pt/lakehouse/pt/">
+<link rel="alternate" hreflang="en" href="https://guilhermerigonato.com/public-procurement-pt/lakehouse/">
+<link rel="alternate" hreflang="pt-PT" href="https://guilhermerigonato.com/public-procurement-pt/lakehouse/pt/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<meta property="og:title" content="Lakehouse de contratação pública em Databricks">
+<meta property="og:description" content="Os 1,56 milhões de contratos públicos de Portugal num lakehouse Databricks: pipeline Lakeflow, tabelas Delta, dbt, painel AI/BI e Genie. Vídeo e código.">
+<meta property="og:image" content="https://guilhermerigonato.com/public-procurement-pt/lakehouse/poster.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one left-aligned reading column, like a well-set CV. Rules separate entries; no cards, no badges. */
+:root {
+  /* Almanac palette, the same one the Power BI reports use. */
+  --bg: #c4cbd2;
+  --ink: #182027;
+  --muted: #3b434b;
+  --rule: #a1a9af;
+  --accent: #970d63;
+  --accent-soft: #f1dce6;
+  --panel: #eef1f4;
+  --serif: "Hanken Grotesk", system-ui, "Helvetica Neue", Arial, sans-serif;
+  --display: "Hanken Grotesk", system-ui, "Helvetica Neue", Arial, sans-serif;
+  --sans: "Newsreader", Georgia, serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #13171b; --ink: #e3e7eb; --muted: #9aa4ae; --rule: #333b44; --accent: #e07ab0; --accent-soft: #3a1f2e; --panel: #1b2026; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #13171b; --ink: #e3e7eb; --muted: #9aa4ae; --rule: #333b44; --accent: #e07ab0; --accent-soft: #3a1f2e; --panel: #1b2026; color-scheme: dark; }
+
+body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 1.06rem; line-height: 1.55; }
+.page {
+  max-width: 46rem; margin: 0 auto; padding-block: 3.5rem 4rem;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 3rem;
+}
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+h1 { font-family: var(--display); font-weight: 600; font-size: clamp(2rem, 5vw, 2.7rem); line-height: 1.15; letter-spacing: -0.02em; padding-bottom: 0.5rem; border-bottom: 2px solid var(--ink); }
+h2 { font-family: var(--display); font-weight: 600; font-size: 1.4rem; line-height: 1.3; letter-spacing: -0.01em; }
+h3 { font-family: var(--display); font-size: 1.08rem; font-weight: 600; line-height: 1.4; }
+.small, .role, .facts, .links, .status, .stack, .job .when, .skills b, .kv span, button.copy { font-family: var(--display); }
+p, ul, ol { margin: 0; }
+a { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+.muted { color: var(--muted); }
+.small { font-size: 0.9rem; }
+
+header { display: grid; gap: 0.9rem; }
+.role { font-size: 1.1rem; font-weight: 500; }
+.intro { max-width: 62ch; }
+.facts { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; color: var(--muted); font-size: 0.92rem; }
+.links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; font-size: 0.95rem; }
+
+section { display: grid; gap: 1.25rem; }
+.list { display: grid; border-top: 1px solid var(--rule); }
+.entry { display: grid; gap: 0.5rem; padding-block: 1.25rem; border-bottom: 1px solid var(--rule); }
+.entry > * { min-width: 0; }
+.entry .top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.75rem; }
+.status { font-size: 0.85rem; color: var(--muted); }
+.entry ul { padding-left: 1.1rem; display: grid; gap: 0.15rem; }
+.entry li { font-variant-numeric: tabular-nums; }
+.stack { font-size: 0.88rem; color: var(--muted); }
+
+.job { display: grid; grid-template-columns: 7.5rem 1fr; gap: 0.25rem 1.5rem; padding-block: 1rem; border-bottom: 1px solid var(--rule); }
+.job > * { min-width: 0; }
+.job .when { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 0.92rem; padding-top: 0.05rem; }
+.job div { display: grid; gap: 0.2rem; }
+@media (max-width: 560px) { .job { grid-template-columns: 1fr; } }
+
+.skills { display: grid; gap: 0.4rem; }
+.skills p { display: grid; grid-template-columns: 7.5rem 1fr; gap: 1.5rem; }
+.skills p > * { min-width: 0; }
+@media (max-width: 560px) { .skills p { grid-template-columns: 1fr; gap: 0; } }
+
+footer { display: grid; gap: 0.75rem; padding-top: 1.25rem; border-top: 1px solid var(--ink); }
+.contact { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; align-items: baseline; }
+.email { font-family: var(--mono); font-size: 0.92rem; user-select: all; overflow-wrap: anywhere; }
+button.copy { font-size: 0.82rem; color: var(--ink); background: none; border: 1px solid var(--ink); border-radius: 2px; padding: 0.1rem 0.5rem; cursor: pointer; margin-left: 0.5rem; }
+button.copy:hover { background: var(--accent-soft); }
+
+/* Case-study page */
+.steps { padding-left: 1.25rem; display: grid; gap: 1rem; }
+.steps li::marker { color: var(--muted); }
+.figure { margin: 0; background: var(--panel); border: 1px solid var(--rule); border-top: 2px solid var(--ink); border-radius: 2px; padding: 1rem; overflow-x: auto; }
+.figure svg { display: block; min-width: 680px; width: 100%; height: auto; }
+.figure .box { fill: var(--bg); stroke: var(--rule); }
+.figure .box-hl { fill: var(--bg); stroke: var(--accent); stroke-width: 1.5; }
+.figure .t { fill: var(--ink); font-family: var(--display); font-size: 14px; font-weight: 600; }
+.figure .s { fill: var(--muted); font-family: var(--display); font-size: 11.5px; }
+.figure .arrow { stroke: var(--muted); stroke-width: 1.25; fill: none; }
+.figure .head-a { fill: var(--muted); }
+pre { margin: 0; background: var(--panel); border: 1px solid var(--rule); border-radius: 2px; padding: 1rem; overflow-x: auto; font-family: var(--mono); font-size: 0.85rem; line-height: 1.7; }
+code { font-family: var(--mono); font-size: 0.88em; }
+.kv { display: grid; grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); gap: 1rem 1.5rem; background: var(--panel); border: 1px solid var(--rule); border-top: 2px solid var(--ink); border-radius: 2px; padding: 1rem; }
+.kv div { display: grid; gap: 0.1rem; min-width: 0; }
+.kv b { font-family: var(--mono); font-weight: 500; font-size: 1.25rem; font-variant-numeric: tabular-nums; }
+.kv span { font-size: 0.88rem; color: var(--muted); }
+</style>
+<style>
+.video { margin: 0; background: #0b0f19; border: 1px solid var(--rule); border-top: 2px solid var(--ink); border-radius: 2px; overflow: hidden; }
+.video video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; }
+.shot { margin: 0; display: grid; gap: 0.5rem; }
+.shot img { display: block; width: 100%; height: auto; border: 1px solid var(--rule); border-top: 2px solid var(--ink); border-radius: 2px; }
+.shot figcaption { font-family: var(--display); font-size: 0.9rem; color: var(--muted); }
+.shots { display: grid; gap: 1.75rem; }
+.lang { font-family: var(--display); font-size: 0.9rem; }
+.topline { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+th, td { text-align: left; padding: 0.45rem 0.75rem 0.45rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-family: var(--display); font-weight: 600; font-size: 0.88rem; color: var(--muted); }
+td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tablewrap { overflow-x: auto; }
+</style>
+</head>
+<body>
+<main class="page">
+<p class="small topline"><span><a href="/pt/">Guilherme Rigonato</a> <span class="muted">/ Projetos</span></span><a class="lang" href="/public-procurement-pt/lakehouse/" hreflang="en" lang="en">English</a></p>
+<header>
+<h1>Lakehouse de contratação pública em Databricks</h1>
+<p class="role">1,56 milhões de contratos públicos · Databricks Free Edition · 2026</p>
+<p class="intro">Construí este projeto primeiro em DuckDB e dbt. Aqui, os mesmos dados correm num lakehouse Databricks como uma equipa de dados os teria em produção: os ficheiros novos são carregados automaticamente, cada linha é verificada, as regras de negócio ficam no dbt e um job semanal atualiza tudo. Os números coincidem com a versão original até ao último contrato.</p>
+<p class="links"><a href="#video">Ver o vídeo (1 min 40 s)</a><a href="https://github.com/Alpralex/public-procurement-pt/tree/main/databricks" target="_blank" rel="noopener">Código</a><a href="https://app.powerbi.com/view?r=eyJrIjoiZDliMmM5ZDAtOTRjYS00M2ZmLWJjNmMtNmJkZjAwNjU1NjEzIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Relatório Power BI dos mesmos dados</a><a href="/pt/">Todos os projetos</a></p>
+</header>
+<div class="kv"><div><b>1,56 M</b><span>contratos, 121 mil M€</span></div><div><b>3 camadas</b><span>bronze, silver, gold</span></div><div><b>18 + 17</b><span>modelos e testes dbt</span></div><div><b>1 job</b><span>atualização semanal, cerca de 5 min</span></div></div>
+<section aria-labelledby="video"><h2 id="video">O projeto em 100 segundos</h2>
+<figure class="video"><video controls preload="none" playsinline poster="/public-procurement-pt/lakehouse/poster.webp" width="1920" height="1080"><source src="/public-procurement-pt/lakehouse/demo.mp4" type="video/mp4"></video></figure>
+<p class="muted small">Não precisa de som: as legendas (em inglês) explicam cada passo. As respostas do Genie estão aceleradas dez vezes.</p></section>
+<section aria-labelledby="arch"><h2 id="arch">Como os dados circulam</h2><figure class="figure"><svg viewBox="0 0 900 190" role="img" aria-labelledby="pipe-title"><title id="pipe-title">Os ficheiros anuais chegam a um volume do Unity Catalog. O Auto Loader lê os ficheiros novos para bronze, o PySpark limpa-os em silver com regras de qualidade, o dbt constrói gold, e um painel, o Genie e o Power BI leem gold.</title><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="head-a" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="box" x="10" y="55" width="135" height="80" rx="3"/><text class="t" x="77" y="90" text-anchor="middle">Ficheiros Portal BASE</text><text class="s" x="77" y="110" text-anchor="middle">volume Unity Catalog</text><rect class="box" x="165" y="55" width="135" height="80" rx="3"/><text class="t" x="232" y="90" text-anchor="middle">Bronze</text><text class="s" x="232" y="110" text-anchor="middle">Auto Loader, texto bruto</text><path class="arrow" d="M145,95 L161,95" marker-end="url(#ah)"/><rect class="box" x="320" y="55" width="135" height="80" rx="3"/><text class="t" x="387" y="90" text-anchor="middle">Silver</text><text class="s" x="387" y="110" text-anchor="middle">PySpark, regras de qualidade</text><path class="arrow" d="M300,95 L316,95" marker-end="url(#ah)"/><rect class="box-hl" x="475" y="55" width="135" height="80" rx="3"/><text class="t" x="542" y="90" text-anchor="middle">Gold</text><text class="s" x="542" y="110" text-anchor="middle">modelo em estrela, dbt</text><path class="arrow" d="M455,95 L471,95" marker-end="url(#ah)"/><rect class="box" x="670" y="10" width="220" height="70" rx="3"/><text class="t" x="780" y="41" text-anchor="middle">Painel AI/BI</text><text class="s" x="780" y="60" text-anchor="middle">e Power BI</text><rect class="box" x="670" y="110" width="220" height="70" rx="3"/><text class="t" x="780" y="141" text-anchor="middle">Genie</text><text class="s" x="780" y="160" text-anchor="middle">perguntas em linguagem natural</text><path class="arrow" d="M610,85 C640,85 640,45 666,45" marker-end="url(#ah)"/><path class="arrow" d="M610,105 C640,105 640,145 666,145" marker-end="url(#ah)"/></svg></figure></section>
+<section aria-labelledby="what"><h2 id="what">O que construí</h2><ol class="steps">
+<li><h3>Ingestão que só lê o que é novo</h3><p>Um pipeline Lakeflow usa o Auto Loader para recolher os ficheiros anuais de um volume do Unity Catalog. Quando chega um ficheiro novo, só esse é lido. A camada bronze guarda todas as colunas como texto, por isso uma data ou um valor mal formatado nunca interrompe o carregamento.</p></li>
+<li><h3>Limpeza com regras de qualidade medidas</h3><p>A camada silver remove duplicados e define o tipo de cada coluna em PySpark. As linhas que violam uma regra obrigatória (sem identificador, sem data) vão para uma tabela de rejeitados com o nome da regra. As regras mais brandas só contam as falhas, e assim a qualidade da fonte fica visível em cada execução.</p></li>
+<li><h3>Regras de negócio em dbt</h3><p>O dbt-databricks constrói a camada gold: seis dimensões, uma tabela de factos de contratos, uma ponte contrato–fornecedor e os marts por trás de cada gráfico. Correm 17 testes em cada atualização, incluindo um que compara os totais com a versão original em DuckDB.</p></li>
+<li><h3>Privacidade desde a origem</h3><p>Os fornecedores que são pessoas singulares são mascarados antes da camada gold, e o Genie só vê gold. Quando se pergunta pelos maiores fornecedores, a resposta só indica empresas.</p></li>
+<li><h3>Um deploy, um agendamento</h3><p>Um Databricks Asset Bundle publica os esquemas, o pipeline, o job semanal e o painel com um só comando. O código PySpark tem 13 testes unitários que correm no GitHub Actions sem precisar de workspace.</p></li>
+</ol></section>
+<section aria-labelledby="shots"><h2 id="shots">Ecrãs</h2><div class="shots">
+<figure class="shot"><a href="/public-procurement-pt/lakehouse/dash-overview.webp"><img src="/public-procurement-pt/lakehouse/dash-overview.webp" alt="Painel AI/BI, visão geral: quem compra, como e o quê, com filtro cruzado." width="1600" height="842" loading="lazy" decoding="async"></a><figcaption>Painel AI/BI, visão geral: quem compra, como e o quê, com filtro cruzado.</figcaption></figure>
+<figure class="shot"><a href="/public-procurement-pt/lakehouse/dash-competition2.webp"><img src="/public-procurement-pt/lakehouse/dash-competition2.webp" alt="Página de concorrência: os contratos acumulam-se logo abaixo dos limites legais do ajuste direto e da consulta prévia." width="1600" height="842" loading="lazy" decoding="async"></a><figcaption>Página de concorrência: os contratos acumulam-se logo abaixo dos limites legais do ajuste direto e da consulta prévia.</figcaption></figure>
+<figure class="shot"><a href="/public-procurement-pt/lakehouse/pipeline.webp"><img src="/public-procurement-pt/lakehouse/pipeline.webp" alt="Pipeline Lakeflow: Auto Loader para bronze e, depois, tabelas silver com regras de qualidade." width="1600" height="900" loading="lazy" decoding="async"></a><figcaption>Pipeline Lakeflow: Auto Loader para bronze e, depois, tabelas silver com regras de qualidade.</figcaption></figure>
+<figure class="shot"><a href="/public-procurement-pt/lakehouse/dash-pipeline.webp"><img src="/public-procurement-pt/lakehouse/dash-pipeline.webp" alt="Página do pipeline no painel: linhas por tabela, de bronze a gold, e a data da última atualização." width="1600" height="842" loading="lazy" decoding="async"></a><figcaption>Página do pipeline no painel: linhas por tabela, de bronze a gold, e a data da última atualização.</figcaption></figure>
+<figure class="shot"><a href="/public-procurement-pt/lakehouse/genie.webp"><img src="/public-procurement-pt/lakehouse/genie.webp" alt="O Genie responde a uma pergunta em linguagem natural com SQL que escreveu sobre as tabelas gold." width="1600" height="900" loading="lazy" decoding="async"></a><figcaption>O Genie responde a uma pergunta em linguagem natural com SQL que escreveu sobre as tabelas gold.</figcaption></figure>
+</div></section>
+<section aria-labelledby="check"><h2 id="check">Coincide com a versão original?</h2><p>Os mesmos ficheiros de origem, dois motores. Todos os valores abaixo são idênticos nas duas versões (ficheiros de 24 de outubro de 2026).</p>
+<div class="tablewrap"><table><thead><tr><th>Verificação</th><th>Versão DuckDB</th><th>Lakehouse</th></tr></thead><tbody>
+<tr><td>Linhas de origem</td><td class="n">1 555 252</td><td class="n">1 555 252</td></tr>
+<tr><td>Contratos depois de remover duplicados</td><td class="n">1 550 674</td><td class="n">1 550 674</td></tr>
+<tr><td>Valor contratual sem IVA</td><td class="n">120,54 mil M€</td><td class="n">120,54 mil M€</td></tr>
+<tr><td>Concursos públicos com uma só proposta</td><td class="n">10,2%</td><td class="n">10,2%</td></tr>
+<tr><td>Contratos de bens e serviços logo abaixo de 20 000 € vs. logo acima</td><td class="n">50 519 vs. 12 290</td><td class="n">50 519 vs. 12 290</td></tr>
+</tbody></table></div>
+<h3>Dois erros que a migração apanhou</h3><ul><li>Um carregador transformou o &quot;\b&quot; das minhas expressões regulares num carácter de retrocesso. Todos os municípios caíram em silêncio na categoria &quot;Outros&quot;, e os totais continuavam a bater certo. Agora há um teste que falha se isso voltar a acontecer.</li><li>O Spark arredonda as divisões de decimais a seis casas, o que alterava um índice de concentração de mercado de 59,0 para 58,3. As quotas passaram a ser calculadas em vírgula flutuante.</li></ul>
+<p class="muted">O painel e o Genie vivem dentro do meu workspace Databricks, e a Free Edition não permite partilhá-los publicamente. É por isso que esta página mostra um vídeo e capturas de ecrã, e não uma ligação ao painel. O código publica-se em qualquer workspace com um só comando.</p></section>
+<section aria-labelledby="stack"><h2 id="stack">Ferramentas</h2><p>Databricks (Unity Catalog, Lakeflow declarative pipelines, Auto Loader, Delta Lake, SQL serverless, painéis AI/BI, Genie, Asset Bundles), PySpark, dbt-databricks, pytest, GitHub Actions</p>
+<p class="links"><a href="https://github.com/Alpralex/public-procurement-pt/tree/main/databricks" target="_blank" rel="noopener">Abrir o código</a><a href="/pt/">Todos os projetos</a></p></section>
+<footer><div class="contact">
+<p><span class="email" id="email">rigonato.guilherme@gmail.com</span><button class="copy" id="copy-email" type="button">Copiar</button></p>
+<a href="https://www.linkedin.com/in/guilherme-rigonato" target="_blank" rel="noopener">LinkedIn</a>
+<a href="https://github.com/Alpralex" target="_blank" rel="noopener">GitHub</a>
+</div></footer>
+</main>
+<script>
+(function () {
+  var btn = document.getElementById('copy-email'); if (!btn) return;
+  var L = 'Copiar', D = 'Copiado', S = 'Selecionado';
+  btn.addEventListener('click', function () {
+    var el = document.getElementById('email'), text = el.textContent;
+    var done = function () { btn.textContent = D; setTimeout(function () { btn.textContent = L; }, 1600); };
+    var fallback = function () { var r = document.createRange(); r.selectNodeContents(el); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = S; };
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch (e) { fallback(); }
+  });
+})();
+</script>
+<script data-goatcounter="https://guilhermerigonato.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script>document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a[href]");if(!a||!window.goatcounter||!goatcounter.count)return;var h=a.getAttribute("href"),k=/app\.powerbi\.com/.test(h)?"power-bi":/\.pdf$/.test(h)?"cv":/github\.com/.test(h)?"github":/linkedin\.com/.test(h)?"linkedin":"";if(k)goatcounter.count({path:"click-"+k+"-"+location.pathname,title:a.textContent.trim().slice(0,60),event:true});});</script>
+</body>
+</html>

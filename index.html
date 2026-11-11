@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Guilherme Rigonato · Senior BI Developer</title>
-<meta name="description" content="Guilherme Rigonato, senior BI developer in Lisbon: Qlik Sense, Power BI, SQL, dbt and Python. Projects with live reports, code and experience.">
+<meta name="description" content="Guilherme Rigonato, senior BI developer in Lisbon: Qlik Sense, Power BI, SQL, dbt, Databricks and Python. Projects with live reports, code and experience.">
 <link rel="alternate" hreflang="en" href="https://guilhermerigonato.com/">
 <link rel="alternate" hreflang="pt-PT" href="https://guilhermerigonato.com/pt/">
 <link rel="canonical" href="https://guilhermerigonato.com/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <meta property="og:title" content="Guilherme Rigonato · Senior BI Developer">
-<meta property="og:description" content="Guilherme Rigonato, senior BI developer in Lisbon: Qlik Sense, Power BI, SQL, dbt and Python. Projects with live reports, code and experience.">
+<meta property="og:description" content="Guilherme Rigonato, senior BI developer in Lisbon: Qlik Sense, Power BI, SQL, dbt, Databricks and Python. Projects with live reports, code and experience.">
 <meta property="og:image" content="https://guilhermerigonato.com/img/fpa.webp?v=20261109">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -155,8 +155,8 @@ button.copy:hover { background: var(--accent-soft); }
 <section id="projects" aria-labelledby="h-projects">
 <div class="sec-head narrow"><h2 id="h-projects">Projects</h2><p class="muted">Most projects come in four versions built on the same data: a Power BI report, a web dashboard with cross-filtering, a step-by-step Python notebook and a Qlik Sense app. Click an image to open the live report. The code is on GitHub, where every Power BI model is checked automatically against Microsoft’s best-practice rules.</p></div>
 <div class="filters"><span class="label" id="filter-label">Show projects that use</span>
-<div class="seg" role="group" aria-labelledby="filter-label"><button type="button" data-key="all" aria-pressed="true">All</button><button type="button" data-key="powerbi" aria-pressed="false">Power BI</button><button type="button" data-key="qlik" aria-pressed="false">Qlik Sense</button><button type="button" data-key="sql" aria-pressed="false">SQL and dbt</button></div>
-<span class="count" id="count" aria-live="polite" data-tpl="{n} of {t} projects">7 of 7 projects</span></div>
+<div class="seg" role="group" aria-labelledby="filter-label"><button type="button" data-key="all" aria-pressed="true">All</button><button type="button" data-key="powerbi" aria-pressed="false">Power BI</button><button type="button" data-key="qlik" aria-pressed="false">Qlik Sense</button><button type="button" data-key="sql" aria-pressed="false">SQL and dbt</button><button type="button" data-key="databricks" aria-pressed="false">Databricks</button></div>
+<span class="count" id="count" aria-live="polite" data-tpl="{n} of {t} projects">8 of 8 projects</span></div>
 <div class="list">
 <article class="proj" data-tags="powerbi qlik sql python">
 <div class="body">
@@ -187,6 +187,16 @@ button.copy:hover { background: var(--accent-soft); }
 <p class="links"><a href="https://app.powerbi.com/view?r=eyJrIjoiZDliMmM5ZDAtOTRjYS00M2ZmLWJjNmMtNmJkZjAwNjU1NjEzIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener">Power BI report</a><a href="/public-procurement-pt/?lang=en">Web dashboard</a><a href="/public-procurement-pt/notebook/">Python notebook</a><a href="https://github.com/Alpralex/public-procurement-pt" target="_blank" rel="noopener">Code</a></p>
 </div>
 <a class="shot" href="https://app.powerbi.com/view?r=eyJrIjoiZDliMmM5ZDAtOTRjYS00M2ZmLWJjNmMtNmJkZjAwNjU1NjEzIiwidCI6IjY2MDMwOWU1LWI1YWEtNDQzNS1iMDU2LTJhYmViOGZmNDZjNyJ9" target="_blank" rel="noopener" aria-label="Open power bi report: Where Portugal&#x27;s public procurement money goes"><img src="/img/procurement.webp?v=20261109" alt="Where Portugal&#x27;s public procurement money goes: Power BI report" width="1100" height="626" loading="lazy" decoding="async"></a>
+</article>
+<article class="proj" data-tags="databricks sql python">
+<div class="body">
+<div class="top"><h3>The procurement data on a Databricks lakehouse</h3></div>
+<p>The same 1.56 million public contracts, moved from DuckDB to a Databricks lakehouse the way a data team would run it in production. A 100-second video shows it working, from the raw files to a question answered in plain English.</p>
+<ul><li>New files load automatically, and every row is checked: bad rows go to a rejected table with the reason</li><li>One weekly job refreshes everything in about five minutes, with 17 dbt tests</li><li>The numbers match the original build to the last contract</li><li>Genie answers questions in plain language, and private individuals stay masked</li></ul>
+<p class="stack"><span class="tl">Tools:</span> Databricks (Unity Catalog, Lakeflow pipelines, Auto Loader, Delta Lake, AI/BI dashboards, Genie, Asset Bundles), PySpark, dbt, SQL</p>
+<p class="links"><a href="/public-procurement-pt/lakehouse/">Case study</a><a href="/public-procurement-pt/lakehouse/#video">Video (100 s)</a><a href="https://github.com/Alpralex/public-procurement-pt/tree/main/databricks" target="_blank" rel="noopener">Code</a></p>
+</div>
+<a class="shot" href="/public-procurement-pt/lakehouse/" aria-label="Open case study: The procurement data on a Databricks lakehouse"><img src="/img/lakehouse.webp?v=20261109" alt="The procurement data on a Databricks lakehouse: Case study" width="1100" height="626" loading="lazy" decoding="async"></a>
 </article>
 <article class="proj" data-tags="powerbi sql python">
 <div class="body">
@@ -248,7 +258,8 @@ button.copy:hover { background: var(--accent-soft); }
 <section id="skills" aria-labelledby="h-skills" class="narrow">
 <h2 id="h-skills">Skills</h2><div class="skills">
 <p><span class="muted">BI</span><span>Qlik Sense, Power BI, DAX, Power Query, set analysis, data modelling</span></p>
-<p><span class="muted">Data</span><span>SQL, PostgreSQL, Oracle, dbt, DuckDB, Python</span></p>
+<p><span class="muted">Data</span><span>SQL, PostgreSQL, Oracle, dbt, DuckDB, Python (pandas, PySpark)</span></p>
+<p><span class="muted">Lakehouse</span><span>Databricks: Unity Catalog, Lakeflow pipelines, Delta Lake, AI/BI dashboards, Genie</span></p>
 <p><span class="muted">AI</span><span>Claude API, AI assistants that answer questions by querying data</span></p>
 </div></section>
 <section id="contact" aria-labelledby="h-contact" class="narrow">
